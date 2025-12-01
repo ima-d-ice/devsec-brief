@@ -1,7 +1,3 @@
-Based on the code and file structure provided, here is a comprehensive `README.md` for the **DevSec Brief** project.
-
------
-
 # DevSec Brief
 
 **DevSec Brief** is a RAG-powered (Retrieval-Augmented Generation) news assistant designed to help developers and security professionals stay up-to-date. It aggregates articles from top Web Development and Cybersecurity RSS feeds, stores them locally, and uses an LLM to answer natural language questions based on the retrieved content.
