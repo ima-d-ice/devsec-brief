@@ -1,0 +1,8 @@
+feedparser
+requests
+chromadb
+sentence-transformers
+python-dotenv
+groq
+fastapi
+uvicorn[standard]

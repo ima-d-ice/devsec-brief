@@ -1,0 +1,30 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+
+# SQLite / Chroma (can re-generate)
+data/*.db
+data/chroma/
+logs/
+
+# Env & secrets
+.env
+*.env
+
+# Node / Next.js
+devsec-brief-frontend/node_modules/
+devsec-brief-frontend/.next/
+devsec-brief-frontend/.env*
+npm-debug.log*
+
+# Docker junk
+*.pid
+*.sock
+
+# OS/cache
+.DS_Store
+Thumbs.db
