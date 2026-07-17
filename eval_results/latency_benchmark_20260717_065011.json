@@ -1,0 +1,812 @@
+{
+  "benchmark_config": {
+    "api_key": "GROQ_API_KEY_2 (key 2)",
+    "api_key_suffix": "b2MZzk",
+    "sample_size": 50,
+    "timestamp": "2026-07-17T06:50:11.091938"
+  },
+  "per_query": [
+    {
+      "question": "Which specific Firefox components are affected by the critical vulnerabilities that currently have public exploit code?",
+      "cold": {
+        "retrieval": 1554.4,
+        "build_context": 0.0,
+        "llm_generation": 448.2,
+        "total": 2002.6
+      },
+      "warm": {
+        "retrieval": 188.8,
+        "build_context": 0.0,
+        "llm_generation": 301.3,
+        "total": 490.1
+      }
+    },
+    {
+      "question": "Welke verschillen zijn er in de vereiste toegangsniveaus voor het misbruiken van CVE-2026-15409 en CVE-2026-15410?",
+      "cold": {
+        "retrieval": 903.4,
+        "build_context": 0.0,
+        "llm_generation": 167.3,
+        "total": 1070.6
+      },
+      "warm": {
+        "retrieval": 128.2,
+        "build_context": 0.0,
+        "llm_generation": 401.0,
+        "total": 529.3
+      }
+    },
+    {
+      "question": "What is the specific user action required for a threat actor to successfully exploit the vulnerabilities mentioned in the advisory?",
+      "cold": {
+        "retrieval": 966.9,
+        "build_context": 0.0,
+        "llm_generation": 200.5,
+        "total": 1167.4
+      },
+      "warm": {
+        "retrieval": 265.5,
+        "build_context": 0.0,
+        "llm_generation": 167.0,
+        "total": 432.5
+      }
+    },
+    {
+      "question": "What is the primary security impact of exploiting these 11 vulnerable Microsoft-signed UEFI applications?",
+      "cold": {
+        "retrieval": 776.6,
+        "build_context": 0.0,
+        "llm_generation": 366.4,
+        "total": 1143.1
+      },
+      "warm": {
+        "retrieval": 244.9,
+        "build_context": 0.0,
+        "llm_generation": 212.8,
+        "total": 457.7
+      }
+    },
+    {
+      "question": "What primary attack techniques does the Forg365 phishing-as-a-service platform utilize to compromise Microsoft 365 accounts?",
+      "cold": {
+        "retrieval": 496.0,
+        "build_context": 0.0,
+        "llm_generation": 301.9,
+        "total": 797.8
+      },
+      "warm": {
+        "retrieval": 222.4,
+        "build_context": 0.0,
+        "llm_generation": 1515.8,
+        "total": 1738.3
+      }
+    },
+    {
+      "question": "What is the primary objective of the transformation and compression techniques discussed in the article regarding raw pixel data?",
+      "cold": {
+        "retrieval": 1870.1,
+        "build_context": 0.0,
+        "llm_generation": 2326.9,
+        "total": 4197.1
+      },
+      "warm": {
+        "retrieval": 412.3,
+        "build_context": 0.0,
+        "llm_generation": 1338.2,
+        "total": 1750.5
+      }
+    },
+    {
+      "question": "Welke specifieke kwetsbaarheid in de n8n AI Agents functionaliteit stelt gebruikers in staat om gedeelde credential secrets bloot te stellen?",
+      "cold": {
+        "retrieval": 2054.3,
+        "build_context": 0.0,
+        "llm_generation": 2225.7,
+        "total": 4280.0
+      },
+      "warm": {
+        "retrieval": 249.6,
+        "build_context": 0.0,
+        "llm_generation": 3298.5,
+        "total": 3548.1
+      }
+    },
+    {
+      "question": "How can I improve resource efficiency when running a Node.js application on Vultr using PM2?",
+      "cold": {
+        "retrieval": 1227.5,
+        "build_context": 0.0,
+        "llm_generation": 2506.7,
+        "total": 3734.3
+      },
+      "warm": {
+        "retrieval": 365.9,
+        "build_context": 0.0,
+        "llm_generation": 1575.0,
+        "total": 1941.0
+      }
+    },
+    {
+      "question": "What mechanisms are causing crypto wallet extensions to inadvertently expose user identities and track their activity across different websites?",
+      "cold": {
+        "retrieval": 742.7,
+        "build_context": 0.0,
+        "llm_generation": 3257.6,
+        "total": 4000.3
+      },
+      "warm": {
+        "retrieval": 586.0,
+        "build_context": 0.0,
+        "llm_generation": 2380.6,
+        "total": 2966.7
+      }
+    },
+    {
+      "question": "Which specific types of assets within the Balochistan Police infrastructure were compromised by the threat actors?",
+      "cold": {
+        "retrieval": 947.1,
+        "build_context": 0.0,
+        "llm_generation": 2211.9,
+        "total": 3159.0
+      },
+      "warm": {
+        "retrieval": 303.0,
+        "build_context": 0.0,
+        "llm_generation": 2258.4,
+        "total": 2561.3
+      }
+    },
+    {
+      "question": "What is the primary technical change being implemented regarding h1 elements in browser user agent styles?",
+      "cold": {
+        "retrieval": 621.4,
+        "build_context": 0.0,
+        "llm_generation": 2265.8,
+        "total": 2887.2
+      },
+      "warm": {
+        "retrieval": 306.3,
+        "build_context": 0.0,
+        "llm_generation": 2262.3,
+        "total": 2568.6
+      }
+    },
+    {
+      "question": "What specific data was inadvertently being exfiltrated by the Grok Build CLI tool during coding tasks?",
+      "cold": {
+        "retrieval": 1106.8,
+        "build_context": 0.0,
+        "llm_generation": 1311.8,
+        "total": 2418.5
+      },
+      "warm": {
+        "retrieval": 246.1,
+        "build_context": 0.0,
+        "llm_generation": 2281.2,
+        "total": 2527.3
+      }
+    },
+    {
+      "question": "Was there any evidence that the hidden browsing-history collector within ModHeader successfully exfiltrated user data?",
+      "cold": {
+        "retrieval": 1051.7,
+        "build_context": 0.0,
+        "llm_generation": 2312.9,
+        "total": 3364.7
+      },
+      "warm": {
+        "retrieval": 665.0,
+        "build_context": 0.0,
+        "llm_generation": 1311.3,
+        "total": 1976.3
+      }
+    },
+    {
+      "question": "Which specific versions of the @asyncapi npm packages were identified as compromised and distributing botnet malware?",
+      "cold": {
+        "retrieval": 1205.4,
+        "build_context": 0.0,
+        "llm_generation": 3222.4,
+        "total": 4427.8
+      },
+      "warm": {
+        "retrieval": 548.5,
+        "build_context": 0.0,
+        "llm_generation": 2543.6,
+        "total": 3092.1
+      }
+    },
+    {
+      "question": "What was the primary method used by the attackers to turn visitors' browsers into a DDoS botnet via the 148 malicious npm packages?",
+      "cold": {
+        "retrieval": 1147.4,
+        "build_context": 0.1,
+        "llm_generation": 2315.6,
+        "total": 3463.0
+      },
+      "warm": {
+        "retrieval": 596.2,
+        "build_context": 0.0,
+        "llm_generation": 2310.4,
+        "total": 2906.6
+      }
+    },
+    {
+      "question": "What specific metadata does the proposed Meta AI system collect and log in association with a user's emotional state?",
+      "cold": {
+        "retrieval": 984.0,
+        "build_context": 0.0,
+        "llm_generation": 1397.3,
+        "total": 2381.3
+      },
+      "warm": {
+        "retrieval": 389.9,
+        "build_context": 0.0,
+        "llm_generation": 2422.3,
+        "total": 2812.3
+      }
+    },
+    {
+      "question": "What primary operational risk is contributing to the exploitation of known vulnerabilities according to the article?",
+      "cold": {
+        "retrieval": 744.9,
+        "build_context": 0.0,
+        "llm_generation": 3451.9,
+        "total": 4196.8
+      },
+      "warm": {
+        "retrieval": 289.2,
+        "build_context": 0.0,
+        "llm_generation": 2475.8,
+        "total": 2765.1
+      }
+    },
+    {
+      "question": "What is the current status of the Global Privacy Control (GPC) specification?",
+      "cold": {
+        "retrieval": 2845.8,
+        "build_context": 0.0,
+        "llm_generation": 2301.9,
+        "total": 5147.8
+      },
+      "warm": {
+        "retrieval": 334.5,
+        "build_context": 0.0,
+        "llm_generation": 2384.2,
+        "total": 2718.7
+      }
+    },
+    {
+      "question": "What is the potential security impact of the six discovered U-Boot flaws on affected hardware?",
+      "cold": {
+        "retrieval": 2887.5,
+        "build_context": 0.0,
+        "llm_generation": 2350.2,
+        "total": 5237.7
+      },
+      "warm": {
+        "retrieval": 245.0,
+        "build_context": 0.0,
+        "llm_generation": 2464.9,
+        "total": 2709.8
+      }
+    },
+    {
+      "question": "What specific information was revealed by the exposed hacker server regarding the WP-SHELLSTORM operation?",
+      "cold": {
+        "retrieval": 2894.5,
+        "build_context": 0.0,
+        "llm_generation": 2422.6,
+        "total": 5317.1
+      },
+      "warm": {
+        "retrieval": 214.3,
+        "build_context": 0.0,
+        "llm_generation": 2616.5,
+        "total": 2830.8
+      }
+    },
+    {
+      "question": "Which specific GitLab versions should be upgraded to patch the documented vulnerabilities?",
+      "cold": {
+        "retrieval": 2860.4,
+        "build_context": 0.0,
+        "llm_generation": 2236.0,
+        "total": 5096.5
+      },
+      "warm": {
+        "retrieval": 228.8,
+        "build_context": 0.0,
+        "llm_generation": 2332.2,
+        "total": 2561.0
+      }
+    },
+    {
+      "question": "Which specific conditions must be met to exploit CVE-2026-59841 in the FortiSIEM Windows Agent?",
+      "cold": {
+        "retrieval": 2799.1,
+        "build_context": 0.0,
+        "llm_generation": 2446.4,
+        "total": 5245.4
+      },
+      "warm": {
+        "retrieval": 201.8,
+        "build_context": 0.0,
+        "llm_generation": 2770.4,
+        "total": 2972.2
+      }
+    },
+    {
+      "question": "What is the primary attack vector for exploiting the vulnerability in Cisco Catalyst Center?",
+      "cold": {
+        "retrieval": 3208.5,
+        "build_context": 0.0,
+        "llm_generation": 2223.6,
+        "total": 5432.2
+      },
+      "warm": {
+        "retrieval": 345.7,
+        "build_context": 0.0,
+        "llm_generation": 2255.9,
+        "total": 2601.6
+      }
+    },
+    {
+      "question": "What are the key goals for creating effective technical documentation according to the article?",
+      "cold": {
+        "retrieval": 2770.4,
+        "build_context": 0.0,
+        "llm_generation": 2310.2,
+        "total": 5080.7
+      },
+      "warm": {
+        "retrieval": 369.3,
+        "build_context": 0.0,
+        "llm_generation": 2468.5,
+        "total": 2837.8
+      }
+    },
+    {
+      "question": "What is the trigger mechanism that causes Cursor to execute arbitrary code on a Windows machine?",
+      "cold": {
+        "retrieval": 2839.1,
+        "build_context": 0.0,
+        "llm_generation": 2503.7,
+        "total": 5342.8
+      },
+      "warm": {
+        "retrieval": 292.2,
+        "build_context": 0.0,
+        "llm_generation": 2535.2,
+        "total": 2827.5
+      }
+    },
+    {
+      "question": "What structural changes have been made to the documentation on MDN?",
+      "cold": {
+        "retrieval": 2871.3,
+        "build_context": 0.0,
+        "llm_generation": 2377.2,
+        "total": 5248.5
+      },
+      "warm": {
+        "retrieval": 257.5,
+        "build_context": 0.0,
+        "llm_generation": 2395.8,
+        "total": 2653.3
+      }
+    },
+    {
+      "question": "What is the primary limitation of most current AI security agents when processing security data?",
+      "cold": {
+        "retrieval": 3129.2,
+        "build_context": 0.0,
+        "llm_generation": 2275.0,
+        "total": 5404.3
+      },
+      "warm": {
+        "retrieval": 260.4,
+        "build_context": 0.0,
+        "llm_generation": 2500.1,
+        "total": 2760.6
+      }
+    },
+    {
+      "question": "What is the primary requirement for an AI-generated finding to be considered useful in a security context?",
+      "cold": {
+        "retrieval": 3040.7,
+        "build_context": 0.0,
+        "llm_generation": 2264.0,
+        "total": 5304.7
+      },
+      "warm": {
+        "retrieval": 658.1,
+        "build_context": 0.0,
+        "llm_generation": 2262.8,
+        "total": 2921.0
+      }
+    },
+    {
+      "question": "Which specific versions of Adobe ColdFusion are affected by these vulnerabilities, and to which versions should I upgrade?",
+      "cold": {
+        "retrieval": 3387.6,
+        "build_context": 0.0,
+        "llm_generation": 2619.3,
+        "total": 6006.9
+      },
+      "warm": {
+        "retrieval": 219.1,
+        "build_context": 0.0,
+        "llm_generation": 2512.3,
+        "total": 2731.3
+      }
+    },
+    {
+      "question": "What are the potential security impacts of the two identified access control flaws in RabbitMQ?",
+      "cold": {
+        "retrieval": 2873.1,
+        "build_context": 0.0,
+        "llm_generation": 2372.1,
+        "total": 5245.2
+      },
+      "warm": {
+        "retrieval": 468.1,
+        "build_context": 0.0,
+        "llm_generation": 2768.8,
+        "total": 3236.9
+      }
+    },
+    {
+      "question": "What specific AI implementation is the Fortune 50 company currently utilizing within their Security Operations Center (SOC)?",
+      "cold": {
+        "retrieval": 2900.3,
+        "build_context": 0.0,
+        "llm_generation": 2424.3,
+        "total": 5324.6
+      },
+      "warm": {
+        "retrieval": 390.4,
+        "build_context": 0.0,
+        "llm_generation": 2474.7,
+        "total": 2865.1
+      }
+    },
+    {
+      "question": "Which major web browsers have committed to deprecating third-party cookies by 2024?",
+      "cold": {
+        "retrieval": 2871.7,
+        "build_context": 0.0,
+        "llm_generation": 2269.5,
+        "total": 5141.2
+      },
+      "warm": {
+        "retrieval": 366.9,
+        "build_context": 0.0,
+        "llm_generation": 2222.8,
+        "total": 2589.7
+      }
+    },
+    {
+      "question": "Which versions of Rancher are affected by the legacy Project Role Template Binding reconciler vulnerability, and what is the specific security impact?",
+      "cold": {
+        "retrieval": 3592.7,
+        "build_context": 0.0,
+        "llm_generation": 2717.2,
+        "total": 6309.9
+      },
+      "warm": {
+        "retrieval": 454.6,
+        "build_context": 0.0,
+        "llm_generation": 2607.1,
+        "total": 3061.7
+      }
+    },
+    {
+      "question": "Which specific Azure components require action from security professionals based on the provided list of vulnerabilities?",
+      "cold": {
+        "retrieval": 3068.2,
+        "build_context": 0.0,
+        "llm_generation": 2374.5,
+        "total": 5442.8
+      },
+      "warm": {
+        "retrieval": 685.7,
+        "build_context": 0.0,
+        "llm_generation": 2246.2,
+        "total": 2932.0
+      }
+    },
+    {
+      "question": "What implementation language does CrashStealer use, and how does it differ from traditional macOS information stealers?",
+      "cold": {
+        "retrieval": 3222.6,
+        "build_context": 0.0,
+        "llm_generation": 2242.6,
+        "total": 5465.2
+      },
+      "warm": {
+        "retrieval": 711.6,
+        "build_context": 0.0,
+        "llm_generation": 2549.6,
+        "total": 3261.2
+      }
+    },
+    {
+      "question": "Which specific versions of Adobe ColdFusion are affected by these vulnerabilities?",
+      "cold": {
+        "retrieval": 3145.8,
+        "build_context": 0.0,
+        "llm_generation": 2696.4,
+        "total": 5842.2
+      },
+      "warm": {
+        "retrieval": 500.3,
+        "build_context": 0.0,
+        "llm_generation": 2360.0,
+        "total": 2860.4
+      }
+    },
+    {
+      "question": "What platform hosts the JavaScriptmas daily coding challenges?",
+      "cold": {
+        "retrieval": 4001.9,
+        "build_context": 0.4,
+        "llm_generation": 2266.6,
+        "total": 6268.9
+      },
+      "warm": {
+        "retrieval": 746.2,
+        "build_context": 0.0,
+        "llm_generation": 2293.2,
+        "total": 3039.4
+      }
+    },
+    {
+      "question": "Who has MDN selected as the course partner for its official curriculum?",
+      "cold": {
+        "retrieval": 3197.1,
+        "build_context": 0.0,
+        "llm_generation": 2366.7,
+        "total": 5563.8
+      },
+      "warm": {
+        "retrieval": 454.1,
+        "build_context": 0.0,
+        "llm_generation": 2447.6,
+        "total": 2901.7
+      }
+    },
+    {
+      "question": "Which specific SAP products are affected by remote code execution (RCE) or memory corruption vulnerabilities according to this update?",
+      "cold": {
+        "retrieval": 3340.1,
+        "build_context": 0.0,
+        "llm_generation": 2679.8,
+        "total": 6019.9
+      },
+      "warm": {
+        "retrieval": 831.1,
+        "build_context": 0.0,
+        "llm_generation": 3605.9,
+        "total": 4437.0
+      }
+    },
+    {
+      "question": "Which specific Palo Alto Networks product lines and PAN-OS components are affected by the disclosed vulnerabilities?",
+      "cold": {
+        "retrieval": 2915.2,
+        "build_context": 0.0,
+        "llm_generation": 2611.8,
+        "total": 5527.0
+      },
+      "warm": {
+        "retrieval": 261.1,
+        "build_context": 0.0,
+        "llm_generation": 2398.6,
+        "total": 2659.8
+      }
+    },
+    {
+      "question": "What is the nature of the Windows vulnerability associated with the LegacyHive proof-of-concept?",
+      "cold": {
+        "retrieval": 2548.3,
+        "build_context": 0.0,
+        "llm_generation": 2406.5,
+        "total": 4954.8
+      },
+      "warm": {
+        "retrieval": 226.7,
+        "build_context": 0.0,
+        "llm_generation": 2245.3,
+        "total": 2472.0
+      }
+    },
+    {
+      "question": "Which Siemens SICORE system versions are affected by the disclosed vulnerabilities and what specific risk does the firmware update procedure pose?",
+      "cold": {
+        "retrieval": 3012.4,
+        "build_context": 0.0,
+        "llm_generation": 2809.0,
+        "total": 5821.4
+      },
+      "warm": {
+        "retrieval": 328.6,
+        "build_context": 0.0,
+        "llm_generation": 2626.7,
+        "total": 2955.3
+      }
+    },
+    {
+      "question": "Which specific component of the Zimbra software is affected by this stored XSS vulnerability?",
+      "cold": {
+        "retrieval": 2658.1,
+        "build_context": 0.0,
+        "llm_generation": 2431.0,
+        "total": 5089.2
+      },
+      "warm": {
+        "retrieval": 268.7,
+        "build_context": 0.0,
+        "llm_generation": 2297.6,
+        "total": 2566.3
+      }
+    },
+    {
+      "question": "What is the primary benefit of using the Streams API for fetching and transforming data in a web application?",
+      "cold": {
+        "retrieval": 2758.5,
+        "build_context": 0.0,
+        "llm_generation": 2505.1,
+        "total": 5263.7
+      },
+      "warm": {
+        "retrieval": 244.6,
+        "build_context": 0.0,
+        "llm_generation": 2373.0,
+        "total": 2617.6
+      }
+    },
+    {
+      "question": "What specific action has Progress Software instructed ShareFile customers to take in response to the reported security threat?",
+      "cold": {
+        "retrieval": 3138.6,
+        "build_context": 0.0,
+        "llm_generation": 2369.7,
+        "total": 5508.3
+      },
+      "warm": {
+        "retrieval": 340.6,
+        "build_context": 0.0,
+        "llm_generation": 2381.6,
+        "total": 2722.2
+      }
+    },
+    {
+      "question": "What is the primary method the threat actor O-UNC-066 uses to trick users into enrolling a malicious Microsoft Entra passkey?",
+      "cold": {
+        "retrieval": 3410.4,
+        "build_context": 0.0,
+        "llm_generation": 2530.2,
+        "total": 5940.6
+      },
+      "warm": {
+        "retrieval": 328.4,
+        "build_context": 0.0,
+        "llm_generation": 2322.5,
+        "total": 2651.0
+      }
+    },
+    {
+      "question": "What is the primary security impact of OAuth client ID spoofing in Microsoft Entra ID environments according to the report?",
+      "cold": {
+        "retrieval": 2783.1,
+        "build_context": 0.0,
+        "llm_generation": 2449.2,
+        "total": 5232.3
+      },
+      "warm": {
+        "retrieval": 240.3,
+        "build_context": 0.0,
+        "llm_generation": 2256.8,
+        "total": 2497.2
+      }
+    },
+    {
+      "question": "What are the primary factors that developers must balance when implementing image compression?",
+      "cold": {
+        "retrieval": 3023.6,
+        "build_context": 0.0,
+        "llm_generation": 2221.8,
+        "total": 5245.4
+      },
+      "warm": {
+        "retrieval": 294.3,
+        "build_context": 0.0,
+        "llm_generation": 2328.5,
+        "total": 2622.8
+      }
+    },
+    {
+      "question": "What is the primary security vulnerability that allows an attacker to gain control over other Shark RV2320EDUS vacuums in the same AWS region?",
+      "cold": {
+        "retrieval": 2964.2,
+        "build_context": 0.0,
+        "llm_generation": 2646.6,
+        "total": 5610.9
+      },
+      "warm": {
+        "retrieval": 300.7,
+        "build_context": 0.0,
+        "llm_generation": 2756.0,
+        "total": 3056.8
+      }
+    },
+    {
+      "question": "Which specific versions of MOVEit Transfer are affected by these vulnerabilities and require patching?",
+      "cold": {
+        "retrieval": 2840.6,
+        "build_context": 0.0,
+        "llm_generation": 2236.4,
+        "total": 5077.0
+      },
+      "warm": {
+        "retrieval": 213.4,
+        "build_context": 0.0,
+        "llm_generation": 2335.2,
+        "total": 2548.6
+      }
+    }
+  ],
+  "aggregate": {
+    "retrieval": {
+      "cold_mean_ms": 2364.0,
+      "cold_median_ms": 2843.2,
+      "warm_mean_ms": 365.8,
+      "warm_median_ms": 304.6,
+      "delta_mean_ms": 1998.2,
+      "delta_pct": 84.5
+    },
+    "build_context": {
+      "cold_mean_ms": 0.0,
+      "cold_median_ms": 0.0,
+      "warm_mean_ms": 0.0,
+      "warm_median_ms": 0.0,
+      "delta_mean_ms": 0.0,
+      "delta_pct": 37.7
+    },
+    "llm_generation": {
+      "cold_mean_ms": 2205.0,
+      "cold_median_ms": 2358.5,
+      "warm_mean_ms": 2209.0,
+      "warm_median_ms": 2366.5,
+      "delta_mean_ms": -4.1,
+      "delta_pct": -0.2
+    },
+    "total": {
+      "cold_mean_ms": 4569.0,
+      "cold_median_ms": 5235.0,
+      "warm_mean_ms": 2574.9,
+      "warm_median_ms": 2720.4,
+      "delta_mean_ms": 1994.1,
+      "delta_pct": 43.6
+    }
+  },
+  "percentiles": {
+    "p50": {
+      "cold_ms": 5237.7,
+      "warm_ms": 2722.2
+    },
+    "p90": {
+      "cold_ms": 5940.6,
+      "warm_ms": 3092.1
+    },
+    "p95": {
+      "cold_ms": 6019.9,
+      "warm_ms": 3261.2
+    },
+    "p99": {
+      "cold_ms": 6309.9,
+      "warm_ms": 4437.0
+    }
+  }
+}

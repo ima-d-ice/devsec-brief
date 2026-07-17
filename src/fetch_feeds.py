@@ -1,11 +1,32 @@
 # src/fetch_feeds.py
-
+import random
+import time
+import asyncio
+import aiohttp
 import feedparser
-import requests
+from bs4 import BeautifulSoup
 from src.db import save_article_if_new
 
+def strip_html(html_text: str) -> str:
+    if not html_text:
+        return ""
+    try:
+        return BeautifulSoup(html_text, "html.parser").get_text(separator=" ", strip=True)
+    except Exception:
+        return str(html_text)
+
+# A mix of modern Windows, Mac, Chrome, Firefox, and Safari user agents
+USER_AGENTS = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:121.0) Gecko/20100101 Firefox/121.0",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Safari/605.1.15",
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+]
+
+
 FEEDS = [
-    # 🌐 Web Dev / General Tech
+    # Web Dev / General Tech
     {
         "name": "Hacker News",
         "url": "https://news.ycombinator.com/rss",
@@ -22,10 +43,10 @@ FEEDS = [
         "category": "webdev",
     },
 
-    # 🛡 Cybersecurity
+    #  Cybersecurity
     {
         "name": "NCSC (NL Cyber Security)",
-        "url": "https://feeds.english.ncsc.nl/news.rss",
+        "url": "https://advisories.ncsc.nl/rss/advisories",
         "category": "cybersec",
     },
     {
@@ -40,65 +61,87 @@ FEEDS = [
     },
 ]
 
-
-HEADERS = {
-    # Pretend to be a normal browser; some sites block default Python UA
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:120.0) Gecko/20100101 Firefox/120.0"
-}
-
-
-def fetch_single_feed(feed):
+async def fetch_single_feed_async(session: aiohttp.ClientSession, feed: dict) -> int:
     print(f"\n=== Fetching: {feed['name']} ===")
     print(f"URL: {feed['url']}")
 
-    try:
-        resp = requests.get(feed["url"], headers=HEADERS, timeout=10)
-        print(f"HTTP status: {resp.status_code}, bytes: {len(resp.content)}")
-    except Exception as e:
-        print(f"Request error for {feed['name']}: {e}")
+    max_retries = 3
+    content_data = None
+    status_code = None
+
+    for attempt in range(1, max_retries + 1):
+        headers = {"User-Agent": random.choice(USER_AGENTS)}
+
+        try:
+            async with session.get(feed["url"], headers=headers, timeout=10) as resp:
+                status_code = resp.status
+                if status_code == 200:
+                    content_data = await resp.read()
+                    print(f"Success on attempt {attempt}.")
+                    break
+                elif status_code in [400, 403, 404, 410]:
+                    print(f"Permanent error {status_code}. Not retrying.")
+                    return 0
+                else:
+                    print(f"Attempt {attempt} failed (Status {status_code}).")
+
+        except Exception as e:
+            print(f"Attempt {attempt} failed: Network error ({e})")
+
+        if attempt < max_retries:
+            sleep_time = 2 ** attempt
+            print(f"Retrying in {sleep_time} seconds...")
+            await asyncio.sleep(sleep_time)
+
+    if not content_data or status_code != 200:
+        print(f" Giving up on {feed['name']} after {max_retries} attempts.")
         return 0
+    
+    parsed = feedparser.parse(content_data)
+    print(f"Entries found: {len(parsed.entries)}")
 
-    if resp.status_code != 200:
-        print(f"Non-200 response for {feed['name']}, skipping.")
-        return 0
-
-    parsed = feedparser.parse(resp.content)
-    print(f"Entries found by feedparser: {len(parsed.entries)}")
-
-    inserted = 0
+    new_inserted = 0
+    duplicates_skipped = 0
     for entry in parsed.entries:
-        published = getattr(entry, "published", "") or getattr(entry, "updated", "")
+        published = getattr(entry, "published", getattr(entry, "updated", ""))
 
-        # Try to get content; fall back to summary or empty string
         content = ""
         if getattr(entry, "content", None):
             try:
                 content = entry.content[0].value
-            except Exception:
+            except (IndexError, AttributeError, TypeError) as e:
                 content = str(entry.content)
         elif getattr(entry, "summary", None):
             content = entry.summary
 
         data = {
-            "title": getattr(entry, "title", "(no title)"),
+            "title": strip_html(getattr(entry, "title", "(no title)")),
             "url": getattr(entry, "link", ""),
             "source": feed["name"],
             "category": feed["category"],
-            "summary": getattr(entry, "summary", "") or "",
-            "content": content or "",
+            "summary": strip_html(getattr(entry, "summary", "") or ""),
+            "content": strip_html(content or ""),
             "published_at": published or "",
         }
+        if data["url"]:  
+            is_new = await asyncio.to_thread(save_article_if_new, **data)
+            if is_new:
+                new_inserted += 1
+            else:
+                duplicates_skipped += 1
+        
+    print(f"Inserted {new_inserted} articles for {feed['name']}")   
+    print(f"Skipped {duplicates_skipped} duplicate articles for {feed['name']}")
+    return new_inserted
 
-        if data["url"]:  # only save if we actually have a URL
-            save_article_if_new(**data)
-            inserted += 1
+async def fetch_all_feeds_async() -> int:
+    # Disable SSL verification to fix macOS certificate errors for public RSS feeds
+    connector = aiohttp.TCPConnector(ssl=False)
+    async with aiohttp.ClientSession(connector=connector) as session:
+        tasks = [fetch_single_feed_async(session, feed) for feed in FEEDS]
+        results = await asyncio.gather(*tasks)
+        return sum(results)
 
-    print(f"Inserted (attempted) {inserted} articles for {feed['name']}")
-    return inserted
-
-
-def fetch_all_feeds():
-    total = 0
-    for feed in FEEDS:
-        total += fetch_single_feed(feed)
-    print(f"\n✅ Fetch complete. Attempted to insert {total} articles total.")
+def fetch_all_feeds() -> None:
+    total = asyncio.run(fetch_all_feeds_async())
+    print(f"\nFetch complete. Inserted {total} articles total.")

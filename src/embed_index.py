@@ -4,6 +4,7 @@ from pathlib import Path
 import chromadb
 from sentence_transformers import SentenceTransformer
 from src.db import get_conn
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 # Path where Chroma will store its data
 CHROMA_PATH = Path(__file__).resolve().parents[1] / "data" / "chroma"
@@ -16,8 +17,8 @@ collection = client.get_or_create_collection(
 )
 
 # SentenceTransformer model for embeddings (FREE, downloaded once)
-EMBED_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
-embed_model = SentenceTransformer(EMBED_MODEL_NAME)
+EMBED_MODEL_NAME = "nomic-ai/nomic-embed-text-v1.5"
+embed_model = SentenceTransformer(EMBED_MODEL_NAME, trust_remote_code=True, device="mps")
 
 
 def load_articles(limit: int | None = None):
@@ -37,12 +38,28 @@ def load_articles(limit: int | None = None):
 
 
 def sync_index(limit: int | None = None):
+    global collection
+    try:
+        client.delete_collection("news_articles")
+    except Exception:
+        pass
+    collection = client.get_or_create_collection(
+        name="news_articles",
+        metadata={"hnsw:space": "cosine"},
+    )
+    print("Dropped and recreated 'news_articles' collection to clear old chunks.")
+
     rows = load_articles(limit=limit)
     print(f"Loaded {len(rows)} articles from DB.")
 
     ids: list[str] = []
     docs: list[str] = []
     metadatas: list[dict] = []
+
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=400,
+        chunk_overlap=100,
+    )
 
     for row in rows:
         article_id = str(row["id"])
@@ -53,17 +70,20 @@ def sync_index(limit: int | None = None):
         if not text:
             continue
 
-        ids.append(article_id)
-        docs.append(text)
-        metadatas.append(
-            {
-                "title": title,
-                "url": row["url"],
-                "source": row["source"],
-                "category": row["category"],
-                "published_at": row["published_at"],
-            }
-        )
+        chunks = text_splitter.split_text(text)
+
+        for i, chunk in enumerate(chunks):
+            ids.append(f"{article_id}-{i}")
+            docs.append(chunk)
+            metadatas.append(
+                {
+                    "title": title,
+                    "url": row["url"],
+                    "source": row["source"],
+                    "category": row["category"],
+                    "published_at": row["published_at"],
+                }
+            )
 
     if not ids:
         print("No non-empty documents to index.")

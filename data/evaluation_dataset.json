@@ -1,0 +1,252 @@
+[
+  {
+    "question": "Which specific Firefox components are affected by the critical vulnerabilities that currently have public exploit code?",
+    "expected_answer": "The affected components are the JavaScript: WebAssembly component (CVE-2026-15718) and the DOM: Navigation component (CVE-2026-15719).",
+    "expected_source_url": "https://thehackernews.com/2026/07/firefox-chrome-adobe-and-vmware-updates.html"
+  },
+  {
+    "question": "Welke verschillen zijn er in de vereiste toegangsniveaus voor het misbruiken van CVE-2026-15409 en CVE-2026-15410?",
+    "expected_answer": "Voor CVE-2026-15409 (SSRF) is geen authenticatie vereist, terwijl voor CVE-2026-15410 (code-injectie) een geauthenticeerde aanvaller met admin-rechten nodig is.",
+    "expected_source_url": "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0239"
+  },
+  {
+    "question": "What is the specific user action required for a threat actor to successfully exploit the vulnerabilities mentioned in the advisory?",
+    "expected_answer": "For a successful exploit, the threat actor must deceive the victim into opening and processing a malicious source file within the development environment.",
+    "expected_source_url": "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0235"
+  },
+  {
+    "question": "What is the primary security impact of exploiting these 11 vulnerable Microsoft-signed UEFI applications?",
+    "expected_answer": "Exploiting these applications allows an attacker to bypass Secure Boot, enabling the execution of untrusted code during system boot and the deployment of malicious UEFI bootkits or other malware.",
+    "expected_source_url": "https://thehackernews.com/2026/07/11-old-microsoft-signed-linux-uefi.html"
+  },
+  {
+    "question": "What primary attack techniques does the Forg365 phishing-as-a-service platform utilize to compromise Microsoft 365 accounts?",
+    "expected_answer": "Forg365 utilizes a combination of device code phishing, adversary-in-the-middle (AitM) tactics, antibot evasion, AI-assisted lure creation, and post-compromise mailbox operations.",
+    "expected_source_url": "https://thehackernews.com/2026/07/forg365-phaas-targets-microsoft-365.html"
+  },
+  {
+    "question": "What is the primary objective of the transformation and compression techniques discussed in the article regarding raw pixel data?",
+    "expected_answer": "The objective is to shrink image information for efficient delivery without any perceivable loss in quality.",
+    "expected_source_url": "https://developer.mozilla.org/en-US/blog/image-formats-pixels-graphics/"
+  },
+  {
+    "question": "Welke specifieke kwetsbaarheid in de n8n AI Agents functionaliteit stelt gebruikers in staat om gedeelde credential secrets bloot te stellen?",
+    "expected_answer": "Dit betreft het omzeilen van HTTP request domeinrestricties door gebruikers met member-level permissies.",
+    "expected_source_url": "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0228"
+  },
+  {
+    "question": "How can I improve resource efficiency when running a Node.js application on Vultr using PM2?",
+    "expected_answer": "You can improve resource efficiency by using PM2's cluster mode.",
+    "expected_source_url": "https://developer.mozilla.org/en-US/blog/deploying-node-js-applications-with-pm2-on-vultr/"
+  },
+  {
+    "question": "What mechanisms are causing crypto wallet extensions to inadvertently expose user identities and track their activity across different websites?",
+    "expected_answer": "The wallets leak data through the way they communicate with websites and blockchain servers, which allows for the linking of separate addresses and enables cross-site tracking.",
+    "expected_source_url": "https://thehackernews.com/2026/07/study-of-85-crypto-wallet-extensions.html"
+  },
+  {
+    "question": "Which specific types of assets within the Balochistan Police infrastructure were compromised by the threat actors?",
+    "expected_answer": "The compromised assets included servers hosting web applications that manage police and citizen data, such as criminal and [data].",
+    "expected_source_url": "https://thehackernews.com/2026/07/hackers-weaponize-balochistan-police.html"
+  },
+  {
+    "question": "What is the primary technical change being implemented regarding h1 elements in browser user agent styles?",
+    "expected_answer": "Browsers are rolling out changes to default UA styles specifically for nested section headings.",
+    "expected_source_url": "https://developer.mozilla.org/en-US/blog/h1-element-styles/"
+  },
+  {
+    "question": "What specific data was inadvertently being exfiltrated by the Grok Build CLI tool during coding tasks?",
+    "expected_answer": "The Grok Build CLI was uploading entire Git repositories, including the full commit history, to an xAI-managed Google Cloud Storage bucket rather than just the specific files required for a task.",
+    "expected_source_url": "https://thehackernews.com/2026/07/grok-build-uploads-entire-git.html"
+  },
+  {
+    "question": "Was there any evidence that the hidden browsing-history collector within ModHeader successfully exfiltrated user data?",
+    "expected_answer": "No, the collector remained dormant due to an empty allow-list, and no proof has emerged that it ever gathered or sent any browsing domain data.",
+    "expected_source_url": "https://thehackernews.com/2026/07/google-and-microsoft-pull-modheader.html"
+  },
+  {
+    "question": "Which specific versions of the @asyncapi npm packages were identified as compromised and distributing botnet malware?",
+    "expected_answer": "The compromised versions are @asyncapi/generator-helpers@1.1.1, @asyncapi/generator-components@0.7.1, @asyncapi/generator@3.3.1, and @asyncapi/specs versions v6.11.2 and v6.11.2-alpha.1.",
+    "expected_source_url": "https://thehackernews.com/2026/07/compromised-asyncapi-npm-packages.html"
+  },
+  {
+    "question": "What was the primary method used by the attackers to turn visitors' browsers into a DDoS botnet via the 148 malicious npm packages?",
+    "expected_answer": "The attackers used the npm registry as free hosting for a booby-trapped proxy site, which then turned the browsers of students using the proxy into a DDoS botnet.",
+    "expected_source_url": "https://thehackernews.com/2026/07/148-npm-packages-disguised-as-student.html"
+  },
+  {
+    "question": "What specific metadata does the proposed Meta AI system collect and log in association with a user's emotional state?",
+    "expected_answer": "The system logs the time, the user's location, the user's current activity, and how the user was interacting with their phone.",
+    "expected_source_url": "https://thehackernews.com/2026/07/meta-files-patent-for-ai-that-can.html"
+  },
+  {
+    "question": "What primary operational risk is contributing to the exploitation of known vulnerabilities according to the article?",
+    "expected_answer": "The risk is caused by delays in the remediation process, specifically where fixes for old bugs remain sitting in a queue rather than being implemented.",
+    "expected_source_url": "https://thehackernews.com/2026/07/weekly-recap-sharefile-threat-citrix.html"
+  },
+  {
+    "question": "What is the current status of the Global Privacy Control (GPC) specification?",
+    "expected_answer": "Global Privacy Control (GPC) has recently published its first working draft on its way to becoming a formal privacy standard.",
+    "expected_source_url": "https://developer.mozilla.org/en-US/blog/global-privacy-control/"
+  },
+  {
+    "question": "What is the potential security impact of the six discovered U-Boot flaws on affected hardware?",
+    "expected_answer": "Four of the flaws can cause a device to crash, while the other two allow an attacker to execute their own code by slipping a malicious image in front of the bootloader.",
+    "expected_source_url": "https://thehackernews.com/2026/07/six-new-u-boot-flaws-could-let.html"
+  },
+  {
+    "question": "What specific information was revealed by the exposed hacker server regarding the WP-SHELLSTORM operation?",
+    "expected_answer": "The exposed server revealed the operation's inner workings, including hacking tools, activity logs, and target lists naming more than 1.4 million websites.",
+    "expected_source_url": "https://thehackernews.com/2026/07/exposed-hacker-server-reveals-wp.html"
+  },
+  {
+    "question": "Which specific GitLab versions should be upgraded to patch the documented vulnerabilities?",
+    "expected_answer": "Users should upgrade to at least versions 18.11.7, 19.0.4, or 19.1.2 to resolve the vulnerabilities affecting versions 9.1 through 18.11.6, 19.0 through 19.0.3, and 19.1 through 19.1.1.",
+    "expected_source_url": "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0222"
+  },
+  {
+    "question": "Which specific conditions must be met to exploit CVE-2026-59841 in the FortiSIEM Windows Agent?",
+    "expected_answer": "The attacker must be on the same local network and the 'Supers Override' feature must be active.",
+    "expected_source_url": "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0240"
+  },
+  {
+    "question": "What is the primary attack vector for exploiting the vulnerability in Cisco Catalyst Center?",
+    "expected_answer": "The vulnerability is exploited via HTTP request manipulation, specifically by leveraging insufficient validation of user-supplied input to access files within a restricted container.",
+    "expected_source_url": "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0218"
+  },
+  {
+    "question": "What are the key goals for creating effective technical documentation according to the article?",
+    "expected_answer": "The goal is to make documentation clear, consistent, and well-structured.",
+    "expected_source_url": "https://developer.mozilla.org/en-US/blog/technical-writing/"
+  },
+  {
+    "question": "What is the trigger mechanism that causes Cursor to execute arbitrary code on a Windows machine?",
+    "expected_answer": "Cursor executes code when a user opens a repository that contains a file named 'git.exe' located in the project root.",
+    "expected_source_url": "https://thehackernews.com/2026/07/cursor-flaw-lets-malicious-cloned.html"
+  },
+  {
+    "question": "What structural changes have been made to the documentation on MDN?",
+    "expected_answer": "The MDN Curriculum and the Learn section have been merged into a single, new 'Learn Web Development' section.",
+    "expected_source_url": "https://developer.mozilla.org/en-US/blog/curriculum-learn-web-development/"
+  },
+  {
+    "question": "What is the primary limitation of most current AI security agents when processing security data?",
+    "expected_answer": "Most AI security agents rely on fragmented risk signals, such as scanner output, severity scores, threat intelligence, configuration findings, and exposure data, rather than a unified view.",
+    "expected_source_url": "https://thehackernews.com/2026/07/how-pentera-turns-ai-security-workflows.html"
+  },
+  {
+    "question": "What is the primary requirement for an AI-generated finding to be considered useful in a security context?",
+    "expected_answer": "A finding must be proven before it becomes useful.",
+    "expected_source_url": "https://thehackernews.com/2026/07/ai-can-find-bugs-but-human-knowledge.html"
+  },
+  {
+    "question": "Which specific versions of Adobe ColdFusion are affected by these vulnerabilities, and to which versions should I upgrade?",
+    "expected_answer": "The vulnerabilities affect Adobe ColdFusion versions 25.9, 23.20, and all earlier versions. You should upgrade to versions newer than these to resolve the identified security issues.",
+    "expected_source_url": "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0217"
+  },
+  {
+    "question": "What are the potential security impacts of the two identified access control flaws in RabbitMQ?",
+    "expected_answer": "The flaws could allow attackers to leak OAuth client secrets, expose enterprise messaging infrastructure to takeover risks, and bypass tenant boundaries.",
+    "expected_source_url": "https://thehackernews.com/2026/07/rabbitmq-flaws-could-leak-oauth-secrets.html"
+  },
+  {
+    "question": "What specific AI implementation is the Fortune 50 company currently utilizing within their Security Operations Center (SOC)?",
+    "expected_answer": "They have connected Claude to a few detection tools to assist with specific investigations.",
+    "expected_source_url": "https://thehackernews.com/2026/07/thinking-fast-and-slow-in-soc-case-for.html"
+  },
+  {
+    "question": "Which major web browsers have committed to deprecating third-party cookies by 2024?",
+    "expected_answer": "Chrome, Firefox, and Safari have all announced they will deprecate third-party cookies.",
+    "expected_source_url": "https://developer.mozilla.org/en-US/blog/goodbye-third-party-cookies/"
+  },
+  {
+    "question": "Which versions of Rancher are affected by the legacy Project Role Template Binding reconciler vulnerability, and what is the specific security impact?",
+    "expected_answer": "Rancher versions 2.13.0 through 2.13.7 and 2.14.0 through 2.14.3 are affected. The vulnerability results in users retaining Pod Security Admission permissions that should have been revoked after an administrator removed them from a RoleTemplate, due to a missing cleanup step in the reconciler.",
+    "expected_source_url": "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0220"
+  },
+  {
+    "question": "Which specific Azure components require action from security professionals based on the provided list of vulnerabilities?",
+    "expected_answer": "According to the snippet, only Azure CycleCloud requires attention, as the vulnerabilities in the OpenAI agent and Entra provisioning have already been centrally addressed by Microsoft and require no further action.",
+    "expected_source_url": "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0233"
+  },
+  {
+    "question": "What implementation language does CrashStealer use, and how does it differ from traditional macOS information stealers?",
+    "expected_answer": "CrashStealer is implemented in native C++, whereas other information stealers are typically built on AppleScript droppers or Objective-C-based wrappers.",
+    "expected_source_url": "https://thehackernews.com/2026/07/crashstealer-macos-malware-uses.html"
+  },
+  {
+    "question": "Which specific versions of Adobe ColdFusion are affected by these vulnerabilities?",
+    "expected_answer": "Versions 25.10, 23.21, and all earlier versions are affected.",
+    "expected_source_url": "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0241"
+  },
+  {
+    "question": "What platform hosts the JavaScriptmas daily coding challenges?",
+    "expected_answer": "The challenges are hosted on Scrimba.",
+    "expected_source_url": "https://developer.mozilla.org/en-US/blog/daily-holiday-javascript-challenges/"
+  },
+  {
+    "question": "Who has MDN selected as the course partner for its official curriculum?",
+    "expected_answer": "MDN has chosen Scrimba as the course partner for the MDN Curriculum.",
+    "expected_source_url": "https://developer.mozilla.org/en-US/blog/mdn-scrimba-partnership/"
+  },
+  {
+    "question": "Which specific SAP products are affected by remote code execution (RCE) or memory corruption vulnerabilities according to this update?",
+    "expected_answer": "Memory corruption is identified in SAP NetWeaver Application Server ABAP, and remote code execution due to insecure deserialization is identified in the SAP Change and Transport System Attach Tool.",
+    "expected_source_url": "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0230"
+  },
+  {
+    "question": "Which specific Palo Alto Networks product lines and PAN-OS components are affected by the disclosed vulnerabilities?",
+    "expected_answer": "The affected products are PA-Series firewalls, VM-Series firewalls, and Panorama management platforms. The vulnerabilities impact the User-ID Authentication Portal, GlobalProtect gateway/portal, Clientless VPN modules, the IPv6 packet processing mechanism, the management web interface, and Large Scale VPN (LSVPN).",
+    "expected_source_url": "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0227"
+  },
+  {
+    "question": "What is the nature of the Windows vulnerability associated with the LegacyHive proof-of-concept?",
+    "expected_answer": "LegacyHive is a Windows User Profile Service (ProfSvc) arbitrary hive load elevation of privileges vulnerability.",
+    "expected_source_url": "https://thehackernews.com/2026/07/researcher-drops-new-windows-zero-day.html"
+  },
+  {
+    "question": "Which Siemens SICORE system versions are affected by the disclosed vulnerabilities and what specific risk does the firmware update procedure pose?",
+    "expected_answer": "Systems below version V26.20 are affected. The firmware update procedure contains a weakness in signature validation, which allows an attacker to install malicious firmware and gain persistent code execution.",
+    "expected_source_url": "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0225"
+  },
+  {
+    "question": "Which specific component of the Zimbra software is affected by this stored XSS vulnerability?",
+    "expected_answer": "The vulnerability impacts the Classic Web Client.",
+    "expected_source_url": "https://thehackernews.com/2026/07/critical-zimbra-flaw-could-let-crafted_0483473395.html"
+  },
+  {
+    "question": "What is the primary benefit of using the Streams API for fetching and transforming data in a web application?",
+    "expected_answer": "It enhances performance, responsiveness, and resource efficiency by processing data as it arrives.",
+    "expected_source_url": "https://developer.mozilla.org/en-US/blog/efficient-data-handling-with-the-streams-api/"
+  },
+  {
+    "question": "What specific action has Progress Software instructed ShareFile customers to take in response to the reported security threat?",
+    "expected_answer": "Progress Software has instructed customers to shut down the Windows servers running their Storage Zone Controllers.",
+    "expected_source_url": "https://thehackernews.com/2026/07/urgent-progress-tells-sharefile.html"
+  },
+  {
+    "question": "What is the primary method the threat actor O-UNC-066 uses to trick users into enrolling a malicious Microsoft Entra passkey?",
+    "expected_answer": "The threat actor uses voice-based fake security requests to prompt Microsoft 365 users to enroll a new Entra passkey.",
+    "expected_source_url": "https://thehackernews.com/2026/07/hackers-use-fake-microsoft-entra.html"
+  },
+  {
+    "question": "What is the primary security impact of OAuth client ID spoofing in Microsoft Entra ID environments according to the report?",
+    "expected_answer": "It allows threat actors to enumerate user accounts and validate stolen credentials without triggering a successful sign-in event that would alert defenders.",
+    "expected_source_url": "https://thehackernews.com/2026/07/oauth-client-id-spoofing-lets-attackers.html"
+  },
+  {
+    "question": "What are the primary factors that developers must balance when implementing image compression?",
+    "expected_answer": "Developers must balance the trade-offs between image quality, file size, and processing speed.",
+    "expected_source_url": "https://developer.mozilla.org/en-US/blog/image-formats-codecs-compression-tools/"
+  },
+  {
+    "question": "What is the primary security vulnerability that allows an attacker to gain control over other Shark RV2320EDUS vacuums in the same AWS region?",
+    "expected_answer": "An attacker can extract the certificate from the vacuum's flash memory, which then enables them to execute root commands on other devices within the same AWS region.",
+    "expected_source_url": "https://thehackernews.com/2026/07/unpatched-shark-vacuum-flaw-could-let.html"
+  },
+  {
+    "question": "Which specific versions of MOVEit Transfer are affected by these vulnerabilities and require patching?",
+    "expected_answer": "The affected versions are 25.0.0 through 25.0.7, 25.1.0 through 25.1.3, and any version 26.0.0 prior to 26.0.1.",
+    "expected_source_url": "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0226"
+  }
+]

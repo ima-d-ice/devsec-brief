@@ -1,0 +1,16 @@
+[
+  {
+    "user_input":"How has the default behavior for npm install scripts changed in version 12 to mitigate supply chain risks?",
+    "retrieved_contexts":[
+      "npm 12 Disables Install Scripts by Default to Reduce Supply Chain Risk\n\nGitHub has officially announced the release of npm version 12 with install scripts disabled by default, along with deprecating granular access tokens (GATs) designed to bypass two-factor authentication (2FA).",
+      "Injective Labs GitHub Compromise Pushes Wallet-Key-Stealing npm Packages\n\nUnknown threat actors compromised the Injective Labs SDK project's GitHub repository and leveraged it to publish a malicious package on the npm registry to steal cryptocurrency wallet private keys and mnemonic seed phrases.",
+      "<p><strong>Mitigation<\/strong><br \/>Users are recommended to upgrade to v3.12.2 or later. Operators who need dicomwebproxy or dicomjson in authenticated deployments must additionally configure the new dangerouslyAllowedOriginsForAuthenticatedEnvironments allowlist in app-config.js.<\/p>",
+      "<td>2026-04-14<\/td>\n<td>1<\/td>\n<td>Original Release<\/td>\n<\/tr>\n<tr>\n<td>2026-05-12<\/td>\n<td>2<\/td>\n<td>Updated the risk associated with successful exploitation of this vulnerability and revised the remediation table to a mitigation table to emphasize that multiple mitigation options are available.<\/td>\n<\/tr>\n<tr>\n<td>2026-07-09<\/td>\n<td>3<\/td>",
+      "<p><strong>Mendix Studio Pro versions before V11.12 are affected by a file parsing vulnerability that could be triggered when the application reads specially crafted malicious project during the build pipeline. This could allow an attacker to execute arbitrary code in the context of that user. Siemens has released new versions for several affected products and recommends to update to the latest",
+      "arbitrary code execution. Please refer to the Recommended Immediate Actions for information about the mitigation\/remediation.<\/strong><\/p>"
+    ],
+    "response":"According to the news excerpt from The Hacker News, npm 12 disables install scripts by default to reduce supply chain risk.",
+    "reference":"npm 12 disables install scripts by default.",
+    "faithfulness":1.0
+  }
+]

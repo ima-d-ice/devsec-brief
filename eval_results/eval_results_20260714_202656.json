@@ -1,0 +1,82 @@
+[
+  {
+    "user_input":"How has the default behavior for npm install scripts changed in version 12 to mitigate supply chain risks?",
+    "retrieved_contexts":[
+      "npm 12 Disables Install Scripts by Default to Reduce Supply Chain Risk\n\nGitHub has officially announced the release of npm version 12 with install scripts disabled by default, along with deprecating granular access tokens (GATs) designed to bypass two-factor authentication (2FA).",
+      "Compromised jscrambler 8.14.0 npm Release Drops Rust Infostealer During Install\n\nThe jscrambler npm package was compromised, and simply installing its&nbsp;8.14.0&nbsp;release runs an infostealer on your machine. Published on July 11, 2026, the malicious version carries a&nbsp;preinstall&nbsp;hook that drops and executes a native binary, one build each for Windows, macOS, and Linux.",
+      "Injective Labs GitHub Compromise Pushes Wallet-Key-Stealing npm Packages\n\nUnknown threat actors compromised the Injective Labs SDK project's GitHub repository and leveraged it to publish a malicious package on the npm registry to steal cryptocurrency wallet private keys and mnemonic seed phrases.",
+      "What Changes When Your Software Supply Chain Includes AI Writing Your Code?\n\nSoftware supply chain security was hard enough. Then AI joined the build pipeline.\n\nFor five years, \"software supply chain security\" meant one question: what's in your code? Which open-source packages, which versions, which transitive dependencies three layers deep that nobody chose on purpose?",
+      "<p><strong>Mitigation<\/strong><br \/>Users are recommended to upgrade to v3.12.2 or later. Operators who need dicomwebproxy or dicomjson in authenticated deployments must additionally configure the new dangerouslyAllowedOriginsForAuthenticatedEnvironments allowlist in app-config.js.<\/p>",
+      "<td>2026-04-14<\/td>\n<td>1<\/td>\n<td>Original Release<\/td>\n<\/tr>\n<tr>\n<td>2026-05-12<\/td>\n<td>2<\/td>\n<td>Updated the risk associated with successful exploitation of this vulnerability and revised the remediation table to a mitigation table to emphasize that multiple mitigation options are available.<\/td>\n<\/tr>\n<tr>\n<td>2026-07-09<\/td>\n<td>3<\/td>"
+    ],
+    "response":"npm 12 disables install scripts by default to reduce supply chain risk.",
+    "reference":"In npm version 12, install scripts are disabled by default (the 'allowScripts' setting defaults to off) and must now be manually opted-in to run.",
+    "context_precision":null,
+    "faithfulness":null,
+    "answer_relevancy":null
+  },
+  {
+    "user_input":"Which specific software components are affected by the vulnerabilities recently added to CISA's KEV Catalog?",
+    "retrieved_contexts":[
+      "CISA Adds 4 Actively Exploited Adobe, Joomla, and Langflow Flaws to KEV\n\nThe U.S. Cybersecurity and Infrastructure Security Agency (CISA) on Tuesday added four security flaws to its Known Exploited Vulnerabilities (KEV) catalog, citing evidence of active exploitation.\n\nThe vulnerabilities are listed below -",
+      "<p>CISA has added three new vulnerabilities to its <a href=\"https:\/\/www.cisa.gov\/known-exploited-vulnerabilities-catalog\">Known Exploited Vulnerabilities (KEV) Catalog<\/a>, based on evidence of active exploitation.<\/p>\n<ul>",
+      "<p>While BOD 26-04 applies only to FCEB agencies, CISA encourages all organizations to adopt risk-based vulnerability management and prioritize remediation of <a href=\"https:\/\/www.cisa.gov\/known-exploited-vulnerabilities-catalog\">KEV Catalog vulnerabilities<\/a>. CISA will continue to add vulnerabilities to the catalog that meet the <a",
+      "<p>While BOD 26-04 applies only to FCEB agencies, CISA encourages all organizations to adopt risk-based vulnerability management and prioritize remediation of <a href=\"https:\/\/www.cisa.gov\/known-exploited-vulnerabilities-catalog\">KEV Catalog vulnerabilities<\/a>. CISA will continue to add vulnerabilities to the catalog that meet the <a",
+      "<p>While BOD 26-04 applies only to FCEB agencies, CISA encourages all organizations to adopt risk-based vulnerability management and prioritize remediation of <a href=\"https:\/\/www.cisa.gov\/known-exploited-vulnerabilities-catalog\">KEV Catalog vulnerabilities<\/a>. CISA will continue to add vulnerabilities to the catalog that meet the <a",
+      "<p>While BOD 26-04 applies only to FCEB agencies, CISA encourages all organizations to adopt risk-based vulnerability management and prioritize remediation of <a href=\"https:\/\/www.cisa.gov\/known-exploited-vulnerabilities-catalog\">KEV Catalog vulnerabilities<\/a>. CISA will continue to add vulnerabilities to the catalog that meet the <a"
+    ],
+    "response":"Based on the provided news excerpts, the specific software components affected by the vulnerabilities recently added to CISA's KEV Catalog are:\n\n1. Adobe (no specific component mentioned)\n2. Joomla (no specific component mentioned)\n3. Langflow (no specific component mentioned)\n4. (Additional vulnerabilities mentioned in other news excerpts do not specify the affected software components.)\n\nNote that the news excerpts do not provide detailed information about the affected software components.",
+    "reference":"The affected software components are iCagenda (CVE-2026-48939) and Balbooa Forms (CVE-2026-56291).",
+    "context_precision":null,
+    "faithfulness":null,
+    "answer_relevancy":null
+  },
+  {
+    "user_input":"What is the primary method used by the threat actor O-UNC-066 to deceive Microsoft 365 users into enrolling a malicious Entra passkey?",
+    "retrieved_contexts":[
+      "Hackers Use Fake Microsoft Entra Passkey Enrollment to Gain Microsoft 365 Access\n\nA threat actor has been targeting organizations spanning multiple sectors with voice-based fake security requests that prompt Microsoft 365 users to enroll a new Entra passkey with an aim to carry out data extortion attacks.",
+      "Forg365 PhaaS Targets Microsoft 365 with Device Code and AitM Session Theft\n\nA new phishing-as-a-service (PhaaS) operation called Forg365 is using a combination of device code phishing, adversary-in-the-middle (AitM) tactics, antibot evasion, artificial intelligence (AI)-assisted lure creation, and post-compromise mailbox operations targeting Microsoft 365 accounts.",
+      "Attacker Uses Suspected AI-Generated PowerShell Script to Map Active Directory\n\nCybersecurity researchers have flagged an intrusion in which an unknown threat actor leveraged a vibe-coded PowerShell script for Active Directory (AD) enumeration.",
+      "DEBULL Tooling Abuses Microsoft Device-Code Flow to Target M365 Accounts\n\nA Microsoft 365 device code phishing campaign has been observed leveraging collaboration-themed lures to take control of victim accounts between the last week of June 2026 and into early July, per findings from ZeroBEC.",
+      "The activity cluster, tracked by Elastic Security Labs under the moniker REF6045, involves infecting victims through fake CAPTCHA verification pages that deceive them into running a malicious command that installs a PowerShell toolkit dubbed",
+      "For security leaders, the risk is clear: traditional URL checks may miss the attack while Microsoft 365 access, sensitive data, and response time"
+    ],
+    "response":"Not enough info from sources.",
+    "reference":"The threat actor uses voice-based fake security requests to prompt users to enroll a new Entra passkey.",
+    "context_precision":null,
+    "faithfulness":null,
+    "answer_relevancy":null
+  },
+  {
+    "user_input":"What is the specific security vulnerability associated with Mendix Studio Pro versions prior to V11.12, and how can it be exploited?",
+    "retrieved_contexts":[
+      "<p><strong>Mendix Studio Pro versions before V11.12 are affected by a file parsing vulnerability that could be triggered when the application reads specially crafted malicious project during the build pipeline. This could allow an attacker to execute arbitrary code in the context of that user. Siemens has released new versions for several affected products and recommends to update to the latest",
+      "<h2>Summary<\/h2>\n<p><strong>An update is available that resolves vulnerability in the product versions listed as affected in the advisory. An attacker who successfully exploited this vulnerability could cause the product to stop or corrupt memory data.<\/strong><\/p>\n<p>The following versions of XZ Utils vulnerability impacting B&amp;R Products are affected:<\/p>\n<ul>",
+      "<p>A path traversal vulnerability exists in the 7-Zip component included in MELSOFT Update Manager SW1DND-UDM-M. This vulnerability could allow a local attacker to execute arbitrary code by decompressing a specially crafted archive file using the affected product. As a result, the affected product may be impacted in ways such as information theft, information tampering, a denial-of-service",
+      "BeyondTrust Patches Critical Auth Bypass Flaws in Remote Support and PRA\n\nBeyondTrust has released updates to address two critical security flaws affecting Remote Support (RS) and Privileged Remote Access (PRA) products that, if successfully exploited, could allow unauthenticated attackers to take control of susceptible devices.\n\nThe vulnerabilities are listed below -",
+      "<td>2026-04-14<\/td>\n<td>1<\/td>\n<td>Original Release<\/td>\n<\/tr>\n<tr>\n<td>2026-05-12<\/td>\n<td>2<\/td>\n<td>Updated the risk associated with successful exploitation of this vulnerability and revised the remediation table to a mitigation table to emphasize that multiple mitigation options are available.<\/td>\n<\/tr>\n<tr>\n<td>2026-07-09<\/td>\n<td>3<\/td>",
+      "The vulnerability, tracked as CVE-2026-50656 (CVSS score: 7.8), is a privilege escalation issue in the Microsoft Malware Protection Engine (\"mpengine.dll\"), which provides scanning, detection, and cleaning capabilities for its antivirus and"
+    ],
+    "response":"A file parsing vulnerability exists in Mendix Studio Pro versions before V11.12. This vulnerability can be triggered when the application reads specially crafted malicious project during the build pipeline, allowing an attacker to execute arbitrary code in the context of that user.",
+    "reference":"The application is affected by a file parsing vulnerability that can be triggered when reading a specially crafted malicious project during the build pipeline, potentially allowing an attacker to execute arbitrary code in the context of the user.",
+    "context_precision":null,
+    "faithfulness":null,
+    "answer_relevancy":null
+  },
+  {
+    "user_input":"Which specific versions of Oracle PeopleSoft Enterprise PT PeopleTools are affected by the vulnerabilities that allow unauthenticated attackers to bypass authentication?",
+    "retrieved_contexts":[
+      "<h2>Summary<\/h2>\n<p><strong>Successful exploitation of these vulnerabilities can allow an attacker to cause unauthorized access and exposure of sensitive information when the unauthenticated attacker accesses credentials stored within firmware or system files.<\/strong><\/p>\n<p>The following versions of Schneider Electric EasyLogic T150 and Saitel DP RTU are affected:<\/p>\n<ul>",
+      "BeyondTrust Patches Critical Auth Bypass Flaws in Remote Support and PRA\n\nBeyondTrust has released updates to address two critical security flaws affecting Remote Support (RS) and Privileged Remote Access (PRA) products that, if successfully exploited, could allow unauthenticated attackers to take control of susceptible devices.\n\nThe vulnerabilities are listed below -",
+      "<div class=\"csaf-accordion-content\">\n<p>The vulnerability allows an unauthenticated actor to bypass authentication and gain access to restricted resources on the device.<\/p>\n<p><a href=\"https:\/\/www.cve.org\/CVERecord?id=CVE-2026-12352\">View CVE Details<\/a><\/p>\n<hr \/>\n<h4>Affected Products<\/h4>\n<h5>Digi International PortServer TS, Digi One SP IA<\/h5>\n<div class=\"ics-vendor-version-status\">",
+      "Oracle heeft kwetsbaarheden verholpen in Oracle PeopleSoft Enterprise PT PeopleTools (versies 8.61 en 8.62) en PeopleSoft Enterprise CS Campus Community en Student Financials (versie 9.2.38). De kwetsbaarheden in Oracle PeopleSoft Enterprise PT PeopleTools versies 8.61 en 8.62 stellen ongeauthenticeerde aanvallers met netwerktoegang via HTTP of HTTPS in staat om authenticatiecontroles te",
+      "<h2>Summary<\/h2>\n<p><strong>Successful exploitation of these vulnerabilities could allow an attacker to remotely issue commands, modify operational values, interfere with control logic, and alter device behavior without authentication or privilege enforcement.<\/strong><\/p>\n<p>The following versions of Delta Electronics DVP12SE PLC are affected:<\/p>\n<ul>",
+      "<p>CISA has added one new vulnerability to its <a href=\"https:\/\/www.cisa.gov\/known-exploited-vulnerabilities-catalog\">Known Exploited Vulnerabilities (KEV) Catalog<\/a>, based on evidence of active exploitation.<\/p>\n<ul>\n<li><a href=\"https:\/\/www.cve.org\/CVERecord?id=CVE-2026-48558\" target=\"_blank\">CVE-2026-48558<\/a> SimpleHelp Authentication Bypass Vulnerability<\/li>\n<\/ul>"
+    ],
+    "response":"According to the NCSC (NL Cyber Security) news excerpt, the affected versions of Oracle PeopleSoft Enterprise PT PeopleTools are:\n\n- Version 8.61\n- Version 8.62",
+    "reference":"The affected versions are Oracle PeopleSoft Enterprise PT PeopleTools 8.61 and 8.62.",
+    "context_precision":null,
+    "faithfulness":null,
+    "answer_relevancy":null
+  }
+]

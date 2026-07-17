@@ -6,3 +6,14 @@ python-dotenv
 groq
 fastapi
 uvicorn[standard]
+langchain-text-splitters
+aiohttp
+ragas
+datasets
+langchain-groq
+langchain-huggingface
+tabulate
+google-generativeai
+langchain-google-genai
+einops
+beautifulsoup4

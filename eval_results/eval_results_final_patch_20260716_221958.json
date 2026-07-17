@@ -1,0 +1,47 @@
+[
+  {
+    "user_input": "What are the primary factors that developers must balance when implementing image compression?",
+    "retrieved_contexts": [
+      "Image formats: Codecs and compression tools\n\nImage compression involves countless trade-offs between quality, size, and speed. In this final part of the series, we experiment with codecs, metrics, and tools to find practical ways to balance efficiency and visual fidelity.",
+      "- Willekeurig uitvoeren van code\n- Onrechtmatig verhogen van privileges\n- Uitlezen van willekeurige bestanden\n- Omzeilen van beveiligingsmaatregelen \n\nAdobe is op het moment van schrijven niet bewust van actief misbruik van bovengenoemde kwetsbaarheden.",
+      "Image formats: Pixel data from encoders to decoders\n\nFrom individual pixels to fully decoded images on your screen, raw pixel data gets transformed, compressed, and efficiently delivered. Learn about the techniques and optimizations that shrink image information without any perceivable loss in quality."
+    ],
+    "response": "Quality, size, and speed.",
+    "reference": "Developers must balance the trade-offs between image quality, file size, and processing speed.",
+    "context_precision": 0.8333333332916666,
+    "faithfulness": 1.0,
+    "answer_relevancy": 0.33769458340971675,
+    "retrieval_latency_ms": 1074.3,
+    "generation_latency_ms": 343.2
+  },
+  {
+    "user_input": "What is the primary security vulnerability that allows an attacker to gain control over other Shark RV2320EDUS vacuums in the same AWS region?",
+    "retrieved_contexts": [
+      "Unpatched Shark Vacuum Flaw Could Let Attackers Control Other Vacuums Region-Wide\n\nPull the certificate off the flash of a Shark RV2320EDUS robot vacuum, and you can run root commands on other people's Shark vacuums across the same AWS region: watch the camera, drive the robot, read the map of the house, and take the Wi-Fi password in plaintext.",
+      "The vulnerability has been described as a case of stored cross-site scripting (XSS) that could allow specially crafted emails to execute malicious scripts in a user's session. It has yet to be assigned a CVE identifier.\n\n\"The",
+      ".NET Framework: \n|----------------|------|-------------------------------------|\n| CVE-ID         | CVSS | Impact                              |\n|----------------|------|-------------------------------------|\n| CVE-2026-50524 | 7.50 | Denial-of-Service                   | \n| CVE-2026-50527 | 7.50 | Denial-of-Service                   |"
+    ],
+    "response": "The primary security vulnerability is related to pulling the certificate off the flash of a Shark RV2320EDUS robot vacuum, which allows an attacker to run root commands on other people's Shark vacuums across the same AWS region.",
+    "reference": "An attacker can extract the certificate from the vacuum's flash memory, which then enables them to execute root commands on other devices within the same AWS region.",
+    "context_precision": 0.9999999999,
+    "faithfulness": 1.0,
+    "answer_relevancy": 0.8227108541544403,
+    "retrieval_latency_ms": 2342.9,
+    "generation_latency_ms": 554.3
+  },
+  {
+    "user_input": "Which specific versions of MOVEit Transfer are affected by these vulnerabilities and require patching?",
+    "retrieved_contexts": [
+      "Progress heeft kwetsbaarheden verholpen in MOVEit Transfer, specifiek in de Custom Reports modules en de Ad Hoc module. De kwetsbaarheden betreffen meerdere versies van MOVEit Transfer, waaronder 25.0.0 tot en met 25.0.7, 25.1.0 tot en met 25.1.3, en 26.0.0 tot net voor 26.0.1. E\u00e9n kwetsbaarheid in de Custom Reports modules betreft een onjuiste neutralisatie van speciale elementen binnen data",
+      "Firefox, Chrome, Adobe, and VMware Updates Fix Multiple Critical Security Flaws\n\nMozilla has released updates to address two critical flaws in Firefox for which it warned that exploit code has been published.\n\nThe vulnerabilities are listed below -\n\n\n  CVE-2026-15718, an invalid pointer in the JavaScript: WebAssembly component\n  CVE-2026-15719, a site isolation in the DOM: Navigation component",
+      "Zoom Patches Critical Windows Flaw That Could Enable Account Takeover\n\nZoom has released security updates for a critical security flaw impacting Zoom Workplace for Windows that could facilitate account takeover.\n\nThe vulnerability, tracked as CVE-2026-53412 (CVSS score: 9.8), affects Zoom Desktop Client for Windows, Zoom VDI Client for Windows, and Zoom Meeting SDK for Windows."
+    ],
+    "response": "The affected versions of MOVEit Transfer are: \n- 25.0.0 to 25.0.7\n- 25.1.0 to 25.1.3\n- 26.0.0 up to but not including 26.0.1.",
+    "reference": "The affected versions are 25.0.0 through 25.0.7, 25.1.0 through 25.1.3, and any version 26.0.0 prior to 26.0.1.",
+    "context_precision": 0.9999999999,
+    "faithfulness": 1.0,
+    "answer_relevancy": 0.8601639024079352,
+    "retrieval_latency_ms": 1011.6,
+    "generation_latency_ms": 515.7
+  }
+]
