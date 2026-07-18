@@ -10,6 +10,8 @@ __pycache__/
 data/*.db
 data/chroma/
 logs/
+eval_results/
+scratch/
 
 # Env & secrets
 .env
