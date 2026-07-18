@@ -125,6 +125,39 @@ def _save_expansion_to_db(cache_key: str, expansions: list[str]):
 _init_expansion_cache_db()
 _load_expansion_cache()
 
+# -------------------- Entity Glossary (Intent Bridge) --------------------
+
+GLOSSARY_PATH = Path(__file__).resolve().parents[1] / "data" / "entity_glossary.json"
+_entity_glossary = {}
+
+def _load_glossary():
+    global _entity_glossary
+    try:
+        with open(GLOSSARY_PATH, 'r') as f:
+            _entity_glossary = json.load(f)
+        print(f"  [glossary] Loaded {len(_entity_glossary)} entities for query enrichment.")
+    except Exception as e:
+        print(f"  [glossary] Could not load: {e}")
+        _entity_glossary = {}
+
+_load_glossary()
+
+def get_query_variants(query: str) -> list[str]:
+    """Returns multiple query variants for Multi-Vector Retrieval."""
+    if not _entity_glossary:
+        return [query]
+        
+    query_lower = query.lower()
+    injections = []
+    
+    for entity, definition in _entity_glossary.items():
+        if entity.lower() in query_lower:
+            injections.append(str(definition))
+            
+    if injections:
+        return [query, query + " " + " ".join(injections)]
+    return [query]
+
 
 @timeit
 def expand_query_groq(query: str, n_variants: int = 2) -> list[str]:
@@ -261,13 +294,15 @@ def retrieve_super(query: str, topic: str | None = None, k: int = 6):
     # --- Phase 1: Semantic search + keyword search ---
     t0 = time.perf_counter()
 
-    original_q_emb = embed_model.encode([query]).tolist()
+    query_variants = get_query_variants(query)
+    q_embs = embed_model.encode(query_variants).tolist()
 
     def _run_original_chroma_search():
-        return collection.query(query_embeddings=original_q_emb, n_results=20, where=where)
+        return collection.query(query_embeddings=q_embs, n_results=20, where=where)
 
     def _run_keyword():
-        return search_keyword(query, limit=20, topic=topic)
+        # Use the most enriched variant for maximum term overlap in FTS
+        return search_keyword(query_variants[-1], limit=20, topic=topic)
 
     with ThreadPoolExecutor(max_workers=2) as ex:
         chroma_future = ex.submit(_run_original_chroma_search)
@@ -278,13 +313,15 @@ def retrieve_super(query: str, topic: str | None = None, k: int = 6):
 
     timings["semantic+keyword"] = time.perf_counter() - t0
 
-    # Collect original query results
+    # Collect semantic results for all query variants
     semantic_result_lists = []
-    if original_res.get("documents") and original_res["documents"][0]:
-        query_results = []
-        for doc, meta in zip(original_res["documents"][0], original_res["metadatas"][0]):
-            query_results.append({"document": doc, "metadata": meta})
-        semantic_result_lists.append(query_results)
+    if original_res.get("documents"):
+        for i in range(len(original_res["documents"])):
+            if original_res["documents"][i]:
+                query_results = []
+                for doc, meta in zip(original_res["documents"][i], original_res["metadatas"][i]):
+                    query_results.append({"document": doc, "metadata": meta})
+                semantic_result_lists.append(query_results)
 
     # --- Phase 3: RRF Merge ---
     all_lists = semantic_result_lists + [keyword_results]

@@ -20,13 +20,13 @@ from datetime import datetime
 from dotenv import load_dotenv
 load_dotenv()
 
-# Force GROQ_API_KEY_2 (key 2) to avoid rate limits
-GROQ_API_KEY = os.getenv("GROQ_API_KEY_2")
+# Force GROQ_API_KEY_4 (key 4) to avoid rate limits
+GROQ_API_KEY = os.getenv("GROQ_API_KEY_4")
 if not GROQ_API_KEY:
-    print("❌ GROQ_API_KEY_2 not set in .env")
+    print("❌ GROQ_API_KEY_4 not set in .env")
     sys.exit(1)
 
-print(f"🔑 Using GROQ_API_KEY_2 (key 2) ending in ...{GROQ_API_KEY[-6:]}")
+print(f"🔑 Using GROQ_API_KEY_4 (key 4) ending in ...{GROQ_API_KEY[-6:]}")
 
 # Initialize the groq client with key 1
 from src.groq_client import set_api_key
