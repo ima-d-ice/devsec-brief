@@ -17,7 +17,7 @@ collection = client.get_or_create_collection(
 )
 
 # SentenceTransformer model for embeddings (FREE, downloaded once)
-EMBED_MODEL_NAME = "nomic-ai/nomic-embed-text-v1.5"
+EMBED_MODEL_NAME = "BAAI/bge-m3"
 embed_model = SentenceTransformer(EMBED_MODEL_NAME, trust_remote_code=True, device="mps")
 
 

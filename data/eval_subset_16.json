@@ -1,0 +1,77 @@
+[
+  {
+    "question": "Which specific Azure components require action from security professionals based on the provided list of vulnerabilities?",
+    "expected_answer": "According to the snippet, only Azure CycleCloud requires attention, as the vulnerabilities in the OpenAI agent and Entra provisioning have already been centrally addressed by Microsoft and require no further action.",
+    "original_context_precision": 0.0
+  },
+  {
+    "question": "What is the specific user action required for a threat actor to successfully exploit the vulnerabilities mentioned in the advisory?",
+    "expected_answer": "For a successful exploit, the threat actor must deceive the victim into opening and processing a malicious source file within the development environment.",
+    "original_context_precision": 0.0
+  },
+  {
+    "question": "Welke verschillen zijn er in de vereiste toegangsniveaus voor het misbruiken van CVE-2026-15409 en CVE-2026-15410?",
+    "expected_answer": "Voor CVE-2026-15409 (SSRF) is geen authenticatie vereist, terwijl voor CVE-2026-15410 (code-injectie) een geauthenticeerde aanvaller met admin-rechten nodig is.",
+    "original_context_precision": 0.0
+  },
+  {
+    "question": "Which specific GitLab versions should be upgraded to patch the documented vulnerabilities?",
+    "expected_answer": "Users should upgrade to at least versions 18.11.7, 19.0.4, or 19.1.2 to resolve the vulnerabilities affecting versions 9.1 through 18.11.6, 19.0 through 19.0.3, and 19.1 through 19.1.1.",
+    "original_context_precision": 0.0
+  },
+  {
+    "question": "Which specific types of assets within the Balochistan Police infrastructure were compromised by the threat actors?",
+    "expected_answer": "The compromised assets included servers hosting web applications that manage police and citizen data, such as criminal and [data].",
+    "original_context_precision": 0.0
+  },
+  {
+    "question": "What specific metadata does the proposed Meta AI system collect and log in association with a user's emotional state?",
+    "expected_answer": "The system logs the time, the user's location, the user's current activity, and how the user was interacting with their phone.",
+    "original_context_precision": 0.0
+  },
+  {
+    "question": "Which specific conditions must be met to exploit CVE-2026-59841 in the FortiSIEM Windows Agent?",
+    "expected_answer": "The attacker must be on the same local network and the 'Supers Override' feature must be active.",
+    "original_context_precision": 0.9999999999
+  },
+  {
+    "question": "What is the primary security vulnerability that allows an attacker to gain control over other Shark RV2320EDUS vacuums in the same AWS region?",
+    "expected_answer": "An attacker can extract the certificate from the vacuum's flash memory, which then enables them to execute root commands on other devices within the same AWS region.",
+    "original_context_precision": 0.9999999999
+  },
+  {
+    "question": "What is the primary objective of the transformation and compression techniques discussed in the article regarding raw pixel data?",
+    "expected_answer": "The objective is to shrink image information for efficient delivery without any perceivable loss in quality.",
+    "original_context_precision": 0.99999999995
+  },
+  {
+    "question": "What is the primary method the threat actor O-UNC-066 uses to trick users into enrolling a malicious Microsoft Entra passkey?",
+    "expected_answer": "The threat actor uses voice-based fake security requests to prompt Microsoft 365 users to enroll a new Entra passkey.",
+    "original_context_precision": 0.9999999999
+  },
+  {
+    "question": "Who has MDN selected as the course partner for its official curriculum?",
+    "expected_answer": "MDN has chosen Scrimba as the course partner for the MDN Curriculum.",
+    "original_context_precision": 0.9999999999
+  },
+  {
+    "question": "Which major web browsers have committed to deprecating third-party cookies by 2024?",
+    "expected_answer": "Chrome, Firefox, and Safari have all announced they will deprecate third-party cookies.",
+    "original_context_precision": 0.9999999999
+  },
+  {
+    "question": "What is the nature of the Windows vulnerability associated with the LegacyHive proof-of-concept?",
+    "expected_answer": "LegacyHive is a Windows User Profile Service (ProfSvc) arbitrary hive load elevation of privileges vulnerability.",
+    "original_context_precision": 0.49999999995
+  },
+  {
+    "question": "Which specific component of the Zimbra software is affected by this stored XSS vulnerability?",
+    "expected_answer": "The vulnerability impacts the Classic Web Client.",
+    "original_context_precision": 0.3333333333
+  },
+  {
+    "question": "Which specific versions of Adobe ColdFusion are affected by these vulnerabilities?",
+    "expected_answer": "Versions 25.10, 23.21, and all earlier versions are affected.",
+    "original_context_precision": 0.49999999995
+  }
+]

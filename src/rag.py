@@ -23,7 +23,7 @@ from dateutil import parser
 load_dotenv()
 
 # fast + good model on Groq
-GROQ_MODEL = "llama-3.1-8b-instant"
+GROQ_MODEL = "llama-3.3-70b-versatile"
 # you can later try: "llama-3.1-8b-instant"
 
 # -------------------- Embeddings & Chroma setup --------------------
@@ -35,12 +35,12 @@ collection = chroma_client.get_or_create_collection(
     metadata={"hnsw:space": "cosine"},
 )
 
-EMBED_MODEL_NAME = "nomic-ai/nomic-embed-text-v1.5"
+EMBED_MODEL_NAME = "BAAI/bge-m3"
 embed_model = SentenceTransformer(EMBED_MODEL_NAME, trust_remote_code=True, device="mps")
 
 # NEW: Initialize Cross-Encoder for reranking (Multilingual mMARCO model)
 RERANKER_MODEL_NAME = "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1"
-reranker_model = CrossEncoder(RERANKER_MODEL_NAME)
+reranker_model = CrossEncoder(RERANKER_MODEL_NAME, device="mps")
 
 # Shared constant: number of documents fed to the LLM context.
 # Used by build_context() and api.py to ensure returned sources match what the model reads.
@@ -217,10 +217,8 @@ def rrf_merge(*result_lists: list[dict], pool_size: int = 20) -> dict:
                 rrf_scores[url] = 0.0
                 doc_data[url] = item
             else:
-                # If we've seen this URL, keep the version with the longest document text
-                # This ensures we don't throw away a full FTS article in favor of a small Chroma chunk
-                if len(item["document"]) > len(doc_data[url]["document"]):
-                    doc_data[url] = item
+                # Removed FTS5 override bug to prevent context bloat
+                pass
                 
             # Base RRF score
             base_score = 1 / (60 + rank + 1)
@@ -253,40 +251,32 @@ def rrf_merge(*result_lists: list[dict], pool_size: int = 20) -> dict:
 def retrieve_super(query: str, topic: str | None = None, k: int = 6):
     """
     HYBRID SEARCH (optimized):
-      1. Expand query via Groq  ┐
-      2. Original Chroma search ┘  (parallel — overlaps ~600ms Groq wait)
-      3. Batch-encode expansion queries (single encode() call)
-      4. Expansion Chroma searches + keyword search (all parallel)
-      5. RRF merge
-      6. CrossEncoder rerank → top K
+      1. Single pass dense semantic search with BAAI/bge-m3 + keyword search
+      2. RRF merge
+      3. CrossEncoder rerank → top K
     """
     timings = {}
     where = {"category": topic} if topic else None
 
-    # --- Phase 1: Parallel expand + original semantic search ---
-    # Overlaps the ~600ms Groq network wait with the ~80ms original Chroma search.
+    # --- Phase 1: Semantic search + keyword search ---
     t0 = time.perf_counter()
 
-    # DO NOT put embed_model.encode inside the thread; HuggingFace tokenizers can deadlock in threads
     original_q_emb = embed_model.encode([query]).tolist()
 
     def _run_original_chroma_search():
-        """Run the original query's semantic search in a thread."""
         return collection.query(query_embeddings=original_q_emb, n_results=20, where=where)
 
+    def _run_keyword():
+        return search_keyword(query, limit=20, topic=topic)
+
     with ThreadPoolExecutor(max_workers=2) as ex:
-        expand_future = ex.submit(expand_query_groq, query, 2)
-        original_future = ex.submit(_run_original_chroma_search)
+        chroma_future = ex.submit(_run_original_chroma_search)
+        keyword_future = ex.submit(_run_keyword)
+        
+        original_res = chroma_future.result()
+        keyword_results = keyword_future.result()
 
-        original_res = original_future.result()
-
-        try:
-            expansions = expand_future.result()
-        except Exception as e:
-            print("Query expansion failed, using original query only:", e)
-            expansions = []
-
-    timings["expand+original"] = time.perf_counter() - t0
+    timings["semantic+keyword"] = time.perf_counter() - t0
 
     # Collect original query results
     semantic_result_lists = []
@@ -295,43 +285,6 @@ def retrieve_super(query: str, topic: str | None = None, k: int = 6):
         for doc, meta in zip(original_res["documents"][0], original_res["metadatas"][0]):
             query_results.append({"document": doc, "metadata": meta})
         semantic_result_lists.append(query_results)
-
-    # --- Phase 2: Batch-encode expansions + parallel Chroma queries + keyword search ---
-    # Instead of 2 separate encode() calls + 2 sequential Chroma queries + 1 keyword search,
-    # we batch-encode in one call then fan out all searches concurrently.
-    t1 = time.perf_counter()
-
-    if expansions:
-        # Single batched encode for all expansion queries (saves ~30-50ms vs individual calls)
-        expansion_embeddings = embed_model.encode(expansions).tolist()
-
-        def _run_expansion_chroma(emb):
-            return collection.query(query_embeddings=[emb], n_results=20, where=where)
-
-        def _run_keyword():
-            return search_keyword(query, limit=20, topic=topic)
-
-        # Fan out: all expansion Chroma queries + keyword search run concurrently
-        with ThreadPoolExecutor(max_workers=len(expansions) + 1) as ex:
-            chroma_futures = [ex.submit(_run_expansion_chroma, emb) for emb in expansion_embeddings]
-            keyword_future = ex.submit(_run_keyword)
-
-            # Collect expansion Chroma results
-            for future in chroma_futures:
-                res = future.result()
-                if not res.get("documents") or not res["documents"][0]:
-                    continue
-                query_results = []
-                for doc, meta in zip(res["documents"][0], res["metadatas"][0]):
-                    query_results.append({"document": doc, "metadata": meta})
-                semantic_result_lists.append(query_results)
-
-            keyword_results = keyword_future.result()
-    else:
-        # No expansions — just run keyword search
-        keyword_results = search_keyword(query, limit=20, topic=topic)
-
-    timings["expansion_semantic+keyword"] = time.perf_counter() - t1
 
     # --- Phase 3: RRF Merge ---
     all_lists = semantic_result_lists + [keyword_results]

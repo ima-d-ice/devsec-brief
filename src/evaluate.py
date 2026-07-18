@@ -34,6 +34,7 @@ parser.add_argument("--start", type=int, default=0, help="Start index (inclusive
 parser.add_argument("--end", type=int, default=None, help="End index (exclusive)")
 parser.add_argument("--api_key_env", type=str, default="GROQ_API_KEY", help="Env var name for the Groq API key")
 parser.add_argument("--output_tag", type=str, default=None, help="Tag for the output filename")
+parser.add_argument("--dataset", type=str, default="data/evaluation_dataset.json", help="Path to the dataset to evaluate")
 args = parser.parse_args()
 
 GROQ_API_KEY = os.getenv(args.api_key_env)
@@ -43,7 +44,7 @@ if not GROQ_API_KEY:
 # CRITICAL: Switch the generation client to use THIS lane's API key
 from src.groq_client import set_api_key
 set_api_key(GROQ_API_KEY)
-DATASET_PATH = Path(__file__).resolve().parents[1] / "data" / "evaluation_dataset.json"
+DATASET_PATH = Path(__file__).resolve().parents[1] / args.dataset
 RESULTS_DIR = Path(__file__).resolve().parents[1] / "eval_results"
 RESULTS_DIR.mkdir(exist_ok=True)
 
@@ -182,6 +183,8 @@ def run_evaluation():
             continue
         
         # Measure generation latency
+        print("  [Rate Limiter] Sleeping 5s before 70B generation to respect TPM limit...")
+        time.sleep(5)
         t_gen_start = time.perf_counter()
         answer = generate_answer_from_context(context_str, question)
         generation_ms = (time.perf_counter() - t_gen_start) * 1000
@@ -207,7 +210,7 @@ def run_evaluation():
             print("  -> Evaluating with RAGAS...")
             result = evaluate(
                 hf_dataset,
-                metrics=[context_precision, faithfulness, answer_relevancy],
+                metrics=[context_precision],
                 llm=judge_llm,
                 embeddings=judge_embeddings,
                 raise_exceptions=True,
