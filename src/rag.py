@@ -11,6 +11,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 import chromadb
 from sentence_transformers import SentenceTransformer, CrossEncoder
+import numpy as np
 from dotenv import load_dotenv
 from src.groq_client import safe_groq_call
 from src.db import search_keyword
@@ -36,11 +37,37 @@ collection = chroma_client.get_or_create_collection(
 )
 
 EMBED_MODEL_NAME = "BAAI/bge-m3"
-embed_model = SentenceTransformer(EMBED_MODEL_NAME, trust_remote_code=True, device="mps")
+ONNX_EMBED_PATH = Path(__file__).resolve().parents[1] / "data" / "onnx_st" / "bge-m3-onnx"
+if ONNX_EMBED_PATH.exists():
+    print(f"Loading INT8 ONNX Embedding model from {ONNX_EMBED_PATH}...")
+    embed_model = SentenceTransformer(
+        str(ONNX_EMBED_PATH),
+        backend="onnx",
+        model_kwargs={
+            "file_name": "onnx/model_qint8_arm64.onnx",
+            "provider": "CPUExecutionProvider"
+        }
+    )
+else:
+    print("Loading Embedding model (MPS)...")
+    embed_model = SentenceTransformer(EMBED_MODEL_NAME, trust_remote_code=True, device="mps")
 
-# NEW: Initialize Cross-Encoder for reranking (Multilingual mMARCO model)
+# Initialize Cross-Encoder for reranking
 RERANKER_MODEL_NAME = "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1"
-reranker_model = CrossEncoder(RERANKER_MODEL_NAME, device="mps")
+ONNX_RERANK_PATH = Path(__file__).resolve().parents[1] / "data" / "onnx_st" / "mmarco-onnx"
+if ONNX_RERANK_PATH.exists():
+    print(f"Loading INT8 ONNX CrossEncoder from {ONNX_RERANK_PATH}...")
+    reranker_model = CrossEncoder(
+        str(ONNX_RERANK_PATH),
+        backend="onnx",
+        model_kwargs={
+            "file_name": "onnx/model_qint8_arm64.onnx",
+            "provider": "CPUExecutionProvider"
+        }
+    )
+else:
+    print("Loading CrossEncoder natively...")
+    reranker_model = CrossEncoder(RERANKER_MODEL_NAME, device="mps")
 
 # Shared constant: number of documents fed to the LLM context.
 # Used by build_context() and api.py to ensure returned sources match what the model reads.
@@ -67,63 +94,7 @@ def timeit(func):
     return wrapper
 
 
-# -------------------- Query expansion via Groq --------------------
-
-# Two-tier expansion cache:
-#   L1: in-memory dict (instant, lost on restart)
-#   L2: SQLite persistent (survives restarts, ~0.1ms lookup)
-# Repeat queries skip the ~600ms Groq round-trip entirely.
-_expansion_cache: dict[str, list[str]] = {}
-
-EXPANSION_CACHE_DB = Path(__file__).resolve().parents[1] / "data" / "expansion_cache.db"
-
-
-def _init_expansion_cache_db():
-    """Create the persistent expansion cache table if it doesn't exist."""
-    conn = sqlite3.connect(EXPANSION_CACHE_DB)
-    conn.execute("""
-        CREATE TABLE IF NOT EXISTS expansion_cache (
-            key TEXT PRIMARY KEY,
-            expansions TEXT NOT NULL,
-            created_at TEXT DEFAULT CURRENT_TIMESTAMP
-        )
-    """)
-    conn.commit()
-    conn.close()
-
-
-def _load_expansion_cache():
-    """Preload all cached expansions from SQLite into the in-memory L1 cache."""
-    global _expansion_cache
-    try:
-        conn = sqlite3.connect(EXPANSION_CACHE_DB)
-        rows = conn.execute("SELECT key, expansions FROM expansion_cache").fetchall()
-        conn.close()
-        _expansion_cache = {row[0]: json.loads(row[1]) for row in rows}
-        if _expansion_cache:
-            print(f"  [expansion cache] Loaded {len(_expansion_cache)} entries from disk")
-    except Exception as e:
-        print(f"  [expansion cache] Could not load from disk: {e}")
-        _expansion_cache = {}
-
-
-def _save_expansion_to_db(cache_key: str, expansions: list[str]):
-    """Persist a new expansion to the SQLite L2 cache."""
-    try:
-        conn = sqlite3.connect(EXPANSION_CACHE_DB)
-        conn.execute(
-            "INSERT OR REPLACE INTO expansion_cache (key, expansions) VALUES (?, ?)",
-            (cache_key, json.dumps(expansions)),
-        )
-        conn.commit()
-        conn.close()
-    except Exception as e:
-        print(f"  [expansion cache] Could not save to disk: {e}")
-
-
-# Initialize persistent cache on module load
-_init_expansion_cache_db()
-_load_expansion_cache()
+# No LLM expansion cache needed; get_query_variants strictly uses the entity glossary.
 
 # -------------------- Entity Glossary (Intent Bridge) --------------------
 
@@ -157,50 +128,6 @@ def get_query_variants(query: str) -> list[str]:
     if injections:
         return [query, query + " " + " ".join(injections)]
     return [query]
-
-
-@timeit
-def expand_query_groq(query: str, n_variants: int = 2) -> list[str]:
-    """
-    Use Groq LLM to generate a few alternative search queries
-    for better recall (multi-query retrieval).
-    Results are cached in two tiers:
-      L1: in-memory dict (instant)
-      L2: SQLite on disk (survives restarts)
-    """
-    cache_key = f"{query}::{n_variants}"
-    if cache_key in _expansion_cache:
-        print(f"  [expansion cache hit] skipping Groq call")
-        return _expansion_cache[cache_key]
-
-    system_prompt = (
-        "You rewrite search queries for a developer & cybersecurity news search engine. "
-        "Generate alternative phrasings and closely related queries that would help find "
-        "relevant articles about the same topic."
-    )
-    user_prompt = (
-        f"Original query: {query}\n\n"
-        f"Generate {n_variants} alternative phrasings or closely related queries.\n"
-        f"Return ONLY the queries, one per line, no bullets, no numbering."
-    )
-
-    completion = safe_groq_call(
-        model=GROQ_MODEL,
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_prompt},
-        ],
-        temperature=0.4,
-        max_tokens=128,
-    )
-
-    text = completion.choices[0].message.content or ""
-    variants = [line.strip() for line in text.splitlines() if line.strip()]
-    result = variants[:n_variants]
-    # Save to both L1 (memory) and L2 (disk)
-    _expansion_cache[cache_key] = result
-    _save_expansion_to_db(cache_key, result)
-    return result
 
 
 # -------------------- Super retrieval with Chroma (multi-query) --------------------
@@ -292,10 +219,10 @@ def retrieve_super(query: str, topic: str | None = None, k: int = 6):
     where = {"category": topic} if topic else None
 
     # --- Phase 1: Semantic search + keyword search ---
-    t0 = time.perf_counter()
-
+    t_emb = time.perf_counter()
     query_variants = get_query_variants(query)
-    q_embs = embed_model.encode(query_variants).tolist()
+    q_embs = embed_model.encode(query_variants, batch_size=len(query_variants)).tolist()
+    print(f"     [debug] get_query_variants & embed_model.encode took {time.perf_counter() - t_emb:.4f}s")
 
     def _run_original_chroma_search():
         return collection.query(query_embeddings=q_embs, n_results=20, where=where)
@@ -311,7 +238,7 @@ def retrieve_super(query: str, topic: str | None = None, k: int = 6):
         original_res = chroma_future.result()
         keyword_results = keyword_future.result()
 
-    timings["semantic+keyword"] = time.perf_counter() - t0
+    timings["semantic+keyword"] = time.perf_counter() - t_emb
 
     # Collect semantic results for all query variants
     semantic_result_lists = []

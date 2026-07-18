@@ -20,13 +20,13 @@ from datetime import datetime
 from dotenv import load_dotenv
 load_dotenv()
 
-# Force GROQ_API_KEY_4 (key 4) to avoid rate limits
-GROQ_API_KEY = os.getenv("GROQ_API_KEY_4")
+# Force GROQ_API_KEY_3 (key 3) to avoid rate limits
+GROQ_API_KEY = os.getenv("GROQ_API_KEY_3")
 if not GROQ_API_KEY:
-    print("❌ GROQ_API_KEY_4 not set in .env")
+    print("❌ GROQ_API_KEY_3 not set in .env")
     sys.exit(1)
 
-print(f"🔑 Using GROQ_API_KEY_4 (key 4) ending in ...{GROQ_API_KEY[-6:]}")
+print(f"🔑 Using GROQ_API_KEY_3 (key 3) ending in ...{GROQ_API_KEY[-6:]}")
 
 # Initialize the groq client with key 1
 from src.groq_client import set_api_key
@@ -34,15 +34,14 @@ set_api_key(GROQ_API_KEY)
 
 # Import RAG components
 from src.rag import (
-    retrieve_super, build_context, generate_answer_from_context,
-    _expansion_cache,
+    retrieve_super, build_context, generate_answer_from_context
 )
 
 # ── Config ──────────────────────────────────────────────────────────────
 
 DATASET_PATH = Path(__file__).resolve().parent / "data" / "evaluation_dataset.json"
 RESULTS_DIR = Path(__file__).resolve().parent / "eval_results"
-SAMPLE_SIZE = 50  # Number of questions to benchmark
+SAMPLE_SIZE = 10  # Number of questions to benchmark
 
 # ── Helpers ─────────────────────────────────────────────────────────────
 
@@ -110,17 +109,16 @@ def main():
         short_q = question[:80] + "..." if len(question) > 80 else question
         print(f"\n[{i+1}/{len(sample)}] {short_q}")
 
-        # ── COLD RUN: Clear expansion cache ──
-        _expansion_cache.clear()
-        print("  🧊 Cold run (no cache)...")
+        # ── RUN 1: Cold run ──
+        print("  🧊 Run 1 (Cold cache)...")
         cold_timings, _ = measure_pipeline_stages(question)
         cold_runs.append(cold_timings)
         print(f"     Total: {fmt_ms(cold_timings['total'])}  |  "
               f"Retrieval: {fmt_ms(cold_timings['retrieval'])}  |  "
               f"Generation: {fmt_ms(cold_timings['llm_generation'])}")
 
-        # ── WARM RUN: Cache is now populated ──
-        print("  🔥 Warm run (cached)...")
+        # ── RUN 2: Warm run ──
+        print("  🔥 Run 2 (Warm cache)...")
         warm_timings, _ = measure_pipeline_stages(question)
         warm_runs.append(warm_timings)
         print(f"     Total: {fmt_ms(warm_timings['total'])}  |  "
@@ -143,7 +141,7 @@ def main():
     print("─" * len(header))
 
     results_data = {"benchmark_config": {
-        "api_key": "GROQ_API_KEY_2 (key 2)",
+        "api_key": "GROQ_API_KEY_3 (key 3)",
         "api_key_suffix": GROQ_API_KEY[-6:],
         "sample_size": len(sample),
         "timestamp": datetime.now().isoformat(),

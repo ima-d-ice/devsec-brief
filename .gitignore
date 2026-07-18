@@ -30,3 +30,4 @@ npm-debug.log*
 # OS/cache
 .DS_Store
 Thumbs.db
+data/onnx_st/

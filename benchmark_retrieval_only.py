@@ -34,8 +34,7 @@ set_api_key(GROQ_API_KEY)
 
 # Import RAG components
 from src.rag import (
-    retrieve_super, build_context, generate_answer_from_context,
-    _expansion_cache,
+    retrieve_super, build_context, generate_answer_from_context
 )
 
 # ── Config ──────────────────────────────────────────────────────────────
@@ -110,17 +109,16 @@ def main():
         short_q = question[:80] + "..." if len(question) > 80 else question
         print(f"\n[{i+1}/{len(sample)}] {short_q}")
 
-        # ── COLD RUN: Clear expansion cache ──
-        _expansion_cache.clear()
-        print("  🧊 Cold run (no cache)...")
+        # ── RUN 1: Cold run ──
+        print("  🧊 Run 1 (Cold cache)...")
         cold_timings, _ = measure_pipeline_stages(question)
         cold_runs.append(cold_timings)
         print(f"     Total: {fmt_ms(cold_timings['total'])}  |  "
               f"Retrieval: {fmt_ms(cold_timings['retrieval'])}  |  "
               f"Generation: {fmt_ms(cold_timings['llm_generation'])}")
 
-        # ── WARM RUN: Cache is now populated ──
-        print("  🔥 Warm run (cached)...")
+        # ── RUN 2: Warm run ──
+        print("  🔥 Run 2 (Warm cache)...")
         warm_timings, _ = measure_pipeline_stages(question)
         warm_runs.append(warm_timings)
         print(f"     Total: {fmt_ms(warm_timings['total'])}  |  "
