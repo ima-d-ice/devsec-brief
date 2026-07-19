@@ -9,17 +9,17 @@ The retrieval stack is specifically engineered for **zero GPU memory footprint**
   * **Automated Feed Ingestion**: Fetches news from sources like Hacker News, MDN, web.dev, NCSC, CISA, and The Hacker News.
   * **Zero-VRAM Hybrid Retrieval**: Uses a hybrid approach (Semantic embeddings + Keyword routing via `entity_glossary.json`) executed through blazing fast INT8 ONNX binaries on the CPU.
   * **Advanced Reranking**: Re-scores candidate documents using an ONNX-optimized cross-encoder (`mMARCO`) for maximum accuracy.
-  * **AI-Powered Answers**: Utilizes **Groq** (Llama 3.1) to synthesize high-speed answers from the retrieved news snippets.
+  * **AI-Powered Answers**: Utilizes **Groq** (Llama 3.3 70B) to synthesize high-speed answers from the retrieved news snippets.
   * **API-First**: A FastAPI backend designed for robust integration with frontends and multi-agent systems.
 
 ## 🛠️ Tech Stack
 
   * **Language**: Python 3.12+
-  * **LLM Provider**: [Groq](https://groq.com/) (`llama-3.1-8b-instant`)
+  * **LLM Provider**: [Groq](https://groq.com/) (`llama-3.3-70b-versatile`)
   * **Vector Database**: [ChromaDB](https://www.trychroma.com/) (Persistent local storage)
   * **Embeddings & Reranking**: 
     * `BAAI/bge-m3` (Embeddings)
-    * `cross-encoder/mmarco` (Reranker)
+    * `cross-encoder/mmarco-mMiniLMv2-L12-H384-v1` (Reranker)
     * *Both exported to 8-bit Integer (INT8) ONNX models running on the CPUExecutionProvider.*
   * **Backend Framework**: FastAPI
   * **Database**: SQLite (for raw article storage)
