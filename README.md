@@ -1,4 +1,4 @@
-# 🛡️ DevSec Brief
+# DevSec Brief
 
 <div align="center">
   <img src="https://img.shields.io/badge/Python-3.12+-blue.svg" alt="Python 3.12+">
@@ -16,7 +16,7 @@ It autonomously aggregates real-time intelligence from top-tier RSS feeds (Hacke
 
 ---
 
-## ✨ Enterprise-Grade Architecture
+## Enterprise-Grade Architecture
 
 DevSec Brief is engineered to run **entirely on standard CPU cores** for its retrieval pipeline, maintaining a **Zero-VRAM footprint**. This allows you to deploy the system cheaply on generic cloud instances or locally alongside heavy multi-agent GPU workloads.
 
@@ -25,7 +25,7 @@ DevSec Brief is engineered to run **entirely on standard CPU cores** for its ret
 - **Cross-Encoder Reranking:** Candidate documents are rigorously re-scored using an ONNX-optimized cross-encoder (`mMARCO`) to eliminate hallucinations.
 - **Sub-Second TTFT:** Blazing fast Time-To-First-Token (~800ms) achieved via SSE Streaming endpoints and Groq's LPU inference architecture.
 
-### 🏗️ System Architecture
+### System Architecture
 
 ```mermaid
 graph TD;
@@ -48,7 +48,7 @@ graph TD;
 
 ---
 
-## 🚀 Quickstart (Docker)
+## Quickstart (Docker)
 
 The absolute easiest way to deploy the system is via Docker. The container handles OS dependencies, ONNX compilation, and automatic database provisioning out of the box.
 
@@ -76,7 +76,7 @@ docker compose up --build -d
 
 ---
 
-## 📡 API Reference
+## API Reference
 
 The engine exposes a high-performance REST API running by default on `http://127.0.0.1:8000`.
 
@@ -102,7 +102,7 @@ curl -N -X POST "http://127.0.0.1:8000/ask/stream" \
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```text
 devsec-brief/
@@ -124,7 +124,7 @@ devsec-brief/
 
 ---
 
-## 📊 Benchmarks
+## Benchmarks
 
 When deployed natively inside the Docker container (running on macOS Apple Silicon / Linux equivalents), the CPU-only retrieval pipeline yields the following latencies:
 
