@@ -133,7 +133,4 @@ When deployed natively inside the Docker container (running on macOS Apple Silic
 - **Cross-Encoder Reranking:** ~400ms
 - **Average Total Retrieval:** `0.61s`
 
----
 
-## 📜 License
-Distributed under the MIT License. See `LICENSE` for more information.
