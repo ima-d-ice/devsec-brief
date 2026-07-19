@@ -17,3 +17,4 @@ google-generativeai
 langchain-google-genai
 einops
 beautifulsoup4
+optimum[onnxruntime]

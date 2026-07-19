@@ -4,8 +4,6 @@ from pathlib import Path
 from sentence_transformers import SentenceTransformer
 from sentence_transformers.backend.quantize import export_dynamic_quantized_onnx_model
 
-# Force temporary files to be created in our working directory
-# rather than /var/folders/ which may have hidden space limits
 tmp_dir = Path(__file__).resolve().parents[1] / "data" / "onnx_tmp"
 tmp_dir.mkdir(parents=True, exist_ok=True)
 os.environ["TMPDIR"] = str(tmp_dir)
@@ -19,14 +17,12 @@ def main():
     embed_path = onnx_dir / "bge-m3-onnx"
     if not embed_path.exists():
         print("Exporting and quantizing BAAI/bge-m3 to ONNX...")
-        # Workaround for HF Cache symlink issue: Save PT model locally, then load with ONNX backend
         pt_model = SentenceTransformer("BAAI/bge-m3")
         pt_model.save("tmp_bge_m3")
         
         print("Loading local PyTorch model into ONNX backend...")
         model = SentenceTransformer("tmp_bge_m3", backend="onnx")
         
-        # For M1/Apple Silicon CPU, arm64 quantization is recommended
         print("Running ONNX INT8 Quantization...")
         export_dynamic_quantized_onnx_model(
             model,
@@ -35,7 +31,6 @@ def main():
         )
         print(f"Embedding model successfully quantized and saved to {embed_path}")
         
-        # Cleanup
         shutil.rmtree("tmp_bge_m3", ignore_errors=True)
     else:
         print(f"ONNX embedding model already exists at {embed_path}")
@@ -46,7 +41,6 @@ def main():
         try:
             from sentence_transformers.cross_encoder import CrossEncoder
             
-            # Same workaround for cross-encoder
             pt_ce = CrossEncoder("cross-encoder/mmarco-mMiniLMv2-L12-H384-v1")
             pt_ce.save("tmp_mmarco")
             ce_model = CrossEncoder("tmp_mmarco", backend="onnx")
@@ -65,7 +59,6 @@ def main():
     else:
         print(f"ONNX reranker already exists at {rerank_path}")
 
-    # Cleanup temp directory
     shutil.rmtree(tmp_dir, ignore_errors=True)
 
 if __name__ == "__main__":

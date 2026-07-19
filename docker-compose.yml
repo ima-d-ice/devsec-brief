@@ -1,0 +1,15 @@
+services:
+  devsec-brief-api:
+    build: .
+    container_name: devsec-brief-api
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount the data directory so DB, Chroma, and ONNX models persist
+      - ./data:/app/data
+    env_file:
+      - .env
+    environment:
+      # Expose environment variables if needed
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped

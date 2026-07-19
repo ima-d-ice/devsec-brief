@@ -59,7 +59,6 @@ def main():
     articles = get_articles()
     print(f"Loaded {len(articles)} articles.")
     
-    # We will process in small batches to not exceed context length and TPM limits
     batch_size = 3
     glossary = {}
     
@@ -73,7 +72,6 @@ def main():
         
     print(f"Extracted {len(glossary)} total entities.")
     
-    # Save to JSON
     with open(GLOSSARY_PATH, 'w') as f:
         json.dump(glossary, f, indent=2)
     print(f"Saved to {GLOSSARY_PATH}")

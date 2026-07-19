@@ -1,4 +1,3 @@
-# src/fetch_feeds.py
 import random
 import time
 import asyncio
@@ -15,7 +14,6 @@ def strip_html(html_text: str) -> str:
     except Exception:
         return str(html_text)
 
-# A mix of modern Windows, Mac, Chrome, Firefox, and Safari user agents
 USER_AGENTS = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:121.0) Gecko/20100101 Firefox/121.0",
@@ -26,7 +24,6 @@ USER_AGENTS = [
 
 
 FEEDS = [
-    # Web Dev / General Tech
     {
         "name": "Hacker News",
         "url": "https://news.ycombinator.com/rss",
@@ -43,7 +40,6 @@ FEEDS = [
         "category": "webdev",
     },
 
-    #  Cybersecurity
     {
         "name": "NCSC (NL Cyber Security)",
         "url": "https://advisories.ncsc.nl/rss/advisories",
@@ -135,7 +131,6 @@ async def fetch_single_feed_async(session: aiohttp.ClientSession, feed: dict) ->
     return new_inserted
 
 async def fetch_all_feeds_async() -> int:
-    # Disable SSL verification to fix macOS certificate errors for public RSS feeds
     connector = aiohttp.TCPConnector(ssl=False)
     async with aiohttp.ClientSession(connector=connector) as session:
         tasks = [fetch_single_feed_async(session, feed) for feed in FEEDS]

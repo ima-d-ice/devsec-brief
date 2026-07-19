@@ -1,4 +1,3 @@
-# src/rag.py
 
 from pathlib import Path
 import os
@@ -19,15 +18,11 @@ from datetime import datetime, timezone
 from typing import Generator
 from dateutil import parser
 
-# -------------------- Env & Groq setup --------------------
 
 load_dotenv()
 
-# fast + good model on Groq
 GROQ_MODEL = "llama-3.3-70b-versatile"
-# you can later try: "llama-3.1-8b-instant"
 
-# -------------------- Embeddings & Chroma setup --------------------
 
 CHROMA_PATH = Path(__file__).resolve().parents[1] / "data" / "chroma"
 chroma_client = chromadb.PersistentClient(path=str(CHROMA_PATH))
@@ -52,7 +47,6 @@ else:
     print("Loading Embedding model (MPS)...")
     embed_model = SentenceTransformer(EMBED_MODEL_NAME, trust_remote_code=True, device="mps")
 
-# Initialize Cross-Encoder for reranking
 RERANKER_MODEL_NAME = "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1"
 ONNX_RERANK_PATH = Path(__file__).resolve().parents[1] / "data" / "onnx_st" / "mmarco-onnx"
 if ONNX_RERANK_PATH.exists():
@@ -69,17 +63,11 @@ else:
     print("Loading CrossEncoder natively...")
     reranker_model = CrossEncoder(RERANKER_MODEL_NAME, device="mps")
 
-# Shared constant: number of documents fed to the LLM context.
-# Used by build_context() and api.py to ensure returned sources match what the model reads.
 CONTEXT_DOC_LIMIT = 3
 
-# Max characters to pass to the CrossEncoder per document.
-# CrossEncoders typically have a 512-token limit (~2000 chars). Using 1000 chars
-# keeps the most relevant opening content and avoids silent truncation.
 CROSSENCODER_MAX_CHARS = 1000
 
 
-# -------------------- Latency Measurement --------------------
 
 
 def timeit(func):
@@ -94,9 +82,7 @@ def timeit(func):
     return wrapper
 
 
-# No LLM expansion cache needed; get_query_variants strictly uses the entity glossary.
 
-# -------------------- Entity Glossary (Intent Bridge) --------------------
 
 GLOSSARY_PATH = Path(__file__).resolve().parents[1] / "data" / "entity_glossary.json"
 _entity_glossary = {}
@@ -130,10 +116,8 @@ def get_query_variants(query: str) -> list[str]:
     return [query]
 
 
-# -------------------- Super retrieval with Chroma (multi-query) --------------------
 
 
-# -------------------- Source Weights & Temporal Decay --------------------
 
 SOURCE_WEIGHTS = {
     "CISA Cybersecurity Advisories": 1.5,
@@ -160,7 +144,6 @@ def get_temporal_decay(published_at: str) -> float:
     except Exception:
         return 0.8
 
-# -------------------- RRF Merging Logic (Updated) --------------------
 
 def rrf_merge(*result_lists: list[dict], pool_size: int = 20) -> dict:
     """Reciprocal Rank Fusion across multiple ranked result lists.
@@ -177,17 +160,13 @@ def rrf_merge(*result_lists: list[dict], pool_size: int = 20) -> dict:
                 rrf_scores[url] = 0.0
                 doc_data[url] = item
             else:
-                # Removed FTS5 override bug to prevent context bloat
                 pass
                 
-            # Base RRF score
             base_score = 1 / (60 + rank + 1)
             
-            # Apply Source Weight
             source = item["metadata"].get("source", "")
             source_weight = SOURCE_WEIGHTS.get(source, 1.0)
             
-            # Apply Temporal Decay
             decay = get_temporal_decay(item["metadata"].get("published_at", ""))
             
             rrf_scores[url] += base_score * source_weight * decay
@@ -205,7 +184,6 @@ def rrf_merge(*result_lists: list[dict], pool_size: int = 20) -> dict:
         "metadatas": [final_metas]
     }
 
-# -------------------- Super retrieval with Hybrid Search --------------------
 
 @timeit
 def retrieve_super(query: str, topic: str | None = None, k: int = 6):
@@ -218,7 +196,6 @@ def retrieve_super(query: str, topic: str | None = None, k: int = 6):
     timings = {}
     where = {"category": topic} if topic else None
 
-    # --- Phase 1: Semantic search + keyword search ---
     t_emb = time.perf_counter()
     query_variants = get_query_variants(query)
     q_embs = embed_model.encode(query_variants, batch_size=len(query_variants)).tolist()
@@ -228,7 +205,6 @@ def retrieve_super(query: str, topic: str | None = None, k: int = 6):
         return collection.query(query_embeddings=q_embs, n_results=20, where=where)
 
     def _run_keyword():
-        # Use the most enriched variant for maximum term overlap in FTS
         return search_keyword(query_variants[-1], limit=20, topic=topic)
 
     with ThreadPoolExecutor(max_workers=2) as ex:
@@ -240,7 +216,6 @@ def retrieve_super(query: str, topic: str | None = None, k: int = 6):
 
     timings["semantic+keyword"] = time.perf_counter() - t_emb
 
-    # Collect semantic results for all query variants
     semantic_result_lists = []
     if original_res.get("documents"):
         for i in range(len(original_res["documents"])):
@@ -250,7 +225,6 @@ def retrieve_super(query: str, topic: str | None = None, k: int = 6):
                     query_results.append({"document": doc, "metadata": meta})
                 semantic_result_lists.append(query_results)
 
-    # --- Phase 3: RRF Merge ---
     all_lists = semantic_result_lists + [keyword_results]
     non_empty_lists = [lst for lst in all_lists if lst]
 
@@ -267,7 +241,6 @@ def retrieve_super(query: str, topic: str | None = None, k: int = 6):
     if not merged_docs:
         return {"documents": [[]], "metadatas": [[]]}
 
-    # --- Phase 4: CrossEncoder Reranking ---
     total_semantic = sum(len(lst) for lst in semantic_result_lists)
     print(f"Hybrid Search: Merging {total_semantic} semantic docs and {len(keyword_results)} keyword docs...")
     print(f"Reranking {len(merged_docs)} candidate documents with CrossEncoder...")
@@ -286,7 +259,6 @@ def retrieve_super(query: str, topic: str | None = None, k: int = 6):
     if scored_results:
         print(f"Top document rerank score: {scored_results[0][0]:.4f}")
 
-    # Log per-stage timing
     timing_str = " | ".join(f"{k}: {v:.4f}s" for k, v in timings.items())
     print(f"⏱️  [retrieve_super stages] {timing_str}")
 
@@ -296,7 +268,6 @@ def retrieve_super(query: str, topic: str | None = None, k: int = 6):
     }
 
 
-# -------------------- Build context & generation --------------------
 
 
 @timeit
@@ -310,10 +281,7 @@ def build_context(res) -> str:
     metas = res["metadatas"][0]
 
     chunks = []
-    # Use shared constant for doc limit to stay in sync with returned sources
     for doc, meta in zip(docs[:CONTEXT_DOC_LIMIT], metas[:CONTEXT_DOC_LIMIT]):
-        # Increased truncation limit to 12000 characters to ensure full articles are evaluated
-        # This prevents RAGAS from penalizing faithfulness due to missing context at the bottom of articles.
         snippet = doc[:12000].strip().replace("\n\n", "\n")
         chunks.append(
             f"[{meta.get('source')} | {meta.get('category')} | {meta.get('published_at')}]\n"
@@ -336,7 +304,6 @@ def prepare_messages(context: str, query: str, history: list[dict] = None) -> li
 
     messages = [{"role": "system", "content": system_prompt}]
     
-    # Inject conversation history (last 4 turns)
     if history:
         messages.extend(history[-4:])
         
@@ -364,7 +331,6 @@ def generate_answer_from_context(context: str, query: str, history: list[dict] =
     content = completion.choices[0].message.content or ""
     return content.strip()
 
-# NEW: Streaming generator
 def stream_answer_from_context(context: str, query: str, history: list[dict] = None) -> Generator[str, None, None]:
     messages = prepare_messages(context, query, history)
     completion = safe_groq_call(
@@ -380,7 +346,6 @@ def stream_answer_from_context(context: str, query: str, history: list[dict] = N
             yield chunk.choices[0].delta.content
 
 
-# -------------------- Public RAG API --------------------
 
 
 def answer_question(query: str, topic: str | None = None, k: int = 6) -> dict:
@@ -402,7 +367,6 @@ def answer_question(query: str, topic: str | None = None, k: int = 6) -> dict:
 
     answer = generate_answer_from_context(context, query)
 
-    # Slice sources to match CONTEXT_DOC_LIMIT so returned sources = what the LLM saw
     sources = res["metadatas"][0][:CONTEXT_DOC_LIMIT] if res.get("metadatas") else []
     return {
         "answer": answer,
@@ -411,7 +375,6 @@ def answer_question(query: str, topic: str | None = None, k: int = 6) -> dict:
 
 
 if __name__ == "__main__":
-    # quick manual test
     q = "Any important recent web development or JavaScript updates?"
     result = answer_question(q, topic="webdev", k=6)
 

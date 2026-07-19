@@ -1,4 +1,3 @@
-# src/embed_index.py
 
 from pathlib import Path
 import chromadb
@@ -6,17 +5,14 @@ from sentence_transformers import SentenceTransformer
 from src.db import get_conn
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-# Path where Chroma will store its data
 CHROMA_PATH = Path(__file__).resolve().parents[1] / "data" / "chroma"
 
-# Init Chroma client + collection
 client = chromadb.PersistentClient(path=str(CHROMA_PATH))
 collection = client.get_or_create_collection(
     name="news_articles",
     metadata={"hnsw:space": "cosine"},
 )
 
-# SentenceTransformer model for embeddings (FREE, downloaded once)
 EMBED_MODEL_NAME = "BAAI/bge-m3"
 embed_model = SentenceTransformer(EMBED_MODEL_NAME, trust_remote_code=True, device="mps")
 
