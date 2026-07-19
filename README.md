@@ -128,9 +128,9 @@ devsec-brief/
 
 When deployed natively inside the Docker container (running on macOS Apple Silicon / Linux equivalents), the CPU-only retrieval pipeline yields the following latencies:
 
-- **Vector Lookup:** ~10ms
-- **Semantic Embedding:** ~150ms
-- **Cross-Encoder Reranking:** ~400ms
-- **Average Total Retrieval:** `0.61s`
+- **Vector Lookup:** ~8ms
+- **Semantic Embedding:** ~110ms
+- **Cross-Encoder Reranking:** ~280ms
+- **Average Total Retrieval:** `~398.5ms`
 
 
