@@ -1,4 +1,4 @@
-# DevSec Brief
+# DevSec-Brief
 
 <div align="center">
   <img src="https://img.shields.io/badge/Python-3.12+-blue.svg" alt="Python 3.12+">
@@ -10,20 +10,16 @@
 
 <br>
 
-**DevSec Brief** is a highly optimized, enterprise-grade Retrieval-Augmented Generation (RAG) engine designed specifically for software developers and cybersecurity professionals. 
-
-It autonomously aggregates real-time intelligence from top-tier RSS feeds (Hacker News, MDN, CISA, NCSC, etc.), stores them in a persistent local vector database, and utilizes **Groq's Llama 3.3 70B** to synthesize lightning-fast, highly accurate answers.
+A full-stack RAG-powered AI news system that aggregates, processes, and serves developer and cybersecurity news.
 
 ---
 
-## Enterprise-Grade Architecture
+## Architecture & Tech Stack
 
-DevSec Brief is engineered to run **entirely on standard CPU cores** for its retrieval pipeline, maintaining a **Zero-VRAM footprint**. This allows you to deploy the system cheaply on generic cloud instances or locally alongside heavy multi-agent GPU workloads.
-
-- **Automated Intelligence Pipeline:** Periodic background ingestion and semantic chunking of industry RSS feeds.
-- **CPU-Optimized Hybrid Search:** Combines keyword routing with dense semantic vector search powered by **8-bit Quantized ONNX** embedding models (`BAAI/bge-m3`).
-- **Cross-Encoder Reranking:** Candidate documents are rigorously re-scored using an ONNX-optimized cross-encoder (`mMARCO`) to eliminate hallucinations.
-- **Sub-Second TTFT:** Blazing fast Time-To-First-Token (~800ms) achieved via SSE Streaming endpoints and Groq's LPU inference architecture.
+- **Backend:** Python, FastAPI
+- **AI/RAG:** Groq (`llama-3.3-70b-versatile`), ONNX embeddings (`BAAI/bge-m3`), ONNX Cross-Encoder (`mMARCO`)
+- **Vector Database:** ChromaDB (Persistent local storage)
+- **Infrastructure:** Docker, Docker Compose
 
 ### System Architecture
 
@@ -48,41 +44,39 @@ graph TD;
 
 ---
 
-## Quickstart (Docker)
+## Core Features
 
-The absolute easiest way to deploy the system is via Docker. The container handles OS dependencies, ONNX compilation, and automatic database provisioning out of the box.
+- Automated fetching of DevSec feeds (`fetch_feeds.py`).
+- Entity extraction and semantic chunking using zero-VRAM CPU-optimized ONNX binaries.
+- RAG-augmented querying with hybrid search and cross-encoder reranking (`rag.py`).
+- Server-Sent Events (SSE) streaming endpoint for frontend integration (`api.py`).
 
-### 1. Configure Environment
-Clone the repository and create your environment file:
+---
+
+## Quick Start (Docker)
+
 ```bash
+# Clone the repo
 git clone https://github.com/ima-d-ice/devsec-brief.git
 cd devsec-brief
+
+# Set up environment variables
 touch .env
-```
+# Add: GROQ_API_KEY=gsk_your_groq_api_key_here
 
-Add your Groq API key to the `.env` file:
-```text
-GROQ_API_KEY=gsk_your_groq_api_key_here
-```
-
-### 2. Launch the Engine
-Spin up the container in detached mode:
-```bash
+# Build and run the containers
 docker compose up --build -d
 ```
 
 > [!NOTE] 
-> On the very first boot, the container will take 1-2 minutes to download base models and compile the INT8 ONNX binaries. The `/data` directory is mounted locally to persist your vectors and binaries between restarts.
+> On the first boot, the container compiles the INT8 ONNX binaries into `/data`. The API is exposed on `http://127.0.0.1:8000`.
 
 ---
 
 ## API Reference
 
-The engine exposes a high-performance REST API running by default on `http://127.0.0.1:8000`.
-
-### 1. Standard Generation
 **`POST /ask`**
-Standard JSON response containing the full synthesized answer and the exact source citations.
+Standard JSON response containing the full synthesized answer and source citations.
 
 ```bash
 curl -X POST "http://127.0.0.1:8000/ask" \
@@ -90,7 +84,6 @@ curl -X POST "http://127.0.0.1:8000/ask" \
      -d '{"query": "What are the latest zero-day vulnerabilities in Linux?", "k": 5}'
 ```
 
-### 2. Streaming Generation (SSE)
 **`POST /ask/stream`**
 For real-time UI integrations. Streams the sources array first, followed by live LLM tokens.
 
@@ -104,31 +97,17 @@ curl -N -X POST "http://127.0.0.1:8000/ask/stream" \
 
 ## Project Structure
 
-```text
-devsec-brief/
-├── Dockerfile                  # Production-ready Python 3.12 container
-├── docker-compose.yml          # Container orchestration & volume mapping
-├── entrypoint.sh               # Intelligent boot script (Auto-compiles ONNX)
-├── requirements.txt            # Python dependencies (optimum, onnxruntime, etc)
-├── data/                       # Persistent Volume (Vector DB, SQLite, ONNX models)
-│   ├── entity_glossary.json    # Domain-specific tech terms for keyword routing
-│   └── feeds_config.json       # RSS feed target definitions
-└── src/                        # Core backend logic
-    ├── api.py                  # FastAPI routing & SSE streaming
-    ├── rag.py                  # Hybrid search & Cross-Encoder pipeline
-    ├── refresh.py              # Data ingestion orchestrator
-    ├── fetch_feeds.py          # HTML stripping & BeautifulSoup parsing
-    ├── export_st_onnx.py       # PyTorch -> INT8 ONNX quantization compiler
-    └── groq_client.py          # LLM Generation wrapper
-```
+- `/src`: Python backend (RAG logic, API endpoints, entity extraction, ONNX compilation).
+- `/data`: Persistent Volume (Vector DB, SQLite metadata, compiled ONNX models).
+- `Dockerfile` & `docker-compose.yml`: Container configuration.
+- `entrypoint.sh`: Boot script for automated model compilation and API startup.
 
 ---
 
 ## Benchmarks
 
 ### Latency Performance
-When deployed natively inside the Docker container (running on macOS Apple Silicon / Linux equivalents), the CPU-only retrieval pipeline yields the following latencies:
-
+When deployed natively inside the Docker container, the CPU-only retrieval pipeline yields the following latencies:
 - **Vector Lookup:** ~8ms
 - **Semantic Embedding:** ~110ms
 - **Cross-Encoder Reranking:** ~280ms
