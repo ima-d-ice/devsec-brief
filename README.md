@@ -126,6 +126,7 @@ devsec-brief/
 
 ## Benchmarks
 
+### Latency Performance
 When deployed natively inside the Docker container (running on macOS Apple Silicon / Linux equivalents), the CPU-only retrieval pipeline yields the following latencies:
 
 - **Vector Lookup:** ~8ms
@@ -133,4 +134,8 @@ When deployed natively inside the Docker container (running on macOS Apple Silic
 - **Cross-Encoder Reranking:** ~280ms
 - **Average Total Retrieval:** `~398.5ms`
 
-
+### RAGAS Evaluation Scores
+The system has been evaluated using the RAGAS framework for accuracy and contextual relevance:
+- **Context Precision:** 83.0% (0.8300)
+- **Faithfulness:** 75.7% (0.7570)
+- **Answer Relevancy:** 64.3% (0.6430)
