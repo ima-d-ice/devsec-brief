@@ -1,102 +1,83 @@
-
-from pathlib import Path
-import chromadb
+import time
 from sentence_transformers import SentenceTransformer
-from src.db import get_conn
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from src.db import get_conn
 
-CHROMA_PATH = Path(__file__).resolve().parents[1] / "data" / "chroma"
+embed_model = SentenceTransformer("BAAI/bge-m3", device="mps")
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=400, chunk_overlap=100)
 
-client = chromadb.PersistentClient(path=str(CHROMA_PATH))
-collection = client.get_or_create_collection(
-    name="news_articles",
-    metadata={"hnsw:space": "cosine"},
-)
+def sync_index(limit=None):
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute("TRUNCATE article_chunks RESTART IDENTITY CASCADE;")
+            conn.commit()
 
-EMBED_MODEL_NAME = "BAAI/bge-m3"
-embed_model = SentenceTransformer(EMBED_MODEL_NAME, trust_remote_code=True, device="mps")
+            sql = "SELECT id, title, url, source, category, summary, content, published_at FROM articles ORDER BY id DESC"
+            if limit:
+                sql += f" LIMIT {limit}"
+            
+            cur.execute(sql)
+            rows = cur.fetchall()
+            col_names = [desc[0] for desc in cur.description]
+            articles = [dict(zip(col_names, row)) for row in rows]
 
+    print(f"Loaded {len(articles)} articles")
 
-def load_articles(limit: int | None = None):
-    """Load articles from SQLite into memory."""
-    conn = get_conn()
-    if limit:
-        rows = conn.execute(
-            "SELECT * FROM articles ORDER BY id DESC LIMIT ?",
-            (limit,),
-        ).fetchall()
-    else:
-        rows = conn.execute(
-            "SELECT * FROM articles ORDER BY id DESC",
-        ).fetchall()
-    conn.close()
-    return rows
+    all_chunks = []
+    all_texts_for_embedding = []
 
+    for article in articles:
+        text_to_chunk = (article["title"] or "") + "\n\n" + (article["content"] or article["summary"] or "")
+        splits = text_splitter.split_text(text_to_chunk)
+        
+        for i, chunk in enumerate(splits):
+            all_texts_for_embedding.append(chunk)
+            all_chunks.append({
+                "article_id": article["id"],
+                "chunk_index": i,
+                "chunk_text": chunk,
+                "title": article["title"],
+                "url": article["url"],
+                "source": article["source"],
+                "category": article["category"],
+                "published_at": article["published_at"],
+            })
 
-def sync_index(limit: int | None = None):
-    global collection
-    try:
-        client.delete_collection("news_articles")
-    except Exception:
-        pass
-    collection = client.get_or_create_collection(
-        name="news_articles",
-        metadata={"hnsw:space": "cosine"},
-    )
-    print("Dropped and recreated 'news_articles' collection to clear old chunks.")
-
-    rows = load_articles(limit=limit)
-    print(f"Loaded {len(rows)} articles from DB.")
-
-    ids: list[str] = []
-    docs: list[str] = []
-    metadatas: list[dict] = []
-
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=400,
-        chunk_overlap=100,
-    )
-
-    for row in rows:
-        article_id = str(row["id"])
-        title = row["title"] or ""
-        content = row["content"] or row["summary"] or ""
-
-        text = (title + "\n\n" + content).strip()
-        if not text:
-            continue
-
-        chunks = text_splitter.split_text(text)
-
-        for i, chunk in enumerate(chunks):
-            ids.append(f"{article_id}-{i}")
-            docs.append(chunk)
-            metadatas.append(
-                {
-                    "title": title,
-                    "url": row["url"],
-                    "source": row["source"],
-                    "category": row["category"],
-                    "published_at": row["published_at"],
-                }
-            )
-
-    if not ids:
-        print("No non-empty documents to index.")
+    if not all_texts_for_embedding:
+        print("No documents to encode.")
         return
 
-    print(f"Encoding {len(docs)} documents with {EMBED_MODEL_NAME} ...")
-    embeddings = embed_model.encode(docs, show_progress_bar=True).tolist()
+    print(f"Encoding {len(all_texts_for_embedding)} documents")
+    embeddings = embed_model.encode(all_texts_for_embedding, show_progress_bar=True, batch_size=32)
 
-    print("Upserting into Chroma...")
-    collection.upsert(
-        ids=ids,
-        embeddings=embeddings,  # we provide embeddings directly
-        documents=docs,
-        metadatas=metadatas,
-    )
+    print("Upserting...")
+    
+    insert_sql = """
+        INSERT INTO article_chunks (article_id, chunk_index, chunk_text, title, url, source, category, published_at, embedding)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+    """
+    
+    insert_data = [
+        (
+            chunk["article_id"],
+            chunk["chunk_index"],
+            chunk["chunk_text"],
+            chunk["title"],
+            chunk["url"],
+            chunk["source"],
+            chunk["category"],
+            chunk["published_at"],
+            embeddings[i].tolist()
+        )
+        for i, chunk in enumerate(all_chunks)
+    ]
+    
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.executemany(insert_sql, insert_data)
+            conn.commit()
+
     print("✅ Index sync complete.")
-
 
 if __name__ == "__main__":
     sync_index()

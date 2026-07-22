@@ -5,7 +5,7 @@
   <img src="https://img.shields.io/badge/Docker-Ready-2496ED.svg?logo=docker" alt="Docker">
   <img src="https://img.shields.io/badge/FastAPI-005571?style=flat&logo=fastapi" alt="FastAPI">
   <img src="https://img.shields.io/badge/Groq-Llama_3.3-f55036.svg" alt="Groq Llama 3.3">
-  <img src="https://img.shields.io/badge/Chroma-Vector_DB-ff7a59.svg" alt="ChromaDB">
+  <img src="https://img.shields.io/badge/PostgreSQL-pgvector-336791.svg?logo=postgresql" alt="PostgreSQL pgvector">
 </div>
 
 <br>
@@ -18,7 +18,7 @@ A full-stack RAG-powered AI news system that aggregates, processes, and serves d
 
 - **Backend:** Python, FastAPI
 - **AI/RAG:** Groq (`llama-3.3-70b-versatile`), ONNX embeddings (`BAAI/bge-m3`), ONNX Cross-Encoder (`mMARCO`)
-- **Vector Database:** ChromaDB (Persistent local storage)
+- **Database:** PostgreSQL 16 + pgvector (Persistent vector and metadata storage)
 - **Infrastructure:** Docker, Docker Compose
 
 ### System Architecture
@@ -28,15 +28,13 @@ graph TD;
     subgraph Data Ingestion
         A[RSS Feeds] --> B(fetch_feeds.py);
         B --> C{ONNX Embedder};
-        C --> D[(ChromaDB Vector Store)];
-        C --> E[(SQLite Metadata)];
+        C --> D[(PostgreSQL + pgvector)];
     end
 
     subgraph User Request
         F[Client/Frontend] -- POST /ask/stream --> G[FastAPI Service];
         G --> H{Hybrid Search & Reranking};
         D -.-> H;
-        E -.-> H;
         H -- Context --> I[Groq Llama 3.3];
         I -- Server-Sent Events --> F;
     end
@@ -98,7 +96,7 @@ curl -N -X POST "http://127.0.0.1:8000/ask/stream" \
 ## Project Structure
 
 - `/src`: Python backend (RAG logic, API endpoints, entity extraction, ONNX compilation).
-- `/data`: Persistent Volume (Vector DB, SQLite metadata, compiled ONNX models).
+- `/data`: Persistent Volume (compiled ONNX models, JSON glossary).
 - `Dockerfile` & `docker-compose.yml`: Container configuration.
 - `entrypoint.sh`: Boot script for automated model compilation and API startup.
 

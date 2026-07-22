@@ -1,84 +1,99 @@
-import sqlite3
+import os
 import re
-from pathlib import Path
+from psycopg_pool import ConnectionPool
 
-DB_PATH = Path(__file__).resolve().parents[1] / "data" / "articles.db"
+DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql://devsec:devsec@localhost:5432/devsec")
+
+pool = ConnectionPool(
+    DATABASE_URL,
+    min_size=2,
+    max_size=10,
+    timeout=30.0,
+    kwargs={"autocommit": True},
+)
+
+def configure_connection(conn):
+    with conn.cursor() as cur:
+        cur.execute("SET hnsw.ef_search = 40;")
+        cur.execute("SET statement_timeout = '5s';")
+
+pool.configure = configure_connection
 
 def get_conn():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA foreign_keys = ON;")
-    return conn
+    return pool.connection()
 
 def init_db():
-    conn = get_conn()
-    
-    conn.execute("""
-        CREATE TABLE IF NOT EXISTS articles (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT,
-            url TEXT UNIQUE,
-            source TEXT,
-            category TEXT,
-            summary TEXT,
-            content TEXT,
-            published_at TEXT
-        );
-    """)
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute("CREATE EXTENSION IF NOT EXISTS vector;")
+            cur.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm;")
+            cur.execute("CREATE EXTENSION IF NOT EXISTS unaccent;")
 
-    conn.execute("""
-        CREATE VIRTUAL TABLE IF NOT EXISTS articles_fts USING fts5(
-            title, content, content='articles', content_rowid='id'
-        );
-    """)
+            cur.execute("""
+            CREATE TABLE IF NOT EXISTS articles (
+                id           BIGSERIAL PRIMARY KEY,
+                title        TEXT,
+                url          TEXT UNIQUE,
+                source       TEXT,
+                category     TEXT,
+                summary      TEXT,
+                content      TEXT,
+                published_at TEXT,
+                created_at   TIMESTAMPTZ DEFAULT NOW(),
+                search_vector tsvector GENERATED ALWAYS AS (
+                    to_tsvector('english',
+                        coalesce(unaccent(title), '') || ' ' ||
+                        coalesce(unaccent(coalesce(content, summary)), '')
+                    )
+                ) STORED
+            );
+            """)
 
-    conn.execute("""
-        CREATE TRIGGER IF NOT EXISTS articles_ai AFTER INSERT ON articles BEGIN
-            INSERT INTO articles_fts(rowid, title, content)
-            VALUES (new.id, new.title, COALESCE(new.content, new.summary, ''));
-        END;
-    """)
-    conn.execute("""
-        CREATE TRIGGER IF NOT EXISTS articles_ad AFTER DELETE ON articles BEGIN
-            INSERT INTO articles_fts(articles_fts, rowid, title, content)
-            VALUES('delete', old.id, old.title, COALESCE(old.content, old.summary, ''));
-        END;
-    """)
-    conn.execute("""
-        CREATE TRIGGER IF NOT EXISTS articles_au AFTER UPDATE ON articles BEGIN
-            INSERT INTO articles_fts(articles_fts, rowid, title, content)
-            VALUES('delete', old.id, old.title, COALESCE(old.content, old.summary, ''));
-            INSERT INTO articles_fts(rowid, title, content)
-            VALUES (new.id, new.title, COALESCE(new.content, new.summary, ''));
-        END;
-    """)
+            cur.execute("CREATE INDEX IF NOT EXISTS idx_articles_search_vector ON articles USING GIN (search_vector);")
+            cur.execute("CREATE INDEX IF NOT EXISTS idx_articles_category      ON articles (category);")
+            cur.execute("CREATE INDEX IF NOT EXISTS idx_articles_url_trgm      ON articles USING GIN (url gin_trgm_ops);")
+            cur.execute("CREATE INDEX IF NOT EXISTS idx_articles_source        ON articles (source);")
 
-    conn.execute("INSERT INTO articles_fts(articles_fts) VALUES('rebuild');")
+            cur.execute("""
+            CREATE TABLE IF NOT EXISTS article_chunks (
+                id            BIGSERIAL PRIMARY KEY,
+                article_id    BIGINT REFERENCES articles(id) ON DELETE CASCADE,
+                chunk_index   INTEGER NOT NULL,
+                chunk_text    TEXT NOT NULL,
+                title         TEXT,
+                url           TEXT,
+                source        TEXT,
+                category      TEXT,
+                published_at  TEXT,
+                embedding     vector(1024) NOT NULL,
+                created_at    TIMESTAMPTZ DEFAULT NOW()
+            );
+            """)
 
-    conn.commit()
-    conn.close()
-    print("DB initialized at:", DB_PATH)
+            cur.execute("""
+            CREATE INDEX IF NOT EXISTS idx_chunks_hnsw_cosine
+                ON article_chunks USING hnsw (embedding vector_cosine_ops)
+                WITH (m = 16, ef_construction = 64);
+            """)
+
+            cur.execute("CREATE INDEX IF NOT EXISTS idx_chunks_category ON article_chunks (category);")
+            cur.execute("CREATE INDEX IF NOT EXISTS idx_chunks_url      ON article_chunks (url);")
+            cur.execute("CREATE INDEX IF NOT EXISTS idx_chunks_text_trgm ON article_chunks USING GIN (chunk_text gin_trgm_ops);")
 
 def save_article_if_new(**kwargs) -> bool:
-    """Insert an article. Returns True if it was newly inserted, False if it was a duplicate (same URL)."""
-    conn = get_conn()
-    try:
-        conn.execute("""
-            INSERT INTO articles (title, url, source, category, summary, content, published_at)
-            VALUES (:title, :url, :source, :category, :summary, :content, :published_at)
-        """, kwargs)
-        conn.commit()
-        return True
-    except sqlite3.IntegrityError:
-        return False  # duplicate (same URL)
-    finally:
-        conn.close()
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                INSERT INTO articles (title, url, source, category, summary, content, published_at)
+                VALUES (%(title)s, %(url)s, %(source)s, %(category)s, %(summary)s, %(content)s, %(published_at)s)
+                ON CONFLICT (url) DO NOTHING
+                RETURNING id;
+            """, kwargs)
+            result = cur.fetchone()
+            conn.commit()
+            return result is not None
 
 def search_keyword(query: str, limit: int = 20, topic: str | None = None) -> list[dict]:
-    """
-    Performs exact-match keyword search using SQLite FTS5.
-    Returns a list of dicts formatted similarly to ChromaDB's output for easy merging.
-    """
     cve_pattern = re.compile(r'\bCVE-\d{4}-\d{4,}\b', re.IGNORECASE)
     cve_matches = cve_pattern.findall(query)
     
@@ -92,37 +107,38 @@ def search_keyword(query: str, limit: int = 20, topic: str | None = None) -> lis
     
     terms = []
     for cve in cve_matches:
-        terms.append(f'"{cve}"')
+        terms.append(f"'{cve}'")
     for word in words:
-        terms.append(f'"{word}"*')
+        terms.append(f"'{word}':*")
     
     if not terms:
         return []
 
-    match_query = " AND ".join(terms)
-    
-    conn = get_conn()
+    match_query = " & ".join(terms)
     
     sql = """
-        SELECT a.id, a.title, a.url, a.source, a.category, a.published_at, a.content, a.summary
-        FROM articles_fts
-        JOIN articles a ON articles_fts.rowid = a.id
-        WHERE articles_fts MATCH ?
+        SELECT title, url, source, category, published_at, content, summary
+        FROM articles
+        WHERE search_vector @@ to_tsquery('english', %(match_query)s)
     """
-    params = [match_query]
+    params = {"match_query": match_query}
 
     if topic:
-        sql += " AND a.category = ?"
-        params.append(topic)
+        sql += " AND category = %(topic)s"
+        params["topic"] = topic
 
-    sql += " ORDER BY rank LIMIT ?"
-    params.append(limit)
+    sql += " ORDER BY ts_rank(search_vector, to_tsquery('english', %(match_query)s)) DESC LIMIT %(limit)s"
+    params["limit"] = limit
 
-    rows = conn.execute(sql, params).fetchall()
-    conn.close()
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute(sql, params)
+            rows = cur.fetchall()
+            col_names = [desc[0] for desc in cur.description] if cur.description else []
+            dict_rows = [dict(zip(col_names, row)) for row in rows]
 
     results = []
-    for row in rows:
+    for row in dict_rows:
         doc_text = (row["title"] or "") + "\n\n" + (row["content"] or row["summary"] or "")
         results.append({
             "document": doc_text.strip(),
@@ -135,3 +151,57 @@ def search_keyword(query: str, limit: int = 20, topic: str | None = None) -> lis
             }
         })
     return results
+
+def search_semantic(q_embs: list[list[float]], k: int, topic: str | None):
+    sql = """
+        WITH query_embs AS (
+            SELECT unnest(%(q_embs)s::vector(1024)[]) AS q_emb
+        )
+        SELECT 
+            MIN(a.embedding <=> q.q_emb) AS distance,
+            a.chunk_text,
+            a.title,
+            a.url,
+            a.source,
+            a.category,
+            a.published_at
+        FROM article_chunks a
+        CROSS JOIN query_embs q
+    """
+    
+    params = {"q_embs": q_embs}
+    if topic:
+        sql += " WHERE a.category = %(topic)s"
+        params["topic"] = topic
+        
+    sql += """
+        GROUP BY a.id
+        ORDER BY distance ASC
+        LIMIT %(limit)s
+    """
+    params["limit"] = k
+    
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute(sql, params)
+            rows = cur.fetchall()
+            col_names = [desc[0] for desc in cur.description] if cur.description else []
+            dict_rows = [dict(zip(col_names, row)) for row in rows]
+            
+    docs = []
+    metas = []
+    
+    for row in dict_rows:
+        docs.append(row["chunk_text"])
+        metas.append({
+            "title": row["title"],
+            "url": row["url"],
+            "source": row["source"],
+            "category": row["category"],
+            "published_at": row["published_at"]
+        })
+        
+    return {
+        "documents": [docs],
+        "metadatas": [metas]
+    }

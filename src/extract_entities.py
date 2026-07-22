@@ -1,7 +1,7 @@
-import sqlite3
 import json
 from pathlib import Path
 from src.groq_client import safe_groq_call, set_api_key
+from src.db import get_conn
 from dotenv import load_dotenv
 import os
 
@@ -15,11 +15,13 @@ GLOSSARY_PATH = Path(__file__).resolve().parents[1] / "data" / "entity_glossary.
 MODEL = "llama-3.3-70b-versatile"
 
 def get_articles():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    rows = conn.execute("SELECT title, summary FROM articles").fetchall()
-    conn.close()
-    return [{"title": row["title"], "summary": row["summary"]} for row in rows]
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT title, summary FROM articles")
+            rows = cur.fetchall()
+            col_names = [desc[0] for desc in cur.description]
+            dict_rows = [dict(zip(col_names, row)) for row in rows]
+    return [{"title": row["title"], "summary": row["summary"]} for row in dict_rows]
 
 def extract_entities_from_batch(batch: list[dict]) -> dict:
     system_prompt = (

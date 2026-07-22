@@ -3,17 +3,15 @@ from pathlib import Path
 import os
 import time
 import functools
-import sqlite3
 import json
 import hashlib
 from concurrent.futures import ThreadPoolExecutor
 
-import chromadb
 from sentence_transformers import SentenceTransformer, CrossEncoder
 import numpy as np
 from dotenv import load_dotenv
 from src.groq_client import safe_groq_call
-from src.db import search_keyword
+from src.db import search_keyword, search_semantic
 from datetime import datetime, timezone
 from typing import Generator
 from dateutil import parser
@@ -22,14 +20,6 @@ from dateutil import parser
 load_dotenv()
 
 GROQ_MODEL = "llama-3.3-70b-versatile"
-
-
-CHROMA_PATH = Path(__file__).resolve().parents[1] / "data" / "chroma"
-chroma_client = chromadb.PersistentClient(path=str(CHROMA_PATH))
-collection = chroma_client.get_or_create_collection(
-    name="news_articles",
-    metadata={"hnsw:space": "cosine"},
-)
 
 EMBED_MODEL_NAME = "BAAI/bge-m3"
 ONNX_EMBED_PATH = Path(__file__).resolve().parents[1] / "data" / "onnx_st" / "bge-m3-onnx"
@@ -201,14 +191,14 @@ def retrieve_super(query: str, topic: str | None = None, k: int = 6):
     q_embs = embed_model.encode(query_variants, batch_size=len(query_variants)).tolist()
     print(f"     [debug] get_query_variants & embed_model.encode took {time.perf_counter() - t_emb:.4f}s")
 
-    def _run_original_chroma_search():
-        return collection.query(query_embeddings=q_embs, n_results=20, where=where)
+    def _run_pgvector_search():
+        return search_semantic(q_embs, k=20, topic=topic)
 
     def _run_keyword():
         return search_keyword(query_variants[-1], limit=20, topic=topic)
 
     with ThreadPoolExecutor(max_workers=2) as ex:
-        chroma_future = ex.submit(_run_original_chroma_search)
+        chroma_future = ex.submit(_run_pgvector_search)
         keyword_future = ex.submit(_run_keyword)
         
         original_res = chroma_future.result()

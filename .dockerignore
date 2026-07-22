@@ -1,0 +1,15 @@
+.git
+.gitignore
+.venv
+venv
+env
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+data
+devsec-brief-frontend
+eval_results
+.env
+migrate_data.py
