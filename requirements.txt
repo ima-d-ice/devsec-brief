@@ -8,7 +8,5 @@ beautifulsoup4
 langchain-text-splitters
 python-dateutil
 numpy
-sentence-transformers
+sentence-transformers[onnx]
 psycopg[binary,pool]>=3.2
-optimum
-onnxruntime
