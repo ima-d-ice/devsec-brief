@@ -4,7 +4,7 @@
   <img src="https://img.shields.io/badge/Python-3.12+-blue.svg" alt="Python 3.12+">
   <img src="https://img.shields.io/badge/Docker-Ready-2496ED.svg?logo=docker" alt="Docker">
   <img src="https://img.shields.io/badge/FastAPI-005571?style=flat&logo=fastapi" alt="FastAPI">
-  <img src="https://img.shields.io/badge/Groq-Llama_3.1-f55036.svg" alt="Groq Llama 3.1">
+  <img src="https://img.shields.io/badge/Groq-Llama_3.3-f55036.svg" alt="Groq Llama 3.3">
   <img src="https://img.shields.io/badge/PostgreSQL-pgvector-336791.svg?logo=postgresql" alt="PostgreSQL pgvector">
 </div>
 
@@ -17,7 +17,7 @@ A full-stack RAG-powered AI news system that aggregates, processes, and serves d
 ## Architecture & Tech Stack
 
 - **Backend:** Python, FastAPI
-- **AI/RAG:** Groq (`llama-3.1-8b-instant`), ONNX embeddings (`BAAI/bge-m3`), ONNX Cross-Encoder (`mMARCO`)
+- **AI/RAG:** Groq (`llama-3.3-70b-versatile`), ONNX embeddings (`BAAI/bge-m3`), ONNX Cross-Encoder (`mMARCO`)
 - **Database:** PostgreSQL 16 + pgvector (Persistent vector and metadata storage)
 - **Infrastructure:** Docker, Docker Compose
 
@@ -26,16 +26,18 @@ A full-stack RAG-powered AI news system that aggregates, processes, and serves d
 ```mermaid
 graph TD;
     subgraph Data Ingestion
-        A[RSS Feeds] --> B(fetch_feeds.py);
-        B --> C{ONNX Embedder};
-        C --> D[(PostgreSQL + pgvector)];
+        A[RSS Feeds] -->|fetch_feeds.py| D[(PostgreSQL + pgvector)];
+        D -->|extract_entities.py| E[entity_glossary.json];
+        D -->|embed_index.py| C{ONNX Embedder};
+        C -->|Vector Chunks| D;
     end
 
     subgraph User Request
         F[Client/Frontend] -- POST /ask/stream --> G[FastAPI Service];
         G --> H{Hybrid Search & Reranking};
+        E -.->|Query Expansion| H;
         D -.-> H;
-        H -- Context --> I[Groq Llama 3.1];
+        H -- Context --> I[Groq Llama 3.3];
         I -- Server-Sent Events --> F;
     end
 ```
@@ -111,8 +113,7 @@ The end-to-end RAG pipeline has been heavily optimized for CPU execution. Based 
 - **Hybrid DB Search (pgvector + keyword):** ~45ms
 - **Cross-Encoder Reranking:** ~264ms
 - **Total Retrieval Latency:** `~489ms`
-- **LLM Generation (Llama 3.1 8B):** `~263ms`
-- **Total End-to-End Pipeline:** `~692ms`
+
 
 ### RAGAS Evaluation Scores
 The system has been evaluated using the RAGAS framework for accuracy and contextual relevance:
