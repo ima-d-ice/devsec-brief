@@ -10,7 +10,7 @@ def main():
     print("=== Step 1: Fetching feeds ===")
     fetch_all_feeds()
 
-    print("\n=== Step 2: Syncing embeddings + Chroma index ===")
+    print("\n=== Step 2: Syncing embeddings + pgvector index ===")
     sync_index()
 
     print("\n✅ Refresh complete.")

@@ -6,9 +6,10 @@ __pycache__/
 *.pyd
 *.log
 
-# SQLite / Chroma (can re-generate)
+# Data (legacy SQLite backups, Chroma remnants)
 data/*.db
 data/chroma/
+data/backups/
 logs/
 eval_results/
 scratch/

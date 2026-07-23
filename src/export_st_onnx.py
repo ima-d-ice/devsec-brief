@@ -17,11 +17,18 @@ def main():
     embed_path = onnx_dir / "bge-m3-onnx"
     if not embed_path.exists():
         print("Exporting and quantizing BAAI/bge-m3 to ONNX...")
-        pt_model = SentenceTransformer("BAAI/bge-m3")
+        pt_model = SentenceTransformer(
+            "BAAI/bge-m3",
+            processor_kwargs={"fix_mistral_regex": True}
+        )
         pt_model.save("tmp_bge_m3")
         
         print("Loading local PyTorch model into ONNX backend...")
-        model = SentenceTransformer("tmp_bge_m3", backend="onnx")
+        model = SentenceTransformer(
+            "tmp_bge_m3", 
+            backend="onnx",
+            processor_kwargs={"fix_mistral_regex": True}
+        )
         
         print("Running ONNX INT8 Quantization...")
         export_dynamic_quantized_onnx_model(
@@ -41,12 +48,19 @@ def main():
         try:
             from sentence_transformers.cross_encoder import CrossEncoder
             
-            pt_ce = CrossEncoder("cross-encoder/mmarco-mMiniLMv2-L12-H384-v1")
-            pt_ce.save("tmp_mmarco")
-            ce_model = CrossEncoder("tmp_mmarco", backend="onnx")
+            pt_model = CrossEncoder(
+            "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
+            processor_kwargs={"fix_mistral_regex": True}
+        )
+            pt_model.save("tmp_mmarco")
+            model = CrossEncoder(
+            "tmp_mmarco", 
+            backend="onnx",
+            processor_kwargs={"fix_mistral_regex": True}
+        )
             
             export_dynamic_quantized_onnx_model(
-                ce_model, 
+                model, 
                 quantization_config="arm64",
                 model_name_or_path=str(rerank_path),
             )

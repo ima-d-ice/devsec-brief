@@ -10,7 +10,6 @@ key_4 = os.getenv("GROQ_API_KEY_4")
 if key_4:
     set_api_key(key_4)
 
-DB_PATH = Path(__file__).resolve().parents[1] / "data" / "articles.db"
 GLOSSARY_PATH = Path(__file__).resolve().parents[1] / "data" / "entity_glossary.json"
 MODEL = "llama-3.3-70b-versatile"
 

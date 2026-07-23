@@ -12,7 +12,7 @@ from src.rag import retrieve_super, build_context, stream_answer_from_context, C
 
 app = FastAPI(
     title="DevSec Brief – RAG API",
-    description="RAG-powered dev & cybersec news assistant (Chroma + Groq Llama 3.1).",
+    description="RAG-powered dev & cybersec news assistant (PostgreSQL + pgvector + Groq Llama 3.3).",
     version="0.2.0",
 )
 

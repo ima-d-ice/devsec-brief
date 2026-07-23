@@ -35,7 +35,11 @@ if ONNX_EMBED_PATH.exists():
     )
 else:
     print("Loading Embedding model (MPS)...")
-    embed_model = SentenceTransformer(EMBED_MODEL_NAME, trust_remote_code=True, device="mps")
+    embed_model = SentenceTransformer(
+        EMBED_MODEL_NAME, 
+        trust_remote_code=True, 
+        device="cpu"
+    )
 
 RERANKER_MODEL_NAME = "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1"
 ONNX_RERANK_PATH = Path(__file__).resolve().parents[1] / "data" / "onnx_st" / "mmarco-onnx"
@@ -51,7 +55,10 @@ if ONNX_RERANK_PATH.exists():
     )
 else:
     print("Loading CrossEncoder natively...")
-    reranker_model = CrossEncoder(RERANKER_MODEL_NAME, device="mps")
+    reranker_model = CrossEncoder(
+        RERANKER_MODEL_NAME, 
+        device="cpu"
+    )
 
 CONTEXT_DOC_LIMIT = 3
 
@@ -186,10 +193,15 @@ def retrieve_super(query: str, topic: str | None = None, k: int = 6):
     timings = {}
     where = {"category": topic} if topic else None
 
-    t_emb = time.perf_counter()
+    # Stage 1: Query expansion + Embedding
+    t1 = time.perf_counter()
     query_variants = get_query_variants(query)
     q_embs = embed_model.encode(query_variants, batch_size=len(query_variants)).tolist()
-    print(f"     [debug] get_query_variants & embed_model.encode took {time.perf_counter() - t_emb:.4f}s")
+    timings["embedding"] = time.perf_counter() - t1
+    print(f"     [debug] embedding took {timings['embedding']:.4f}s")
+
+    # Stage 2: Parallel DB search (semantic + keyword)
+    t2 = time.perf_counter()
 
     def _run_pgvector_search():
         return search_semantic(q_embs, k=20, topic=topic)
@@ -198,13 +210,13 @@ def retrieve_super(query: str, topic: str | None = None, k: int = 6):
         return search_keyword(query_variants[-1], limit=20, topic=topic)
 
     with ThreadPoolExecutor(max_workers=2) as ex:
-        chroma_future = ex.submit(_run_pgvector_search)
+        semantic_future = ex.submit(_run_pgvector_search)
         keyword_future = ex.submit(_run_keyword)
         
-        original_res = chroma_future.result()
+        original_res = semantic_future.result()
         keyword_results = keyword_future.result()
 
-    timings["semantic+keyword"] = time.perf_counter() - t_emb
+    timings["db_search"] = time.perf_counter() - t2
 
     semantic_result_lists = []
     if original_res.get("documents"):
@@ -221,6 +233,7 @@ def retrieve_super(query: str, topic: str | None = None, k: int = 6):
     if not non_empty_lists:
         return {"documents": [[]], "metadatas": [[]]}
 
+    # Stage 3: RRF merge
     t3 = time.perf_counter()
     merged = rrf_merge(*non_empty_lists, pool_size=20)
     timings["rrf"] = time.perf_counter() - t3
@@ -235,6 +248,7 @@ def retrieve_super(query: str, topic: str | None = None, k: int = 6):
     print(f"Hybrid Search: Merging {total_semantic} semantic docs and {len(keyword_results)} keyword docs...")
     print(f"Reranking {len(merged_docs)} candidate documents with CrossEncoder...")
     
+    # Stage 4: CrossEncoder reranking
     t4 = time.perf_counter()
     pairs = [[query, doc[:CROSSENCODER_MAX_CHARS]] for doc in merged_docs]
     rerank_scores = reranker_model.predict(pairs)
@@ -249,6 +263,7 @@ def retrieve_super(query: str, topic: str | None = None, k: int = 6):
     if scored_results:
         print(f"Top document rerank score: {scored_results[0][0]:.4f}")
 
+    timings["total_retrieval"] = timings["embedding"] + timings["db_search"] + timings["rrf"] + timings["rerank"]
     timing_str = " | ".join(f"{k}: {v:.4f}s" for k, v in timings.items())
     print(f"⏱️  [retrieve_super stages] {timing_str}")
 
@@ -340,9 +355,9 @@ def stream_answer_from_context(context: str, query: str, history: list[dict] = N
 
 def answer_question(query: str, topic: str | None = None, k: int = 6) -> dict:
     """
-    SUPER RAG (Chroma-only version):
-      1. expand query with Groq
-      2. multi-query semantic retrieval in Chroma
+    SUPER RAG (PostgreSQL + pgvector):
+      1. expand query with entity glossary
+      2. hybrid semantic + keyword retrieval via pgvector
       3. build context
       4. ask Groq LLM to answer from context
     """

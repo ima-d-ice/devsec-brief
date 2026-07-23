@@ -169,7 +169,11 @@ def search_semantic(q_embs: list[list[float]], k: int, topic: str | None):
         CROSS JOIN query_embs q
     """
     
-    params = {"q_embs": q_embs}
+    # Convert embeddings to pgvector string format so psycopg sends text[]
+    # (double precision[][] cannot be cast to vector[] directly)
+    q_emb_strs = ['[' + ','.join(str(x) for x in emb) + ']' for emb in q_embs]
+    
+    params = {"q_embs": q_emb_strs}
     if topic:
         sql += " WHERE a.category = %(topic)s"
         params["topic"] = topic

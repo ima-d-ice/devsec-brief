@@ -3,7 +3,18 @@ from sentence_transformers import SentenceTransformer
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from src.db import get_conn
 
-embed_model = SentenceTransformer("BAAI/bge-m3", device="mps")
+from pathlib import Path
+
+ONNX_EMBED_PATH = Path(__file__).resolve().parents[1] / "data" / "onnx_st" / "bge-m3-onnx"
+
+embed_model = SentenceTransformer(
+    str(ONNX_EMBED_PATH), 
+    backend="onnx",
+    model_kwargs={
+        "file_name": "onnx/model_qint8_arm64.onnx",
+        "provider": "CPUExecutionProvider"
+    }
+)
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=400, chunk_overlap=100)
 
 def sync_index(limit=None):
