@@ -21,26 +21,7 @@ A full-stack RAG-powered AI news system that aggregates, processes, and serves d
 - **Database:** PostgreSQL 16 + pgvector (Persistent vector and metadata storage)
 - **Infrastructure:** Docker, Docker Compose
 
-### System Architecture
 
-```mermaid
-graph TD;
-    subgraph Data Ingestion
-        A[RSS Feeds] -->|fetch_feeds.py| D[(PostgreSQL + pgvector)];
-        D -->|extract_entities.py| E[entity_glossary.json];
-        D -->|embed_index.py| C{ONNX Embedder};
-        C -->|Vector Chunks| D;
-    end
-
-    subgraph User Request
-        F[Client/Frontend] -- POST /ask/stream --> G[FastAPI Service];
-        G --> H{Hybrid Search & Reranking};
-        E -.->|Query Expansion| H;
-        D -.-> H;
-        H -- Context --> I[Groq Llama 3.3];
-        I -- Server-Sent Events --> F;
-    end
-```
 
 ---
 
