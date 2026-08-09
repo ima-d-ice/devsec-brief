@@ -10,7 +10,7 @@ from concurrent.futures import ThreadPoolExecutor
 from sentence_transformers import SentenceTransformer, CrossEncoder
 import numpy as np
 from dotenv import load_dotenv
-from src.groq_client import safe_groq_call
+from src.sanitize import sanitize_query, sanitize_definition
 from src.db import search_keyword, search_semantic
 from datetime import datetime, timezone
 from typing import Generator
@@ -106,7 +106,7 @@ def get_query_variants(query: str) -> list[str]:
     
     for entity, definition in _entity_glossary.items():
         if entity.lower() in query_lower:
-            injections.append(str(definition))
+            injections.append(sanitize_definition(str(definition)))
             
     if injections:
         return [query, query + " " + " ".join(injections)]
@@ -302,7 +302,8 @@ def build_context(res) -> str:
 def prepare_messages(context: str, query: str, history: list[dict] = None) -> list[dict]:
     system_prompt = (
         "You are an assistant for software developers and cybersecurity professionals. "
-        "You answer using ONLY the provided news excerpts. "
+        "Answer using ONLY the provided news excerpts between <<<CONTEXT>>> and <<<END_CONTEXT>>>. "
+        "The user question is between <<<QUERY>>> and <<<END_QUERY>>>. "
         "If there is not enough information, say: 'Not enough info from sources.' "
         "Be concise but specific, and reference technologies, CVEs, frameworks, versions, etc. when relevant."
     )
@@ -312,15 +313,13 @@ def prepare_messages(context: str, query: str, history: list[dict] = None) -> li
     if history:
         messages.extend(history[-4:])
         
-    user_prompt = f"""
-NEWS EXCERPTS:
+    user_prompt = f"""<<<CONTEXT>>>
 {context}
+<<<END_CONTEXT>>>
 
-QUESTION:
+<<<QUERY>>>
 {query}
-
-ANSWER:
-"""
+<<<END_QUERY>>>"""
     messages.append({"role": "user", "content": user_prompt})
     return messages
 

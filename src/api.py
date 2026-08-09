@@ -3,12 +3,13 @@ import time
 import uuid
 from typing import Any, Dict, List, Optional
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 from src.rag import retrieve_super, build_context, stream_answer_from_context, CONTEXT_DOC_LIMIT
+from src.sanitize import sanitize_query, sanitize_history, contains_injection_pattern
 
 app = FastAPI(
     title="DevSec Brief – RAG API",
@@ -43,6 +44,20 @@ class AskRequest(BaseModel):
     k: int = 6
     session_id: Optional[str] = None
 
+    @field_validator('query')
+    @classmethod
+    def validate_query(cls, v: str) -> str:
+        if len(v) > 2000:
+            raise ValueError('Query too long (max 2000 chars)')
+        if contains_injection_pattern(v):
+            raise ValueError('Query contains suspicious patterns')
+        return v
+
+    @field_validator('k')
+    @classmethod
+    def validate_k(cls, v: int) -> int:
+        return max(1, min(v, 20))
+
 class Source(BaseModel):
     title: Optional[str] = None
     url: Optional[str] = None
@@ -63,21 +78,22 @@ async def health():
 def ask(req: AskRequest):
     """Standard JSON endpoint (non-streaming)."""
     topic = req.topic if req.topic not in ("all", "") else None
-    res = retrieve_super(req.query, topic=topic, k=req.k)
+    safe_query = sanitize_query(req.query)
+    res = retrieve_super(safe_query, topic=topic, k=req.k)
     context = build_context(res)
 
     if not context.strip():
         return AskResponse(answer="No relevant news found in the index.", sources=[])
 
-    history = chat_history.get(req.session_id, []) if req.session_id else []
+    history = sanitize_history(chat_history.get(req.session_id, [])) if req.session_id else []
     
     from src.rag import generate_answer_from_context
-    answer = generate_answer_from_context(context, req.query, history)
+    answer = generate_answer_from_context(context, safe_query, history)
 
     if req.session_id:
         if req.session_id not in chat_history:
             chat_history[req.session_id] = []
-        chat_history[req.session_id].append({"role": "user", "content": req.query})
+        chat_history[req.session_id].append({"role": "user", "content": safe_query})
         chat_history[req.session_id].append({"role": "assistant", "content": answer})
 
     sources_raw = res.get("metadatas") or []
@@ -89,7 +105,8 @@ def ask(req: AskRequest):
 def ask_stream(req: AskRequest):
     """SSE Streaming endpoint. Returns sources first, then tokens."""
     topic = req.topic if req.topic not in ("all", "") else None
-    res = retrieve_super(req.query, topic=topic, k=req.k)
+    safe_query = sanitize_query(req.query)
+    res = retrieve_super(safe_query, topic=topic, k=req.k)
     context = build_context(res)
 
     if not context.strip():
@@ -102,7 +119,7 @@ def ask_stream(req: AskRequest):
     sources = sources_raw[0][:CONTEXT_DOC_LIMIT] if sources_raw else []
     
     session_id = req.session_id or str(uuid.uuid4())
-    history = chat_history.get(session_id, [])
+    history = sanitize_history(chat_history.get(session_id, []))
 
     def event_stream():
         sources_payload = json.dumps({"sources": sources, "session_id": session_id})
@@ -113,7 +130,7 @@ def ask_stream(req: AskRequest):
         stream_start = time.perf_counter()
         first_token_time = None
         
-        for token in stream_answer_from_context(context, req.query, history):
+        for token in stream_answer_from_context(context, safe_query, history):
             if first_token_time is None:
                 first_token_time = time.perf_counter()
                 ttft_ms = (first_token_time - stream_start) * 1000
@@ -132,7 +149,7 @@ def ask_stream(req: AskRequest):
             
         if session_id not in chat_history:
             chat_history[session_id] = []
-        chat_history[session_id].append({"role": "user", "content": req.query})
+        chat_history[session_id].append({"role": "user", "content": safe_query})
         chat_history[session_id].append({"role": "assistant", "content": full_answer})
         
         yield f"event: done\ndata: {json.dumps({})}\n\n"

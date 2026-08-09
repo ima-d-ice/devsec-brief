@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 from src.groq_client import safe_groq_call, set_api_key
 from src.db import get_conn
+from src.sanitize import sanitize_definition
 from dotenv import load_dotenv
 import os
 
@@ -67,7 +68,7 @@ def main():
         batch = articles[i:i+batch_size]
         print(f"Processing batch {i//batch_size + 1}...", flush=True)
         entities = extract_entities_from_batch(batch)
-        glossary.update(entities)
+        glossary.update({k: sanitize_definition(v) for k, v in entities.items()})
         import time
         time.sleep(18)
         

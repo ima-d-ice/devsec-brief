@@ -5,6 +5,7 @@ import aiohttp
 import feedparser
 from bs4 import BeautifulSoup
 from src.db import save_article_if_new
+from src.sanitize import sanitize_content
 
 def strip_html(html_text: str) -> str:
     if not html_text:
@@ -111,12 +112,12 @@ async def fetch_single_feed_async(session: aiohttp.ClientSession, feed: dict) ->
             content = entry.summary
 
         data = {
-            "title": strip_html(getattr(entry, "title", "(no title)")),
+            "title": sanitize_content(strip_html(getattr(entry, "title", "(no title)"))),
             "url": getattr(entry, "link", ""),
             "source": feed["name"],
             "category": feed["category"],
-            "summary": strip_html(getattr(entry, "summary", "") or ""),
-            "content": strip_html(content or ""),
+            "summary": sanitize_content(strip_html(getattr(entry, "summary", "") or "")),
+            "content": sanitize_content(strip_html(content or "")),
             "published_at": published or "",
         }
         if data["url"]:  
