@@ -75,6 +75,29 @@ curl -N -X POST "http://127.0.0.1:8000/ask/stream" \
 ```
 
 ---
+ 
+## Security
+
+### Prompt Injection Mitigations
+
+The system implements defense-in-depth against prompt injection attacks:
+
+| Layer | Protection |
+|-------|------------|
+| **Ingestion** | RSS feed content sanitized before database storage (`src/fetch_feeds.py`) |
+| **Glossary** | Entity definitions sanitized at extraction time (`src/extract_entities.py`) |
+| **API Input** | Pydantic validation rejects queries with injection patterns (`src/api.py`) |
+| **Query Processing** | User queries sanitized before retrieval and LLM calls (`src/sanitize.py`) |
+| **Prompt Structure** | Explicit delimiters (`<<<CONTEXT>>>`, `<<<QUERY>>>`) separate context from instructions (`src/rag.py`) |
+| **Chat History** | Conversation history sanitized before re-sending to LLM |
+
+**Implementation:**
+- Centralized sanitization utility: `src/sanitize.py` (16 regex patterns covering common injection techniques)
+- Input validation: `AskRequest` model rejects queries >2000 chars or containing suspicious patterns
+- Structured prompts: System prompt instructs LLM to only use content between explicit delimiters
+- Tests: `tests/test_prompt_injection.py` (13 tests) + `tests/test_api_validation.py` (4 tests)
+
+---
 
 ## Project Structure
 
