@@ -45,7 +45,7 @@ jobs:
         run: |
           pytest tests/unit tests/test_prompt_injection.py tests/test_api_validation.py -v --cov=src --cov-branch --cov-report=term-missing --cov-report=xml --cov-fail-under=55
       - name: Upload coverage
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: coverage-xml
           path: coverage.xml
