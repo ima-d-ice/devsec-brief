@@ -1,20 +1,22 @@
 
 from pathlib import Path
-import os
 import time
 import functools
 import json
-import hashlib
 from concurrent.futures import ThreadPoolExecutor
 
 from sentence_transformers import SentenceTransformer, CrossEncoder
-import numpy as np
+import numpy as np  # noqa: F401 - used indirectly via model outputs
 from dotenv import load_dotenv
-from src.sanitize import sanitize_query, sanitize_definition
+from src.sanitize import sanitize_definition
 from src.db import search_keyword, search_semantic
+from src.groq_client import safe_groq_call
+from src.logger import get_logger
 from datetime import datetime, timezone
 from typing import Generator
 from dateutil import parser
+
+logger = get_logger(__name__)
 
 
 load_dotenv()
@@ -23,42 +25,40 @@ GROQ_MODEL = "llama-3.3-70b-versatile"
 
 EMBED_MODEL_NAME = "BAAI/bge-m3"
 ONNX_EMBED_PATH = Path(__file__).resolve().parents[1] / "data" / "onnx_st" / "bge-m3-onnx"
-if ONNX_EMBED_PATH.exists():
-    print(f"Loading INT8 ONNX Embedding model from {ONNX_EMBED_PATH}...")
-    embed_model = SentenceTransformer(
-        str(ONNX_EMBED_PATH),
-        backend="onnx",
-        model_kwargs={
-            "file_name": "onnx/model_qint8_arm64.onnx",
-            "provider": "CPUExecutionProvider"
-        }
-    )
-else:
-    print("Loading Embedding model (MPS)...")
-    embed_model = SentenceTransformer(
-        EMBED_MODEL_NAME, 
-        trust_remote_code=True, 
-        device="cpu"
-    )
-
 RERANKER_MODEL_NAME = "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1"
 ONNX_RERANK_PATH = Path(__file__).resolve().parents[1] / "data" / "onnx_st" / "mmarco-onnx"
-if ONNX_RERANK_PATH.exists():
-    print(f"Loading INT8 ONNX CrossEncoder from {ONNX_RERANK_PATH}...")
-    reranker_model = CrossEncoder(
-        str(ONNX_RERANK_PATH),
-        backend="onnx",
-        model_kwargs={
-            "file_name": "onnx/model_qint8_arm64.onnx",
-            "provider": "CPUExecutionProvider"
-        }
-    )
-else:
-    print("Loading CrossEncoder natively...")
-    reranker_model = CrossEncoder(
-        RERANKER_MODEL_NAME, 
-        device="cpu"
-    )
+
+# Lazy load with safe fallback - allows unit tests to mock without network/model download
+def _load_embed_model():
+    try:
+        if ONNX_EMBED_PATH.exists():
+            logger.info("Loading INT8 ONNX Embedding model", extra={"path": str(ONNX_EMBED_PATH)})
+            return SentenceTransformer(
+                str(ONNX_EMBED_PATH),
+                backend="onnx",
+                model_kwargs={"file_name": "onnx/model_qint8_arm64.onnx", "provider": "CPUExecutionProvider"},
+            )
+        else:
+            logger.info("Loading Embedding model (CPU fallback)", extra={"model": EMBED_MODEL_NAME})
+            return SentenceTransformer(EMBED_MODEL_NAME, trust_remote_code=True, device="cpu")
+    except Exception as e:
+        logger.warning("embed_model_load_failed", extra={"error": str(e)[:300]})
+        return None
+
+def _load_reranker_model():
+    try:
+        if ONNX_RERANK_PATH.exists():
+            logger.info("Loading INT8 ONNX CrossEncoder", extra={"path": str(ONNX_RERANK_PATH)})
+            return CrossEncoder(str(ONNX_RERANK_PATH), backend="onnx", model_kwargs={"file_name": "onnx/model_qint8_arm64.onnx", "provider": "CPUExecutionProvider"})
+        else:
+            logger.info("Loading CrossEncoder natively", extra={"model": RERANKER_MODEL_NAME})
+            return CrossEncoder(RERANKER_MODEL_NAME, device="cpu")
+    except Exception as e:
+        logger.warning("reranker_load_failed", extra={"error": str(e)[:300]})
+        return None
+
+embed_model = _load_embed_model()
+reranker_model = _load_reranker_model()
 
 CONTEXT_DOC_LIMIT = 3
 
@@ -68,13 +68,13 @@ CROSSENCODER_MAX_CHARS = 1000
 
 
 def timeit(func):
-    """Decorator to measure and log function execution time."""
+    """Decorator to measure and log function execution time (structured)."""
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         start = time.perf_counter()
         result = func(*args, **kwargs)
         elapsed = time.perf_counter() - start
-        print(f"⏱️  {func.__name__} took {elapsed:.4f}s")
+        logger.info("stage_latency", extra={"stage": func.__name__, "ms": round(elapsed * 1000, 1), "seconds": round(elapsed, 4)})
         return result
     return wrapper
 
@@ -89,9 +89,9 @@ def _load_glossary():
     try:
         with open(GLOSSARY_PATH, 'r') as f:
             _entity_glossary = json.load(f)
-        print(f"  [glossary] Loaded {len(_entity_glossary)} entities for query enrichment.")
+        logger.info("glossary_loaded", extra={"count": len(_entity_glossary)})
     except Exception as e:
-        print(f"  [glossary] Could not load: {e}")
+        logger.warning("glossary_load_failed", extra={"error": str(e)})
         _entity_glossary = {}
 
 _load_glossary()
@@ -152,7 +152,8 @@ def rrf_merge(*result_lists: list[dict], pool_size: int = 20) -> dict:
     def process_list(results):
         for rank, item in enumerate(results):
             url = item["metadata"].get("url")
-            if not url: continue
+            if not url:
+                continue
             if url not in rrf_scores:
                 rrf_scores[url] = 0.0
                 doc_data[url] = item
@@ -183,7 +184,7 @@ def rrf_merge(*result_lists: list[dict], pool_size: int = 20) -> dict:
 
 
 @timeit
-def retrieve_super(query: str, topic: str | None = None, k: int = 6):
+def retrieve_super(query: str, topic: str | None = None, k: int = 3):
     """
     HYBRID SEARCH (optimized):
       1. Single pass dense semantic search with BAAI/bge-m3 + keyword search
@@ -191,14 +192,13 @@ def retrieve_super(query: str, topic: str | None = None, k: int = 6):
       3. CrossEncoder rerank → top K
     """
     timings = {}
-    where = {"category": topic} if topic else None
 
     # Stage 1: Query expansion + Embedding
     t1 = time.perf_counter()
     query_variants = get_query_variants(query)
     q_embs = embed_model.encode(query_variants, batch_size=len(query_variants)).tolist()
     timings["embedding"] = time.perf_counter() - t1
-    print(f"     [debug] embedding took {timings['embedding']:.4f}s")
+    logger.info("retrieval_stage", extra={"stage": "embedding", "ms": round(timings["embedding"] * 1000, 1), "variants": len(query_variants)})
 
     # Stage 2: Parallel DB search (semantic + keyword)
     t2 = time.perf_counter()
@@ -245,8 +245,7 @@ def retrieve_super(query: str, topic: str | None = None, k: int = 6):
         return {"documents": [[]], "metadatas": [[]]}
 
     total_semantic = sum(len(lst) for lst in semantic_result_lists)
-    print(f"Hybrid Search: Merging {total_semantic} semantic docs and {len(keyword_results)} keyword docs...")
-    print(f"Reranking {len(merged_docs)} candidate documents with CrossEncoder...")
+    logger.info("hybrid_merge", extra={"semantic_docs": total_semantic, "keyword_docs": len(keyword_results), "pool": len(merged_docs)})
     
     # Stage 4: CrossEncoder reranking
     t4 = time.perf_counter()
@@ -261,11 +260,10 @@ def retrieve_super(query: str, topic: str | None = None, k: int = 6):
     top_k_metas = [x[2] for x in scored_results[:k]]
 
     if scored_results:
-        print(f"Top document rerank score: {scored_results[0][0]:.4f}")
+        logger.info("rerank_top_score", extra={"score": round(float(scored_results[0][0]), 4)})
 
     timings["total_retrieval"] = timings["embedding"] + timings["db_search"] + timings["rrf"] + timings["rerank"]
-    timing_str = " | ".join(f"{k}: {v:.4f}s" for k, v in timings.items())
-    print(f"⏱️  [retrieve_super stages] {timing_str}")
+    logger.info("retrieve_super_complete", extra={k: round(v * 1000, 1) for k, v in timings.items()} | {"total_ms": round(timings["total_retrieval"] * 1000, 1)})
 
     return {
         "documents": [top_k_docs],
@@ -380,8 +378,9 @@ def answer_question(query: str, topic: str | None = None, k: int = 6) -> dict:
 
 if __name__ == "__main__":
     q = "Any important recent web development or JavaScript updates?"
-    result = answer_question(q, topic="webdev", k=6)
+    result = answer_question(q, topic="webdev", k=3)
 
+    logger.info("demo_complete", extra={"question": q})
     print("QUESTION:", q)
     print("\n" + "=" * 80 + "\n")
     print("ANSWER:\n", result["answer"])

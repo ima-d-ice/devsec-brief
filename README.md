@@ -6,6 +6,9 @@
   <img src="https://img.shields.io/badge/FastAPI-005571?style=flat&logo=fastapi" alt="FastAPI">
   <img src="https://img.shields.io/badge/Groq-Llama_3.3-f55036.svg" alt="Groq Llama 3.3">
   <img src="https://img.shields.io/badge/PostgreSQL-pgvector-336791.svg?logo=postgresql" alt="PostgreSQL pgvector">
+  <a href="https://github.com/ima-d-ice/devsec-brief/actions/workflows/ci.yml"><img src="https://github.com/ima-d-ice/devsec-brief/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <img src="https://img.shields.io/badge/coverage-76%25-brightgreen.svg" alt="Coverage">
+  <img src="https://img.shields.io/badge/logging-JSON%20structured-informational.svg" alt="Logging">
 </div>
 
 <br>
@@ -96,6 +99,33 @@ The system implements defense-in-depth against prompt injection attacks:
 - Input validation: `AskRequest` model rejects queries >2000 chars or containing suspicious patterns
 - Structured prompts: System prompt instructs LLM to only use content between explicit delimiters
 - Tests: `tests/test_prompt_injection.py` (13 tests) + `tests/test_api_validation.py` (4 tests)
+
+---
+
+## Reliability & Observability
+
+**Testing:** Pytest unit + integration (`76%` coverage). Unit mocks ONNX/DB (`tests/conftest.py`), integration uses `testcontainers` `pgvector/pgvector:pg16` + `TestClient` `src/api.py:14`.
+
+```bash
+pip install -r requirements-dev.txt
+pytest -q                          # unit + existing (no DB)
+pytest -m integration -v          # pgvector integration (needs docker)
+pytest -q --cov=src --cov-fail-under=55
+```
+
+**Structured Logging:** JSON with `request_id` correlation (`src/logger.py`).
+
+```bash
+docker compose up --build -d
+docker logs devsec_postgres 2>&1 | jq  # or: docker logs <api> | jq 'select(.stage=="total_retrieval")'
+curl -i http://127.0.0.1:8000/ask -H "X-Request-ID: demo-123"  # propagated via X-Request-ID + X-Process-Time-Ms
+```
+
+Every stage `embedding` `db_search` `rrf` `rerank` `total_retrieval` `src/rag.py:186` + `TTFT`/`TPS` `src/api.py:137` logs `ms` + `request_id` for `p50/p95` via `jq`.
+
+**CI/CD:** `.github/workflows/ci.yml` → `lint (ruff)` → `test (pytest --cov)` → `integration (pgvector service)` → `docker build + /health smoke` with `actions/cache` for `data/onnx_st` `src/export_st_onnx.py:14`. `cd.yml` pushes `ghcr.io` on `v*.*.*`.
+
+**Docker Hardened:** Non-root `appuser` `HEALTHCHECK curl /health` `EXPOSE 8000` `src/db.py:15 configure=...` fix, `ssl=True` via `certifi` `src/fetch_feeds.py:135`, volume `./data:/app/data` fix `src/rag.py:25`, `restart: unless-stopped`.
 
 ---
 

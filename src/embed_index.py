@@ -1,38 +1,51 @@
-import time
 from sentence_transformers import SentenceTransformer
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from src.db import get_conn
+from src.logger import get_logger
 
 from pathlib import Path
 
+logger = get_logger(__name__)
+
 ONNX_EMBED_PATH = Path(__file__).resolve().parents[1] / "data" / "onnx_st" / "bge-m3-onnx"
 
-embed_model = SentenceTransformer(
-    str(ONNX_EMBED_PATH), 
-    backend="onnx",
-    model_kwargs={
-        "file_name": "onnx/model_qint8_arm64.onnx",
-        "provider": "CPUExecutionProvider"
-    }
-)
+# Allow import without ONNX model present (e.g., in unit tests)
+try:
+    embed_model = SentenceTransformer(
+        str(ONNX_EMBED_PATH), 
+        backend="onnx",
+        model_kwargs={
+            "file_name": "onnx/model_qint8_arm64.onnx",
+            "provider": "CPUExecutionProvider"
+        }
+    )
+except Exception as e:
+    logger.warning("embed_model_load_failed_onnx", extra={"error": str(e)[:200]})
+    # Fallback mock will be patched in tests; try lazy load later if needed
+    embed_model = None  # type: ignore
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=400, chunk_overlap=100)
 
 def sync_index(limit=None):
+    if embed_model is None:
+        raise RuntimeError("Embedding model not loaded - ONNX path missing and not mocked")
     with get_conn() as conn:
         with conn.cursor() as cur:
             cur.execute("TRUNCATE article_chunks RESTART IDENTITY CASCADE;")
             conn.commit()
 
             sql = "SELECT id, title, url, source, category, summary, content, published_at FROM articles ORDER BY id DESC"
+            params = {}
             if limit:
-                sql += f" LIMIT {limit}"
+                # Parameterized LIMIT (fix f-string SQL injection risk)
+                sql += " LIMIT %(limit)s"
+                params["limit"] = int(limit)
             
-            cur.execute(sql)
+            cur.execute(sql, params if params else None)
             rows = cur.fetchall()
             col_names = [desc[0] for desc in cur.description]
             articles = [dict(zip(col_names, row)) for row in rows]
 
-    print(f"Loaded {len(articles)} articles")
+    logger.info("sync_articles_loaded", extra={"count": len(articles)})
 
     all_chunks = []
     all_texts_for_embedding = []
@@ -55,13 +68,13 @@ def sync_index(limit=None):
             })
 
     if not all_texts_for_embedding:
-        print("No documents to encode.")
+        logger.info("sync_no_docs")
         return
 
-    print(f"Encoding {len(all_texts_for_embedding)} documents")
+    logger.info("sync_encoding", extra={"chunks": len(all_texts_for_embedding)})
     embeddings = embed_model.encode(all_texts_for_embedding, show_progress_bar=True, batch_size=32)
 
-    print("Upserting...")
+    logger.info("sync_upserting", extra={"chunks": len(all_chunks)})
     
     insert_sql = """
         INSERT INTO article_chunks (article_id, chunk_index, chunk_text, title, url, source, category, published_at, embedding)
@@ -88,7 +101,7 @@ def sync_index(limit=None):
             cur.executemany(insert_sql, insert_data)
             conn.commit()
 
-    print("✅ Index sync complete.")
+    logger.info("sync_complete", extra={"chunks": len(all_chunks)})
 
 if __name__ == "__main__":
     sync_index()

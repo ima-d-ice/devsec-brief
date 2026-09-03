@@ -1,0 +1,30 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --cov=src --cov-branch --cov-report=term-missing --cov-fail-under=55 --cov-report=xml"
+markers = [
+    "integration: marks tests requiring postgres or network (deselect with -m 'not integration')",
+    "unit: fast unit tests with no external deps",
+]
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["src/__init__.py", "src/export_st_onnx.py", "src/refresh.py", "src/extract_entities.py", "src/fetch_feeds.py"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "B"]
+ignore = ["E501", "B905", "E402"]

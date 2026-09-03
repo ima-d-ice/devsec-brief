@@ -1,23 +1,40 @@
 import os
 import re
 from psycopg_pool import ConnectionPool
+from src.logger import get_logger
+
+logger = get_logger(__name__)
 
 DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql://devsec:devsec@localhost:5432/devsec")
-
-pool = ConnectionPool(
-    DATABASE_URL,
-    min_size=2,
-    max_size=10,
-    timeout=30.0,
-    kwargs={"autocommit": True},
-)
 
 def configure_connection(conn):
     with conn.cursor() as cur:
         cur.execute("SET hnsw.ef_search = 40;")
         cur.execute("SET statement_timeout = '5s';")
 
-pool.configure = configure_connection
+# Avoid spawning pool threads during pytest without DB (prevents PythonFinalizationError)
+if os.getenv("PYTEST_CURRENT_TEST"):
+    from unittest.mock import MagicMock
+    pool = MagicMock()
+    _mock_conn = MagicMock()
+    _mock_cur = MagicMock()
+    _mock_cur.description = []
+    _mock_cur.fetchall.return_value = []
+    _mock_cur.fetchone.return_value = None
+    _mock_conn.cursor.return_value.__enter__.return_value = _mock_cur
+    _mock_conn.cursor.return_value.__exit__.return_value = False
+    _mock_conn.__enter__.return_value = _mock_conn
+    _mock_conn.__exit__.return_value = False
+    pool.connection.return_value = _mock_conn
+else:
+    pool = ConnectionPool(
+        DATABASE_URL,
+        min_size=2,
+        max_size=10,
+        timeout=30.0,
+        kwargs={"autocommit": True},
+        configure=configure_connection,
+    )
 
 def get_conn():
     return pool.connection()

@@ -1,11 +1,15 @@
 import random
-import time
 import asyncio
+import ssl
+import certifi
 import aiohttp
 import feedparser
 from bs4 import BeautifulSoup
 from src.db import save_article_if_new
 from src.sanitize import sanitize_content
+from src.logger import get_logger
+
+logger = get_logger(__name__)
 
 def strip_html(html_text: str) -> str:
     if not html_text:
@@ -59,8 +63,7 @@ FEEDS = [
 ]
 
 async def fetch_single_feed_async(session: aiohttp.ClientSession, feed: dict) -> int:
-    print(f"\n=== Fetching: {feed['name']} ===")
-    print(f"URL: {feed['url']}")
+    logger.info("fetch_start", extra={"feed": feed['name'], "url": feed['url']})
 
     max_retries = 3
     content_data = None
@@ -74,28 +77,28 @@ async def fetch_single_feed_async(session: aiohttp.ClientSession, feed: dict) ->
                 status_code = resp.status
                 if status_code == 200:
                     content_data = await resp.read()
-                    print(f"Success on attempt {attempt}.")
+                    logger.info("fetch_success", extra={"feed": feed['name'], "attempt": attempt, "status": status_code})
                     break
                 elif status_code in [400, 403, 404, 410]:
-                    print(f"Permanent error {status_code}. Not retrying.")
+                    logger.warning("fetch_permanent_error", extra={"feed": feed['name'], "status": status_code})
                     return 0
                 else:
-                    print(f"Attempt {attempt} failed (Status {status_code}).")
+                    logger.warning("fetch_attempt_failed", extra={"feed": feed['name'], "attempt": attempt, "status": status_code})
 
         except Exception as e:
-            print(f"Attempt {attempt} failed: Network error ({e})")
+            logger.warning("fetch_network_error", extra={"feed": feed['name'], "attempt": attempt, "error": str(e)[:200]})
 
         if attempt < max_retries:
             sleep_time = 2 ** attempt
-            print(f"Retrying in {sleep_time} seconds...")
+            logger.info("fetch_retry", extra={"feed": feed['name'], "sleep_s": sleep_time, "next_attempt": attempt + 1})
             await asyncio.sleep(sleep_time)
 
     if not content_data or status_code != 200:
-        print(f" Giving up on {feed['name']} after {max_retries} attempts.")
+        logger.error("fetch_give_up", extra={"feed": feed['name'], "attempts": max_retries, "status": status_code})
         return 0
     
     parsed = feedparser.parse(content_data)
-    print(f"Entries found: {len(parsed.entries)}")
+    logger.info("entries_found", extra={"feed": feed['name'], "count": len(parsed.entries)})
 
     new_inserted = 0
     duplicates_skipped = 0
@@ -106,7 +109,7 @@ async def fetch_single_feed_async(session: aiohttp.ClientSession, feed: dict) ->
         if getattr(entry, "content", None):
             try:
                 content = entry.content[0].value
-            except (IndexError, AttributeError, TypeError) as e:
+            except (IndexError, AttributeError, TypeError):
                 content = str(entry.content)
         elif getattr(entry, "summary", None):
             content = entry.summary
@@ -127,12 +130,13 @@ async def fetch_single_feed_async(session: aiohttp.ClientSession, feed: dict) ->
             else:
                 duplicates_skipped += 1
         
-    print(f"Inserted {new_inserted} articles for {feed['name']}")   
-    print(f"Skipped {duplicates_skipped} duplicate articles for {feed['name']}")
+    logger.info("feed_insert_complete", extra={"feed": feed['name'], "inserted": new_inserted, "skipped": duplicates_skipped})
     return new_inserted
 
 async def fetch_all_feeds_async() -> int:
-    connector = aiohttp.TCPConnector(ssl=False)
+    # Use certifi SSL context - secure by default (fixed from ssl=False)
+    ssl_context = ssl.create_default_context(cafile=certifi.where())
+    connector = aiohttp.TCPConnector(ssl=ssl_context)
     async with aiohttp.ClientSession(connector=connector) as session:
         tasks = [fetch_single_feed_async(session, feed) for feed in FEEDS]
         results = await asyncio.gather(*tasks)
@@ -140,4 +144,4 @@ async def fetch_all_feeds_async() -> int:
 
 def fetch_all_feeds() -> None:
     total = asyncio.run(fetch_all_feeds_async())
-    print(f"\nFetch complete. Inserted {total} articles total.")
+    logger.info("fetch_all_complete", extra={"total_inserted": total})
