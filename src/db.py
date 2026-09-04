@@ -40,6 +40,15 @@ def init_db():
             cur.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm;")
             cur.execute("CREATE EXTENSION IF NOT EXISTS unaccent;")
 
+            # unaccent() is STABLE, but GENERATED columns require IMMUTABLE
+            # functions. This wrapper makes fresh installs work; behavior identical.
+            cur.execute("""
+            CREATE OR REPLACE FUNCTION immutable_unaccent(text)
+            RETURNS text AS $$
+                SELECT unaccent($1);
+            $$ LANGUAGE sql IMMUTABLE;
+            """)
+
             cur.execute("""
             CREATE TABLE IF NOT EXISTS articles (
                 id           BIGSERIAL PRIMARY KEY,
@@ -55,8 +64,8 @@ def init_db():
                 updated_at   TIMESTAMPTZ DEFAULT NOW(),
                 search_vector tsvector GENERATED ALWAYS AS (
                     to_tsvector('english',
-                        coalesce(unaccent(title), '') || ' ' ||
-                        coalesce(unaccent(coalesce(content, summary)), '')
+                        coalesce(immutable_unaccent(title), '') || ' ' ||
+                        coalesce(immutable_unaccent(coalesce(content, summary)), '')
                     )
                 ) STORED
             );
