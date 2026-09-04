@@ -1,0 +1,2238 @@
+{
+  "total_questions": 139,
+  "total_duration_s": 1050.0,
+  "averages": {
+    "context_precision": 0.647,
+    "faithfulness": 1.0,
+    "answer_relevancy": 0.647,
+    "semantic_similarity": 0.636,
+    "retrieval_latency_ms": 3616.0,
+    "generation_latency_ms": 645.4
+  },
+  "results": [
+    {
+      "id": "cve_01",
+      "category": "cybersec",
+      "question": "What is CVE-2024-3094 and which utility was compromised?",
+      "retrieval_ms": 3301.41,
+      "generation_ms": 1593.32,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains information about Siemens, VMware, and Mitsubishi Electric vulnerabilities, but completely lacks any information regarding CVE-2024-3094 or XZ Utils. Therefore, context precision is 0.0. The generated answer states 'Not enough info from sources,' which is a truthful reflection of the provided context (no hallucinations), so faithfulness is 1.0. However, the answer fails to address the user's question, resulting in 0.0 for answer relevancy. It also misses all core technical facts from the ground truth, resulting in 0.0 for semantic similarity."
+    },
+    {
+      "id": "cve_02",
+      "category": "cybersec",
+      "question": "How did the Log4Shell vulnerability (CVE-2021-44228) work?",
+      "retrieval_ms": 4199.6,
+      "generation_ms": 454.59,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains information about Cisco, VMware, and Progress Kemp vulnerabilities, but completely lacks any details about Log4Shell (CVE-2021-44228) or Apache Log4j. Therefore, context precision is 0.0. The generated answer states 'Not enough info from sources,' which is a truthful reflection of the provided context (no hallucinations), so faithfulness is 1.0. However, the answer fails to address the user's question about how the vulnerability worked, resulting in 0.0 for answer relevancy. Similarly, it misses all the technical facts present in the ground truth, resulting in 0.0 for semantic similarity."
+    },
+    {
+      "id": "cve_03",
+      "category": "cybersec",
+      "question": "What was the mechanism behind the HTTP/2 Rapid Reset attack (CVE-2023-44487)?",
+      "retrieval_ms": 2397.83,
+      "generation_ms": 492.72,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains no information regarding CVE-2023-44487 or the HTTP/2 Rapid Reset attack, making context precision 0.0. The generated answer correctly states that there is not enough information, which is faithful to the provided (irrelevant) context, resulting in a faithfulness score of 1.0. However, the answer fails to address the user's specific question about the mechanism, leading to a relevancy score of 0.0. Consequently, it shares no technical facts with the ground truth, resulting in a semantic similarity score of 0.0."
+    },
+    {
+      "id": "cve_04",
+      "category": "cybersec",
+      "question": "What vulnerability affected curl in October 2023 under CVE-2023-38545?",
+      "retrieval_ms": 2999.2,
+      "generation_ms": 543.24,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains no information regarding curl or CVE-2023-38545, focusing instead on unrelated vulnerabilities (ownCloud, Next.js, Linux Kernel). Therefore, context precision is 0.0. The generated answer correctly states that there is not enough information, which is faithful to the provided (irrelevant) context, so faithfulness is 1.0. However, the answer fails to address the user's specific question about the vulnerability details, resulting in 0.0 for answer relevancy. It also completely misses the technical facts in the ground truth, resulting in 0.0 for semantic similarity."
+    },
+    {
+      "id": "cve_05",
+      "category": "cybersec",
+      "question": "What is the Spring4Shell vulnerability (CVE-2022-22965)?",
+      "retrieval_ms": 4985.68,
+      "generation_ms": 544.77,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains information about Cisco Nexus, ownCloud, and TeamCity vulnerabilities, none of which are related to Spring4Shell (CVE-2022-22965). Therefore, context precision is 0.0. The generated answer states 'Not enough info from sources,' which is a truthful reflection of the provided context (no hallucinations), so faithfulness is 1.0. However, the answer fails to address the user's question about Spring4Shell, resulting in 0.0 for answer relevancy. Similarly, it misses all technical facts from the ground truth, resulting in 0.0 for semantic similarity."
+    },
+    {
+      "id": "cve_06",
+      "category": "cybersec",
+      "question": "What is the impact of CVE-2023-34362 in MOVEit Transfer?",
+      "retrieval_ms": 3523.22,
+      "generation_ms": 561.08,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains no information regarding CVE-2023-34362 or MOVEit Transfer, making the context precision 0.0. The generated answer correctly identifies that the provided sources do not contain the necessary information, so it is faithful to the context (no hallucinations), resulting in a faithfulness score of 1.0. However, the answer fails to address the user's question about the impact of the vulnerability, leading to a relevancy score of 0.0. Consequently, it shares no technical facts with the ground truth, resulting in a semantic similarity score of 0.0."
+    },
+    {
+      "id": "cve_07",
+      "category": "cybersec",
+      "question": "Explain CVE-2024-21762 in Fortinet FortiOS.",
+      "retrieval_ms": 2923.68,
+      "generation_ms": 469.67,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context is completely irrelevant (Siemens SIMATIC vs Fortinet FortiOS), resulting in a context_precision of 0.0. The generated answer correctly identifies that the provided sources do not contain the necessary information, making it strictly faithful to the context (no hallucinations), hence a faithfulness of 1.0. However, the answer fails to address the user's question about CVE-2024-21762, resulting in 0.0 for answer_relevancy. It also completely misses the technical facts in the ground truth, resulting in 0.0 for semantic_similarity."
+    },
+    {
+      "id": "cve_08",
+      "category": "cybersec",
+      "question": "What was the Ivanti Connect Secure zero-day CVE-2023-46805 and CVE-2024-21887 combo?",
+      "retrieval_ms": 3800.94,
+      "generation_ms": 594.63,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains no information regarding Ivanti Connect Secure, CVE-2023-46805, or CVE-2024-21887; it discusses unrelated vulnerabilities (Siemens, ZBT routers, ownCloud). Therefore, context precision is 0.0. The generated answer correctly states that there is not enough information, which is faithful to the provided (irrelevant) context, so faithfulness is 1.0. However, the answer fails to address the user's specific question about the CVE combo, resulting in 0.0 for answer relevancy. It also completely misses the technical facts in the ground truth, resulting in 0.0 for semantic similarity."
+    },
+    {
+      "id": "cve_09",
+      "category": "cybersec",
+      "question": "What risk does CVE-2024-6387 (regreSSHion) pose to OpenSSH?",
+      "retrieval_ms": 3808.94,
+      "generation_ms": 510.62,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains no information regarding CVE-2024-6387 or OpenSSH, making the context precision 0.0. The generated answer correctly identifies that the provided sources do not contain the necessary information, so it is faithful to the context (no hallucinations), resulting in a faithfulness score of 1.0. However, the answer fails to address the user's question about the specific risk, resulting in 0.0 for answer relevancy. It also completely misses the technical facts in the ground truth, resulting in 0.0 for semantic similarity."
+    },
+    {
+      "id": "cve_10",
+      "category": "cybersec",
+      "question": "What is the nature of CVE-2022-30190 (Follina)?",
+      "retrieval_ms": 2908.29,
+      "generation_ms": 463.96,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.2,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains information about Siemens SIMATIC and unrelated 2026 Microsoft Office CVEs, completely missing the details for CVE-2022-30190 (Follina). Therefore, context precision is 0.0. The generated answer correctly states that there is not enough information, which is faithful to the provided (irrelevant) context, so faithfulness is 1.0. However, the answer fails to address the user's question about the nature of the vulnerability, resulting in 0.0 for answer relevancy. It also fails to capture any of the technical facts from the ground truth, resulting in 0.0 for semantic similarity."
+    },
+    {
+      "id": "cve_11",
+      "category": "cybersec",
+      "question": "What is CVE-2024-0012 in Palo Alto Networks PAN-OS?",
+      "retrieval_ms": 3357.04,
+      "generation_ms": 508.13,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains information about Siemens SIMATIC and ownCloud, which is completely irrelevant to the question about Palo Alto Networks PAN-OS CVE-2024-0012, resulting in a context precision of 0.0. The generated answer correctly identifies that the provided sources do not contain the necessary information, making it strictly faithful to the context (no hallucinations), hence a faithfulness score of 1.0. However, the answer fails to address the user's specific question about the vulnerability details, resulting in an answer relevancy of 0.0. Consequently, it misses all technical facts present in the ground truth, leading to a semantic similarity of 0.0."
+    },
+    {
+      "id": "cve_12",
+      "category": "cybersec",
+      "question": "Explain the Confluence Data Center OGNL injection (CVE-2022-26134).",
+      "retrieval_ms": 5705.95,
+      "generation_ms": 503.44,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains completely irrelevant information regarding ICS advisories (CPDLC, Siemens, etc.) and lacks any details about CVE-2022-26134 or Confluence, resulting in a context precision of 0.0. The generated answer states 'Not enough info from sources,' which is a truthful reflection of the provided context (no hallucinations), so faithfulness is 1.0. However, the answer fails to address the user's question about the vulnerability, resulting in 0.0 for answer relevancy. It also completely misses the technical facts in the ground truth, resulting in 0.0 for semantic similarity."
+    },
+    {
+      "id": "web_01",
+      "category": "webdev",
+      "question": "What is Content Security Policy (CSP) and how does strict-dynamic improve it?",
+      "retrieval_ms": 15953.86,
+      "generation_ms": 947.86,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains no information regarding Content Security Policy (CSP) or the strict-dynamic directive, making context precision 0.0. The generated answer correctly identifies the lack of information in the context, so it is faithful to the provided sources (no hallucinations), resulting in a faithfulness score of 1.0. However, the answer fails to address the user's question about what CSP is, resulting in 0.0 for answer relevancy. It also completely misses the technical facts present in the ground truth, resulting in 0.0 for semantic similarity."
+    },
+    {
+      "id": "web_02",
+      "category": "webdev",
+      "question": "How does Cross-Origin Resource Sharing (CORS) preflight request work?",
+      "retrieval_ms": 11385.29,
+      "generation_ms": 606.03,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains information about Zabbix vulnerabilities, JFrog Artifactory, and social engineering attacks, none of which relate to CORS preflight requests. Therefore, context precision is 0.0. The generated answer states 'Not enough info from sources,' which is a truthful reflection of the provided context (no hallucinations), so faithfulness is 1.0. However, the answer fails to address the user's question about how CORS works, resulting in 0.0 for answer relevancy. Similarly, it misses all technical facts present in the ground truth, resulting in 0.0 for semantic similarity."
+    },
+    {
+      "id": "web_03",
+      "category": "webdev",
+      "question": "What is Prototype Pollution in JavaScript and how is it mitigated?",
+      "retrieval_ms": 9087.39,
+      "generation_ms": 633.87,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.25,
+      "scores": {
+        "context_precision": 0.1,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains only a brief mention of prototype pollution in the context of a Zabbix vulnerability, lacking the general definition and mitigation strategies required to answer the question. The generated answer correctly identifies that the context is insufficient, making it faithful to the provided sources (no hallucinations). However, it fails to answer the user's question and shares no technical facts with the ground truth."
+    },
+    {
+      "id": "web_04",
+      "category": "webdev",
+      "question": "How do Passkeys and WebAuthn eliminate credential stuffing attacks?",
+      "retrieval_ms": 8089.41,
+      "generation_ms": 818.37,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context consists of unrelated Dutch security advisories regarding Cisco, Splunk, and Oracle vulnerabilities, containing no information about Passkeys or WebAuthn. Therefore, context precision is 0.0. The generated answer correctly identifies that the sources do not contain the necessary information, making it faithful to the provided context (no hallucinations), so faithfulness is 1.0. However, the answer fails to address the user's specific question about how Passkeys eliminate credential stuffing, resulting in 0.0 for answer relevancy. It also completely misses the technical facts in the ground truth, resulting in 0.0 for semantic similarity."
+    },
+    {
+      "id": "web_05",
+      "category": "webdev",
+      "question": "What is the difference between SameSite=Lax, SameSite=Strict, and SameSite=None for cookies?",
+      "retrieval_ms": 8001.92,
+      "generation_ms": 770.44,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.167,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains information about Zabbix and Next.js vulnerabilities, which is completely irrelevant to the question about cookie SameSite attributes. Therefore, context precision is 0.0. The generated answer states 'Not enough info from sources,' which is a truthful reflection of the provided context (no hallucinations), so faithfulness is 1.0. However, the answer fails to address the user's question, resulting in 0.0 for answer relevancy. It also misses all the technical facts in the ground truth, resulting in 0.0 for semantic similarity."
+    },
+    {
+      "id": "web_06",
+      "category": "webdev",
+      "question": "What security benefits does Subresource Integrity (SRI) provide?",
+      "retrieval_ms": 7604.24,
+      "generation_ms": 764.98,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.4,
+      "scores": {
+        "context_precision": 0.2,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.5,
+        "semantic_similarity": 0.1
+      },
+      "reasoning": "The retrieved context contains one relevant source (MDN) but two completely irrelevant sources (Apple iOS and JFrog advisories), lowering precision. The generated answer is strictly faithful to the limited information in the MDN snippet, so faithfulness is high. However, the answer is vague and misses the core technical mechanism (cryptographic hash verification) described in the ground truth, resulting in low semantic similarity and moderate relevancy."
+    },
+    {
+      "id": "web_07",
+      "category": "webdev",
+      "question": "How does Cross-Origin Embedder Policy (COEP) enable high-resolution timers?",
+      "retrieval_ms": 5254.68,
+      "generation_ms": 429.76,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains no information regarding Cross-Origin Embedder Policy (COEP), high-resolution timers, or browser security mechanisms; it is entirely irrelevant (Linux SCTP flaw, malware, AI inference). Consequently, context_precision is 0.0. The generated answer correctly identifies that the provided sources do not contain the necessary information, making it strictly grounded in the (lack of) context, so faithfulness is 1.0. However, the answer fails to address the user's question with any technical detail, resulting in 0.0 for answer_relevancy. It also completely misses the technical facts present in the ground truth (COEP require-corp, COOP, cross-origin isolation, SharedArrayBuffer, performance.now()), resulting in 0.0 for semantic_similarity."
+    },
+    {
+      "id": "web_08",
+      "category": "webdev",
+      "question": "What is DOM Clobbering and how can developers defend against it?",
+      "retrieval_ms": 2535.39,
+      "generation_ms": 491.47,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains information about ICS advisories and Java vulnerabilities, which is completely irrelevant to DOM Clobbering, resulting in a context precision of 0.0. The generated answer correctly identifies that the sources do not contain the necessary information, so it is faithful to the provided context (no hallucinations), earning a 1.0. However, because the answer is a refusal rather than an explanation of the concept and defenses, it fails to address the user's question (0.0 relevancy) and misses all technical facts from the ground truth (0.0 semantic similarity)."
+    },
+    {
+      "id": "web_09",
+      "category": "webdev",
+      "question": "What is Server-Sent Events (SSE) and when is it preferred over WebSockets?",
+      "retrieval_ms": 6371.67,
+      "generation_ms": 551.46,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context consists of Dutch cybersecurity advisories regarding vulnerabilities in CodeMeter, JFrog Artifactory, and Apple iOS, which are completely irrelevant to the question about Server-Sent Events (SSE) and WebSockets. Consequently, context_precision is 0.0. The generated answer states 'Not enough info from sources,' which is a truthful reflection of the lack of relevant data in the context, so it is faithful (no hallucinations), earning a 1.0. However, it fails to answer the user's question, resulting in 0.0 for answer_relevancy. It also misses all technical facts from the ground truth, resulting in 0.0 for semantic_similarity."
+    },
+    {
+      "id": "web_10",
+      "category": "webdev",
+      "question": "How does HTTP Strict Transport Security (HSTS) with preloading prevent SSL stripping?",
+      "retrieval_ms": 4766.88,
+      "generation_ms": 507.75,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains advisories for Johnson Controls, SolarWinds, and Oracle, none of which mention HSTS or SSL stripping, making the context completely irrelevant (0.0). The generated answer correctly identifies the lack of information in the context, so it is faithful to the provided sources (1.0). However, it fails to answer the user's question, resulting in zero relevancy (0.0) and zero semantic similarity to the ground truth (0.0)."
+    },
+    {
+      "id": "web_11",
+      "category": "webdev",
+      "question": "What are Permission Policies in modern web standards?",
+      "retrieval_ms": 7044.45,
+      "generation_ms": 520.77,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains cybersecurity advisories regarding Thermo Fisher and Oracle vulnerabilities, which are completely irrelevant to the question about web standards (Permission Policies). Therefore, context precision is 0.0. The generated answer correctly identifies that the provided sources do not contain the necessary information, so it is faithful to the context (no hallucinations), earning a 1.0. However, it fails to answer the user's question, resulting in 0.0 for answer relevancy. It also misses all technical facts from the ground truth, resulting in 0.0 for semantic similarity."
+    },
+    {
+      "id": "infra_01",
+      "category": "cybersec",
+      "question": "What security risk arises from mounting /var/run/docker.sock into a container?",
+      "retrieval_ms": 3002.35,
+      "generation_ms": 479.56,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains advisories for Apple iOS, VMware, and JFrog Artifactory, none of which mention Docker or the /var/run/docker.sock file. Therefore, the context precision is 0.0. The generated answer states 'Not enough info from sources,' which is a truthful reflection of the provided context (no hallucinations), so faithfulness is 1.0. However, the answer fails to address the user's specific question about the security risk, resulting in 0.0 for answer relevancy. It also completely misses the technical facts in the ground truth (root-level control, container breakout), resulting in 0.0 for semantic similarity."
+    },
+    {
+      "id": "infra_02",
+      "category": "cybersec",
+      "question": "What are the core principles of Kubernetes RBAC least privilege?",
+      "retrieval_ms": 2838.96,
+      "generation_ms": 495.72,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains advisories for Thermo Fisher, Adobe, and Apple, none of which relate to Kubernetes RBAC. Therefore, context precision is 0.0. The generated answer correctly identifies that the provided sources do not contain the necessary information, making it faithful to the context (no hallucinations), so faithfulness is 1.0. However, the answer fails to address the user's question about Kubernetes principles, resulting in 0.0 for answer relevancy. It also completely misses the technical facts in the ground truth, resulting in 0.0 for semantic similarity."
+    },
+    {
+      "id": "infra_03",
+      "category": "cybersec",
+      "question": "How do AWS IAM permission boundaries protect against privilege escalation?",
+      "retrieval_ms": 2686.47,
+      "generation_ms": 517.79,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains information about JFrog Artifactory, ArubaOS-CX, and Thermo Fisher analyzers, none of which are relevant to AWS IAM permission boundaries. Therefore, context precision is 0.0. The generated answer correctly identifies that the provided sources do not contain the necessary information, so it is faithful to the context (no hallucinations), resulting in a faithfulness score of 1.0. However, the answer fails to address the user's specific question about how IAM permission boundaries work, making it irrelevant (0.0). Consequently, it shares no technical facts with the ground truth, resulting in a semantic similarity of 0.0."
+    },
+    {
+      "id": "infra_04",
+      "category": "cybersec",
+      "question": "What is the purpose of SSH certificate authentication over traditional authorized_keys?",
+      "retrieval_ms": 2557.24,
+      "generation_ms": 462.02,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context consists of unrelated Dutch cybersecurity advisories regarding GitLab, Apple iOS, and Splunk, containing no information about SSH certificates or authorized_keys. Therefore, context precision is 0.0. The generated answer correctly identifies that the provided sources do not contain the necessary information, making it strictly faithful to the context (no hallucinations), so faithfulness is 1.0. However, the answer fails to address the user's question about the purpose of SSH certificates, resulting in 0.0 for answer relevancy. It also completely misses the technical facts present in the ground truth, resulting in 0.0 for semantic similarity."
+    },
+    {
+      "id": "infra_05",
+      "category": "cybersec",
+      "question": "What threat does BGP hijacking pose to internet infrastructure?",
+      "retrieval_ms": 2523.87,
+      "generation_ms": 670.61,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.2,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.4,
+        "semantic_similarity": 0.1
+      },
+      "reasoning": "The retrieved context contains one relevant snippet about a specific BGP hijack incident (Virtualizor) but lacks the general technical definition and broader infrastructure threats (eavesdropping, blackholing, SSL interception) described in the ground truth. The generated answer is strictly faithful to the limited context provided, accurately describing the specific incident without hallucinating. However, it fails to address the general nature of the threat to internet infrastructure as defined in the ground truth, resulting in low semantic similarity and moderate relevancy. The context precision is low because the majority of the retrieved documents (MySQL, Mitsubishi) are irrelevant noise."
+    },
+    {
+      "id": "infra_06",
+      "category": "cybersec",
+      "question": "How does eBPF enhance Linux container security monitoring?",
+      "retrieval_ms": 2779.43,
+      "generation_ms": 479.47,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context consists of unrelated Dutch cybersecurity advisories regarding Apple iOS, macOS, and WatchGuard Fireware, containing no information about eBPF or Linux container security. Therefore, context precision is 0.0. The generated answer correctly identifies that the provided sources do not contain the necessary information, making it strictly faithful to the (lack of) context, so faithfulness is 1.0. However, the answer fails to address the user's question about eBPF, resulting in 0.0 for answer relevancy. It also completely misses the technical facts in the ground truth, resulting in 0.0 for semantic similarity."
+    },
+    {
+      "id": "infra_07",
+      "category": "cybersec",
+      "question": "What is DNS over HTTPS (DoH) and what security problem does it address?",
+      "retrieval_ms": 2189.19,
+      "generation_ms": 398.56,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains information about MySQL vulnerabilities, Siemens Desigo CC, and Redis attacks, none of which are relevant to DNS over HTTPS (DoH). Therefore, context precision is 0.0. The generated answer states 'Not enough info from sources,' which is a truthful reflection of the provided context (no hallucinations), so faithfulness is 1.0. However, the answer fails to address the user's question about what DoH is and the security problems it solves, resulting in 0.0 for answer relevancy. Similarly, it misses all technical facts present in the ground truth, resulting in 0.0 for semantic similarity."
+    },
+    {
+      "id": "infra_08",
+      "category": "cybersec",
+      "question": "How do secrets managers prevent hardcoded credentials in microservices?",
+      "retrieval_ms": 2420.79,
+      "generation_ms": 483.94,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context consists of unrelated security advisories (Keycloak, Apache CloudStack, Microsoft Exchange) and contains no information about secrets managers or hardcoded credentials, resulting in a context precision of 0.0. The generated answer correctly identifies the lack of relevant information in the context, making it faithful to the provided sources (no hallucinations), but it fails to answer the user's question, resulting in 0.0 for relevancy and semantic similarity."
+    },
+    {
+      "id": "infra_09",
+      "category": "cybersec",
+      "question": "What is the danger of SSRF (Server-Side Request Forgery) in cloud environments?",
+      "retrieval_ms": 2693.25,
+      "generation_ms": 1123.33,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.2,
+      "scores": {
+        "context_precision": 0.2,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.3,
+        "semantic_similarity": 0.1
+      },
+      "reasoning": "The retrieved context contains specific vulnerability advisories for JFrog, Apache CloudStack, and Adobe Campaign Classic. While it mentions SSRF, it does not contain the specific technical details regarding cloud metadata endpoints (169.254.169.254) or IAM credential theft described in the ground truth. The generated answer is faithful to the retrieved context (no hallucinations), but it fails to address the core 'danger' in cloud environments as defined by the ground truth (stealing credentials via metadata). Instead, it lists specific product vulnerabilities, making it low in semantic similarity and relevancy to the specific technical mechanism requested."
+    },
+    {
+      "id": "infra_10",
+      "category": "cybersec",
+      "question": "What does Mutual TLS (mTLS) provide for service mesh communications?",
+      "retrieval_ms": 2147.59,
+      "generation_ms": 445.89,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains irrelevant information about Oracle Java vulnerabilities and ICS advisories, with no mention of mTLS or service mesh, resulting in a context precision of 0.0. The generated answer correctly identifies that the provided sources do not contain the necessary information, making it strictly faithful to the context (no hallucinations), hence a faithfulness score of 1.0. However, the answer fails to address the user's question about what mTLS provides, resulting in a relevancy score of 0.0. Consequently, it shares no technical facts with the ground truth, leading to a semantic similarity score of 0.0."
+    },
+    {
+      "id": "infra_11",
+      "category": "cybersec",
+      "question": "How does container image signing with Sigstore/Cosign protect deployments?",
+      "retrieval_ms": 6832.97,
+      "generation_ms": 509.51,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains information about ServiceNow, Oracle, and JFrog vulnerabilities, which is completely irrelevant to the question about Sigstore/Cosign container image signing. Therefore, context precision is 0.0. The generated answer states 'Not enough info from sources,' which is a truthful reflection of the provided context (no hallucinations), so faithfulness is 1.0. However, the answer fails to address the user's question, resulting in 0.0 for answer relevancy. It also misses all technical facts from the ground truth, resulting in 0.0 for semantic similarity."
+    },
+    {
+      "id": "def_01",
+      "category": "cybersec",
+      "question": "What are the core tenets of CISA's Secure-by-Design initiative?",
+      "retrieval_ms": 5362.75,
+      "generation_ms": 506.18,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.25,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains information about Open Source Software security and ICS advisories, but does not mention CISA's Secure-by-Design initiative or its core tenets, resulting in a context precision of 0.0. The generated answer states 'Not enough info from sources,' which is a truthful reflection of the provided context (no hallucinations), so faithfulness is 1.0. However, the answer fails to address the user's question about the specific tenets, resulting in 0.0 for answer relevancy. It also completely misses the technical facts in the ground truth, resulting in 0.0 for semantic similarity."
+    },
+    {
+      "id": "def_02",
+      "category": "cybersec",
+      "question": "What is a Software Bill of Materials (SBOM) and how does SPDX/CycloneDX help?",
+      "retrieval_ms": 3467.57,
+      "generation_ms": 595.35,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.4,
+      "scores": {
+        "context_precision": 0.4,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains a relevant CISA article defining an SBOM as an 'ingredients list' and discussing its role in supply chain risk, but it completely lacks information about SPDX or CycloneDX, which are central to the question. Therefore, context precision is low. The generated answer 'Not enough info from sources' is technically faithful to the provided context (which indeed lacks the specific format details), but it fails to answer the user's question, resulting in 0.0 for relevancy and semantic similarity."
+    },
+    {
+      "id": "def_03",
+      "category": "cybersec",
+      "question": "Why are government agencies urging the migration to Memory Safe Languages?",
+      "retrieval_ms": 2796.04,
+      "generation_ms": 504.85,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.5,
+      "scores": {
+        "context_precision": 0.1,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains a snippet about Apple iOS vulnerabilities involving memory management errors (use-after-free, buffer overflows), which is tangentially related to the concept of memory safety, but it does not explicitly state that government agencies are urging migration to memory-safe languages or provide the specific statistics/reasons found in the ground truth. The other snippets are irrelevant. The generated answer admits a lack of information, which is faithful to the provided (insufficient) context, but it fails to answer the user's question and misses the core technical facts of the ground truth entirely."
+    },
+    {
+      "id": "def_04",
+      "category": "cybersec",
+      "question": "Explain the Zero Trust Architecture principle of 'Never Trust, Always Verify'.",
+      "retrieval_ms": 3507.72,
+      "generation_ms": 471.58,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains news about specific CVEs (Schneider Electric, TeamCity, Metabase) and does not contain any information regarding the Zero Trust Architecture principle of 'Never Trust, Always Verify'. Therefore, context precision is 0.0. The generated answer correctly identifies that the provided sources do not contain the necessary information, so it is faithful to the context (no hallucinations), resulting in a score of 1.0. However, the answer fails to address the user's question about explaining the principle, making it irrelevant (0.0). Consequently, it shares no technical facts with the ground truth, resulting in a semantic similarity of 0.0."
+    },
+    {
+      "id": "def_05",
+      "category": "cybersec",
+      "question": "How does DMARC protect against email domain spoofing alongside SPF and DKIM?",
+      "retrieval_ms": 2187.81,
+      "generation_ms": 392.06,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains information about Keycloak vulnerabilities, Watchfire Controller Software, and MikroTik RouterOS, which are completely irrelevant to the question about DMARC, SPF, and DKIM. Therefore, context precision is 0.0. The generated answer states 'Not enough info from sources,' which is a truthful reflection of the provided context (no hallucinations), so faithfulness is 1.0. However, the answer fails to address the user's question, resulting in 0.0 for answer relevancy. It also misses all the technical facts present in the ground truth, resulting in 0.0 for semantic similarity."
+    },
+    {
+      "id": "def_06",
+      "category": "cybersec",
+      "question": "What is Post-Quantum Cryptography (PQC) and which algorithms did NIST standardize?",
+      "retrieval_ms": 2428.24,
+      "generation_ms": 594.97,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains information about GitLab vulnerabilities, N-able N-central, and Windows Hello malware, none of which relate to Post-Quantum Cryptography or NIST standards. Therefore, context precision is 0.0. The generated answer correctly states that there is not enough information, which is faithful to the provided (irrelevant) context, so faithfulness is 1.0. However, the answer fails to address the user's question about PQC and NIST algorithms, resulting in 0.0 for answer relevancy. It also completely misses the technical facts in the ground truth, resulting in 0.0 for semantic similarity."
+    },
+    {
+      "id": "def_07",
+      "category": "cybersec",
+      "question": "What role do canary tokens and honeypots play in active defense?",
+      "retrieval_ms": 1381.98,
+      "generation_ms": 410.73,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains information about macOS vulnerabilities, Check Point security management flaws, and N-able RMM hotfixes, none of which mention canary tokens or honeypots. Therefore, context precision is 0.0. The generated answer states 'Not enough info from sources,' which is a truthful reflection of the provided context (no hallucinations), so faithfulness is 1.0. However, the answer fails to address the user's question about the role of these tools, resulting in 0.0 for answer relevancy. It also completely misses the technical facts in the ground truth, resulting in 0.0 for semantic similarity."
+    },
+    {
+      "id": "def_08",
+      "category": "cybersec",
+      "question": "What is MITRE ATT&CK and how is it used in threat modeling?",
+      "retrieval_ms": 1774.39,
+      "generation_ms": 442.63,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.4,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains news articles about specific security incidents (METR API key theft, North Korean job fraud, Microsoft 365 phishing) and does not contain any information about MITRE ATT&CK or threat modeling. Therefore, context precision is 0.0. The generated answer states 'Not enough info from sources,' which is a truthful reflection of the provided context (no hallucinations), so faithfulness is 1.0. However, the answer fails to address the user's question, resulting in 0.0 for answer relevancy. It also completely misses the technical facts in the ground truth, resulting in 0.0 for semantic similarity."
+    },
+    {
+      "id": "def_09",
+      "category": "cybersec",
+      "question": "How does automated static analysis (SAST) differ from dynamic analysis (DAST)?",
+      "retrieval_ms": 2156.95,
+      "generation_ms": 416.11,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains unrelated security advisories (Zabbix, Johnson Controls, ManageEngine) and lacks any information regarding Static Analysis (SAST) or Dynamic Analysis (DAST), resulting in a context precision of 0.0. The generated answer correctly identifies that the sources do not contain the necessary information, making it faithful to the provided context (no hallucinations), but it fails to answer the user's question, resulting in 0.0 for relevancy and semantic similarity."
+    },
+    {
+      "id": "def_10",
+      "category": "cybersec",
+      "question": "What is prompt injection in LLM applications and what are effective defenses?",
+      "retrieval_ms": 1300.14,
+      "generation_ms": 808.31,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.2,
+      "scores": {
+        "context_precision": 0.2,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains one relevant snippet about prompt injection (AI Recommendation Poisoning) but lacks specific details on effective defenses like input sanitization or delimiter isolation, resulting in low precision. The generated answer is a refusal ('Not enough info'), which is technically faithful to the lack of comprehensive defense data in the context (no hallucinations), but it completely fails to answer the user's question about what prompt injection is and how to defend against it. Consequently, it shares no semantic similarity with the ground truth."
+    },
+    {
+      "id": "def_11",
+      "category": "cybersec",
+      "question": "What is the principle of defense-in-depth in modern application design?",
+      "retrieval_ms": 3281.32,
+      "generation_ms": 812.05,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains specific vulnerability advisories (Adobe, Apple, Mitsubishi) but does not define the general principle of defense-in-depth, making it irrelevant to the specific conceptual question (Context Precision 0.0). The generated answer correctly identifies that the provided sources do not contain the necessary information, so it is faithful to the context (Faithfulness 1.0). However, it fails to answer the user's question, resulting in zero relevancy (Answer Relevancy 0.0) and zero similarity to the ground truth (Semantic Similarity 0.0)."
+    },
+    {
+      "id": "gen_321",
+      "category": "cybersec",
+      "question": "Welke specifieke kwetsbaarheden in libcurl kunnen leiden tot het lekken van OAuth2 bearer tokens en onder welke omstandigheden gebeurt dit?",
+      "retrieval_ms": 10517.67,
+      "generation_ms": 783.23,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact sentence from the ground truth regarding libcurl, OAuth2 bearer tokens, HTTP(S) redirects, and .netrc files. The generated answer accurately extracts this information without hallucination, directly answers the specific question about vulnerabilities and conditions, and matches the ground truth facts perfectly."
+    },
+    {
+      "id": "gen_320",
+      "category": "cybersec",
+      "question": "Welke specifieke actie in de Zabbix Frontend webserver kan door niet-geauthenticeerde gebruikers worden misbruikt om een denial of service te veroorzaken via overmatige CPU-belasting?",
+      "retrieval_ms": 5564.28,
+      "generation_ms": 681.75,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context explicitly states that the 'popup.testtriggerexpr' action in the Frontend webserver can be abused by unauthenticated users to cause a DoS via excessive CPU load. The generated answer correctly identifies this specific action. It is concise, directly answers the question, and matches the ground truth technical fact perfectly."
+    },
+    {
+      "id": "gen_319",
+      "category": "cybersec",
+      "question": "Welke categorie\u00ebn schade kunnen optreden als een kwaadwillende de kwetsbaarheden in IBM AIX en PowerVM VIOS misbruikt?",
+      "retrieval_ms": 2492.43,
+      "generation_ms": 1186.59,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact list of damage categories from the relevant NCSC advisory (NCSC-2026-0321). The generated answer faithfully extracts this list without hallucination. It directly answers the user's question and matches the ground truth perfectly in terms of technical facts."
+    },
+    {
+      "id": "gen_318",
+      "category": "cybersec",
+      "question": "Welke specifieke versies van Splunk Enterprise zijn kwetsbaar volgens het NCSC-2026-0322 advies en wat zijn de belangrijkste impacten van deze kwetsbaarheden?",
+      "retrieval_ms": 3340.91,
+      "generation_ms": 1131.94,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 0.95
+      },
+      "reasoning": "The retrieved context contains the exact advisory NCSC-2026-0322 with the specific version numbers and detailed impact descriptions. The generated answer is strictly grounded in this context, accurately listing the versions (before 10.4.2, 10.2.6, 10.0.9, 9.4.14) and the impacts (unauthorized access, privilege escalation, XSS, command injection, session manipulation). It directly answers the user's question. The semantic similarity is high as it covers all key points in the ground truth (versions, unauthorized access, config manipulation, code execution with elevated rights) and adds specific details from the context that align with the general 'availability disruption' or 'system compromise' mentioned in the ground truth."
+    },
+    {
+      "id": "gen_317",
+      "category": "cybersec",
+      "question": "Welke specifieke CWE-codes worden genoemd in de NCSC-2026-0323 melding voor de kwetsbaarheden in Cisco Secure Workload?",
+      "retrieval_ms": 4028.37,
+      "generation_ms": 648.69,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact snippet from NCSC-2026-0323 listing the specific CWE codes. The generated answer accurately extracts these codes (CWE-74, CWE-284, CWE-287, CWE-20, CWE-119) and their descriptions without adding any hallucinated information. It directly answers the user's question and matches the technical facts in the ground truth perfectly."
+    },
+    {
+      "id": "gen_316",
+      "category": "cybersec",
+      "question": "Welke versie van Zimbra Collaboration Suite is kwetsbaar voor ongeauthenticeerde OS-commando injectie via SMTP-verzoeken en welke specifieke voorwaarden moeten aanwezig zijn?",
+      "retrieval_ms": 2899.1,
+      "generation_ms": 725.66,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact advisory (NCSC-2026-0324) with the specific version (before 10.1.20) and conditions (zimbra-snmp installed, SNMP notifications enabled). The generated answer accurately extracts these details without hallucination, directly answers the user's question, and matches the ground truth perfectly."
+    },
+    {
+      "id": "gen_315",
+      "category": "cybersec",
+      "question": "Welke producten van Atlassian zijn getroffen door de kwetsbaarheden die in NCSC-2026-0325 worden genoemd, en waarom adviseert het NCSC om de updates met voorrang in te zetten?",
+      "retrieval_ms": 3931.57,
+      "generation_ms": 873.37,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact advisory NCSC-2026-0325 with all relevant details. The generated answer accurately lists the affected products (Bamboo, Bitbucket, Confluence, Jira, Crowd, Fisheye) and correctly explains the reason for prioritized updates (large number of vulnerabilities, public infrastructure exposure) based strictly on the context. It matches the ground truth facts perfectly."
+    },
+    {
+      "id": "gen_314",
+      "category": "cybersec",
+      "question": "Welke specifieke kwetsbaarheid in Keycloak, ge\u00efdentificeerd als CVE-2026-18963, stelt een ongeauthenticeerde externe aanvaller in staat om gebruikersaccounts over te nemen?",
+      "retrieval_ms": 3132.1,
+      "generation_ms": 667.3,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.8,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact advisory (NCSC-2026-0326) describing CVE-2026-18963 in Keycloak. The generated answer accurately reflects the details in the context and matches the ground truth perfectly, identifying the forced password reset and email verification bypass mechanisms."
+    },
+    {
+      "id": "gen_313",
+      "category": "cybersec",
+      "question": "Welke twee specifieke kwetsbaarheden in de GraphQL-implementatie van GitLab zijn verholpen en wat is de impact van de beschikbaarheid van publieke PoC code?",
+      "retrieval_ms": 2552.3,
+      "generation_ms": 1089.97,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact details required to answer the question, including the specific nature of the two GraphQL vulnerabilities and the impact of the public PoC. The generated answer is strictly grounded in this context with no hallucinations. It directly and concisely addresses the user's question. The technical facts in the answer align perfectly with the ground truth."
+    },
+    {
+      "id": "gen_312",
+      "category": "cybersec",
+      "question": "Welke specifieke functies en componenten van de DrayTek VigorAP apparaten bevatten kwetsbaarheden die leiden tot willekeurige commando-uitvoering met root-privileges?",
+      "retrieval_ms": 2099.26,
+      "generation_ms": 977.09,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact advisory (NCSC-2026-0327) with the specific list of functions and components mentioned in the ground truth. The generated answer accurately lists all the components (tr069TestInform, ExportSettings, setLan, setcamset, mesh_start_speed_test, InquierTime, apautotest, upload_settings.cgi, dray_apm) and correctly identifies the vulnerability type (insufficient input validation/filtering) and impact (arbitrary command execution with root privileges). It also correctly notes the additional buffer overflow details present in the context. The answer is fully grounded, relevant, and matches the ground truth facts."
+    },
+    {
+      "id": "gen_311",
+      "category": "cybersec",
+      "question": "Welke specifieke functies bevatten command injection kwetsbaarheden in de DrayTek VigorSwitch en wat is het gevolg van exploitatie?",
+      "retrieval_ms": 2563.41,
+      "generation_ms": 923.1,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact list of functions and the specific impact (root privileges) mentioned in the ground truth. The generated answer accurately lists all functions and correctly states the consequence, including the additional detail about pre-authentication which is also present in the context. It directly answers the user's question without hallucination or deviation."
+    },
+    {
+      "id": "gen_310",
+      "category": "cybersec",
+      "question": "Welke specifieke versie van Next.js is kwetsbaar voor CVE-2026-75604 en onder welke omstandigheden kan deze kwetsbaarheid worden misbruikt?",
+      "retrieval_ms": 2853.99,
+      "generation_ms": 681.32,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact details regarding the conditions for CVE-2026-75604 (Windows, Pages/App router, no Cache Component) and the impact (RCE). The generated answer correctly identifies that the specific version is not mentioned in the source (which is true, the source only says 'Next.js' generally) and accurately lists the exploitation conditions and impact. It matches the ground truth perfectly in terms of technical facts."
+    },
+    {
+      "id": "gen_309",
+      "category": "cybersec",
+      "question": "Welke specifieke kwetsbaarheid in UniFi OS-apparaten kan leiden tot het omzeilen van authenticatiemechanismen en ongeautoriseerde toegang tot beheerinterfaces?",
+      "retrieval_ms": 1848.39,
+      "generation_ms": 622.36,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context (NCSC-2026-0330) explicitly contains the sentence describing the 'improper neutralization van CRLF-sequenties' vulnerability in UniFi OS devices. The generated answer accurately extracts this specific detail, is fully grounded in the context without hallucination, directly answers the user's question, and matches the ground truth technical facts perfectly."
+    },
+    {
+      "id": "gen_308",
+      "category": "cybersec",
+      "question": "Welke specifieke kwetsbaarheden zijn verholpen in Adobe Campaign Classic volgens NCSC-2026-0331 en wat zijn de mogelijke gevolgen?",
+      "retrieval_ms": 1703.06,
+      "generation_ms": 815.75,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact advisory NCSC-2026-0331 with the specific vulnerabilities (SSRF and OS Command Injection) and their consequences. The generated answer is strictly grounded in this context, directly answering the user's question about the specific vulnerabilities and consequences. It captures all technical facts from the ground truth and correctly includes the additional details (OS Command Injection) present in the source context for that specific advisory ID."
+    },
+    {
+      "id": "gen_307",
+      "category": "cybersec",
+      "question": "Welke specifieke kwetsbaarheden zijn verholpen in Apache CloudStack versies 4.12.0.0 tot en met 4.22.1.0 volgens NCSC-2026-0332?",
+      "retrieval_ms": 1375.86,
+      "generation_ms": 1118.08,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact advisory NCSC-2026-0332 with all relevant details. The generated answer is strictly grounded in this context, listing all vulnerabilities mentioned in the ground truth and additional details present in the context (SAML, listHostTags, project roles) without hallucination. It directly answers the question and matches the core technical facts of the ground truth."
+    },
+    {
+      "id": "gen_306",
+      "category": "cybersec",
+      "question": "Welke kwetsbaarheid vereist volgens de NCSC-advisory actie en in welk product bevindt deze zich?",
+      "retrieval_ms": 1296.75,
+      "generation_ms": 775.2,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.5,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context does not contain the specific vulnerability (CVE-2026-70306) or product (SharePoint) mentioned in the ground truth, resulting in a context precision of 0.0. The generated answer is strictly grounded in the provided (irrelevant) context, so faithfulness is 1.0. However, the answer addresses the wrong vulnerability and product entirely, failing to answer the user's specific question based on the ground truth, resulting in 0.0 for both answer relevancy and semantic similarity."
+    },
+    {
+      "id": "gen_305",
+      "category": "cybersec",
+      "question": "Welke specifieke kwetsbaarheid in de logger module van CodeMeter Runtime kan leiden tot crashes en informatielekken, en met welke CVE is deze vooral in combinatie aangetroffen?",
+      "retrieval_ms": 1788.8,
+      "generation_ms": 1744.38,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context (NCSC-2026-0333) contains the exact details required: an input sanitization problem in the logger module allowing format specifier injection, leading to crashes/info leaks, specifically in combination with CVE-2026-81573. The generated answer accurately extracts these facts without hallucination, directly answers the user's question, and matches the ground truth perfectly."
+    },
+    {
+      "id": "gen_304",
+      "category": "cybersec",
+      "question": "Welke specifieke kwetsbaarheid heeft gepubliceerde proof-of-concept-code en wat is de impact van deze kwetsbaarheid?",
+      "retrieval_ms": 3912.8,
+      "generation_ms": 674.26,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.8,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact advisory (NCSC-2026-0289) mentioning CVE-2026-62911, the publication of PoC code, and the specific impact (unauthenticated RCE, access to mailboxes, further network attacks). The generated answer accurately extracts these facts without hallucination. It directly answers the question and matches the ground truth technical facts perfectly."
+    },
+    {
+      "id": "gen_303",
+      "category": "cybersec",
+      "question": "Welke acties kan een ongeauthenticeerde kwaadwillende uitvoeren door de kwetsbaarheden in PaperCut MF en PaperCut NG achtereenvolgens te misbruiken?",
+      "retrieval_ms": 3555.3,
+      "generation_ms": 589.44,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.8,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact advisory (NCSC-2026-0334) which matches the ground truth. The generated answer accurately reflects the facts in the context and ground truth: taking over the environment, executing arbitrary code, and the requirement for malicious network traffic. There are no hallucinations, and the answer is concise and directly addresses the question."
+    },
+    {
+      "id": "gen_302",
+      "category": "cybersec",
+      "question": "Welke specifieke kwetsbaarheden bevinden zich in het iked-proces en de epm-service van WatchGuard Fireware OS volgens NCSC-2026-0335?",
+      "retrieval_ms": 3110.89,
+      "generation_ms": 836.91,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact details required to answer the question regarding NCSC-2026-0335. The generated answer is strictly grounded in this context, listing the specific vulnerabilities (stack-based buffer overflow, type confusion, heap overflow for iked; stack-based buffer overflow for epm-service) without hallucination. It directly addresses the user's question and matches the technical facts in the ground truth perfectly."
+    },
+    {
+      "id": "gen_301",
+      "category": "cybersec",
+      "question": "Welke kwetsbaarheid is verholpen in JFrog Artifactory volgens NCSC-2026-0336 en wat is het risico voor een niet-geauthenticeerde aanvaller?",
+      "retrieval_ms": 4307.0,
+      "generation_ms": 544.06,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact advisory NCSC-2026-0336 with the specific details requested. The generated answer is strictly grounded in this context, directly answers both parts of the question (the vulnerability nature and the risk), and matches the ground truth facts perfectly."
+    },
+    {
+      "id": "gen_300",
+      "category": "cybersec",
+      "question": "Welke twee specifieke kwetsbaarheden zijn verholpen in de SonicWall SMA1000 Appliance en hoe zijn deze misbruikt?",
+      "retrieval_ms": 3489.85,
+      "generation_ms": 768.91,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains all necessary factual details, including the specific vulnerability types (pre-auth SSRF, post-auth RCE) and the fact that they were exploited as zero-days. The generated answer is strictly grounded in this context, accurately identifying the vulnerabilities and their exploitation status. It directly addresses the user's question in the requested language (Dutch) and captures all core technical facts present in the ground truth."
+    },
+    {
+      "id": "gen_299",
+      "category": "cybersec",
+      "question": "Welke specifieke TCP-poorten moeten bereikbaar zijn voor een aanvaller om zonder authenticatie code met rootrechten uit te voeren op Cisco Nexus 9000 Series Switches met Silicon One technologie?",
+      "retrieval_ms": 3661.89,
+      "generation_ms": 738.13,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.8,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context explicitly states that TCP ports 43210 or 43211 must be reachable for the vulnerability to be exploited. The generated answer correctly identifies these specific ports, is fully grounded in the context, directly answers the user's question, and matches the technical facts in the ground truth."
+    },
+    {
+      "id": "gen_298",
+      "category": "cybersec",
+      "question": "Welke specifieke CVE kan door ongeauthoriseerde aanvallers van buitenaf worden misbruikt voor volledige overname van het achterliggende datacenter-netwerk als de SSH beheerinterface publiekelijk via het internet bereikbaar is?",
+      "retrieval_ms": 3915.11,
+      "generation_ms": 496.21,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact sentence from the ground truth, identifying CVE-2026-76658 as the specific vulnerability. The generated answer correctly extracts this CVE ID, which is the core factual answer to the question. It is fully grounded in the context, directly relevant, and matches the technical fact in the ground truth."
+    },
+    {
+      "id": "gen_297",
+      "category": "cybersec",
+      "question": "Welke specifieke aanvalsvectoren worden genoemd in de NCSC-2026-0340 melding voor kwetsbaarheden in ArubaOS-CX?",
+      "retrieval_ms": 3945.43,
+      "generation_ms": 837.51,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact specific attack vectors mentioned in the ground truth. The generated answer accurately lists these four specific vectors (writing files via API, CSRF, SSRF, signature verification bypass) and correctly identifies them as the specific ones, while also providing additional context about general vulnerability types found in the same source. There are no hallucinations, and the answer directly addresses the question with high precision."
+    },
+    {
+      "id": "gen_296",
+      "category": "cybersec",
+      "question": "What are the names and CVE identifiers of the two factory implants disclosed by VulnCheck in ZBT routers that allow unauthenticated remote attackers to run commands as root?",
+      "retrieval_ms": 7244.92,
+      "generation_ms": 603.64,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact names (SPEAKINGSTONE, DARKLANTERN) and CVE identifiers (CVE-2026-74232, CVE-2026-74233) required to answer the question. The generated answer is strictly grounded in this context, directly addresses the user's specific request for names and CVEs, and matches the technical facts in the ground truth perfectly."
+    },
+    {
+      "id": "gen_295",
+      "category": "cybersec",
+      "question": "How many security flaws impacting the ServiceNow AI Platform were rated 10.0 on the CVSS scoring system, and who can exploit them in certain circumstances?",
+      "retrieval_ms": 14000.82,
+      "generation_ms": 564.61,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact factual details required (three flaws rated 10.0, exploitable by unauthenticated attackers). The generated answer is strictly grounded in this context with no hallucinations. It directly answers both parts of the user's question (count and exploiter). It captures the core technical facts of the ground truth, specifically the number of CVSS 10.0 flaws and the type of attacker, which are the specific details requested by the question."
+    },
+    {
+      "id": "gen_294",
+      "category": "cybersec",
+      "question": "What is the primary function of an Identity Fabric and how does it change the dependency of identity security?",
+      "retrieval_ms": 7806.03,
+      "generation_ms": 638.09,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.0,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains advisories for JFrog Artifactory, HPE Networking Fabric Composer, and Oracle Financial Services, none of which discuss 'Identity Fabric' or the specific concept of identity security dependencies described in the ground truth. Therefore, context precision is 0.0. The generated answer correctly identifies that the provided sources do not contain the necessary information, making it faithful to the context (no hallucinations), so faithfulness is 1.0. However, the answer fails to address the user's question about the function of Identity Fabric, resulting in 0.0 for answer relevancy. Consequently, it shares no technical facts with the ground truth, resulting in 0.0 for semantic similarity."
+    },
+    {
+      "id": "gen_293",
+      "category": "cybersec",
+      "question": "What are the two CVE IDs associated with the root remote code execution flaws in the Unitree G1 EDU, and what specific component does the Bluetooth Low Energy path target?",
+      "retrieval_ms": 4715.82,
+      "generation_ms": 624.16,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact CVE IDs and the specific component (Locomotion PC) mentioned in the question. The generated answer is strictly grounded in this context, directly addresses the user's question without evasion, and matches the technical facts in the ground truth perfectly."
+    },
+    {
+      "id": "gen_292",
+      "category": "cybersec",
+      "question": "How many Chrome and Edge extensions were found with wallet-stealing and crypto-draining code, and who identified the similarities in their code?",
+      "retrieval_ms": 3818.96,
+      "generation_ms": 478.22,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact details required: the total count (19), the breakdown (18 Chrome, 1 Edge), and the researcher (Karlo Zanki from Socket). The generated answer is strictly grounded in this context, directly answers the specific questions asked, and captures all core technical facts from the ground truth without hallucination or omission."
+    },
+    {
+      "id": "gen_291",
+      "category": "cybersec",
+      "question": "Which specific vulnerability was added to the CISA KEV catalog after being exploited to target a nuclear research body in the Philippines?",
+      "retrieval_ms": 9470.99,
+      "generation_ms": 850.87,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact details required (CVE ID, CVSS score, target, and actor). The generated answer is strictly grounded in this context without hallucination. It directly answers the question and matches the ground truth facts perfectly."
+    },
+    {
+      "id": "gen_290",
+      "category": "cybersec",
+      "question": "What is the primary function of the Encrypted Client Hello (ECH) standard added in Android 17?",
+      "retrieval_ms": 8255.03,
+      "generation_ms": 600.63,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact factual details regarding ECH in Android 17 (preventing eavesdropping on website visits). The generated answer is strictly grounded in this context, directly answers the question, and matches the technical facts in the ground truth perfectly."
+    },
+    {
+      "id": "gen_289",
+      "category": "cybersec",
+      "question": "What specific capability does the newly patched security flaw in PaperCut NG and MF provide to an unauthenticated attacker?",
+      "retrieval_ms": 2483.0,
+      "generation_ms": 713.83,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact quote from The Hacker News that matches the ground truth. The generated answer accurately reflects this information without hallucination, directly answers the specific question about the capability provided to the attacker, and matches the technical facts in the ground truth perfectly."
+    },
+    {
+      "id": "gen_288",
+      "category": "cybersec",
+      "question": "What is the designation of the critical balance-handling flaw in the Cosmos EVM module, and what specific metadata was missing from its publication?",
+      "retrieval_ms": 3029.17,
+      "generation_ms": 644.71,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact designation (GHSA-7g4w-cg88-2cq2) and the specific missing metadata (CVE identifier, weakness classification, CVSS score). The generated answer accurately extracts these facts without hallucination. It directly answers the user's question. While the ground truth mentions the 'Critical' rating, the question specifically asked for the designation and missing metadata, which the answer provides perfectly. The omission of the rating does not detract from the semantic similarity regarding the specific facts requested."
+    },
+    {
+      "id": "gen_287",
+      "category": "cybersec",
+      "question": "Which specific Senate Department was identified by forensic work as having further data outflows following the August compromise?",
+      "retrieval_ms": 4814.45,
+      "generation_ms": 466.42,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact factual detail required (the specific Senate Department). The generated answer is strictly grounded in this context, directly answers the specific question without unnecessary fluff, and captures the core technical fact stated in the ground truth."
+    },
+    {
+      "id": "gen_286",
+      "category": "cybersec",
+      "question": "Which WordPress plugins and themes are affected by the critical security flaws disclosed by Wordfence and Patchstack, and what is the CVSS score for CVE-2026-76581?",
+      "retrieval_ms": 2364.07,
+      "generation_ms": 674.89,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact list of affected plugins/themes and the specific CVSS score for the requested CVE. The generated answer accurately extracts this information without hallucination, directly addresses the user's question, and matches the ground truth facts perfectly."
+    },
+    {
+      "id": "gen_285",
+      "category": "cybersec",
+      "question": "How does the TerminalFix ClickFix variant differ from traditional ClickFix campaigns in terms of the target interface?",
+      "retrieval_ms": 2116.95,
+      "generation_ms": 475.11,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact factual details required to answer the question, specifically the difference between the Windows Run dialog and Windows Terminal/PowerShell. The generated answer is strictly grounded in this context with no hallucinations. It directly and concisely addresses the user's question about the target interface difference. The answer captures the core technical facts stated in the ground truth perfectly."
+    },
+    {
+      "id": "gen_284",
+      "category": "cybersec",
+      "question": "How did the U.S. Department of Justice correct its previous statement regarding the status of its agencies in relation to attacks by Chinese threat actors?",
+      "retrieval_ms": 2591.29,
+      "generation_ms": 567.37,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact factual details required (DoJ correction from 'victims' to 'targets'). The generated answer is strictly grounded in this context, directly addresses the question, and matches the ground truth in all technical and factual aspects."
+    },
+    {
+      "id": "gen_283",
+      "category": "cybersec",
+      "question": "Which specific network infrastructure components did the Fire Ant actor compromise in their expanded campaign?",
+      "retrieval_ms": 1930.1,
+      "generation_ms": 552.08,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact details required to answer the question (Cisco IOS XR routers, TACACS servers, Linux management hosts). The generated answer is strictly grounded in this context, directly addresses the user's question, and matches the ground truth facts perfectly."
+    },
+    {
+      "id": "gen_282",
+      "category": "cybersec",
+      "question": "What specific capabilities does Claude Code have that the new Compliance API endpoints help security teams monitor?",
+      "retrieval_ms": 3134.41,
+      "generation_ms": 1010.46,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact sentence from the ground truth, providing perfect precision. The generated answer accurately extracts the four specific capabilities (reading files, running shell commands, invoking MCP tools, acting through credentials) and correctly attributes the monitoring capability to the Compliance API, with zero hallucinations. It directly answers the question and matches the technical facts in the ground truth perfectly."
+    },
+    {
+      "id": "gen_281",
+      "category": "cybersec",
+      "question": "Which AI-powered coding assistant did Aurora ransomware operators use to break into target networks, and which two security firms reported this finding?",
+      "retrieval_ms": 1942.34,
+      "generation_ms": 735.99,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact factual details required (Cursor, CloudSEK, Gambit Security). The generated answer is strictly grounded in this context with no hallucinations. It directly and concisely answers the specific question. The technical facts in the answer match the ground truth perfectly."
+    },
+    {
+      "id": "gen_280",
+      "category": "cybersec",
+      "question": "How does the Silver Fox threat actor disguise the ValleyRAT backdoor to evade antivirus detection?",
+      "retrieval_ms": 3359.37,
+      "generation_ms": 845.77,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact factual details required (Silver Fox, ValleyRAT, QN Wallpaper, signed adware, trusted process, AV exclusions). The generated answer is strictly grounded in this context with no hallucinations. It directly and concisely answers the specific question. The technical facts in the answer match the ground truth perfectly."
+    },
+    {
+      "id": "gen_279",
+      "category": "cybersec",
+      "question": "What specific behaviors or issues are described in the article regarding the router, the fake check, trusted systems, and the AI agent?",
+      "retrieval_ms": 2654.82,
+      "generation_ms": 907.49,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact sentences from the ground truth. The generated answer accurately extracts and explains these specific behaviors for the router, fake check, trusted systems, and AI agent without adding hallucinations. It directly addresses the user's question and matches the technical facts in the ground truth perfectly."
+    },
+    {
+      "id": "gen_278",
+      "category": "cybersec",
+      "question": "Which non-IT sectors have recent investigations identified as having suspected North Korean workers employed in them?",
+      "retrieval_ms": 2012.78,
+      "generation_ms": 549.03,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 0.9
+      },
+      "reasoning": "The retrieved context contains the exact factual details required (sales/marketing and medical/healthcare sectors). The generated answer is strictly grounded in this context with no hallucinations. It directly and concisely answers the specific question. While it omits the contextual detail about the 'IT worker scheme' mentioned in the ground truth, it captures the core technical facts regarding the specific sectors identified, resulting in a high but not perfect semantic similarity score."
+    },
+    {
+      "id": "gen_277",
+      "category": "cybersec",
+      "question": "What is the CVSS score for CVE-2026-0768 and what specific risk does it pose to the Langflow application?",
+      "retrieval_ms": 1851.33,
+      "generation_ms": 456.7,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact details required (CVSS 9.8, lack of input validation, arbitrary Python code execution as root). The generated answer is strictly grounded in this context, directly answers the specific question about the score and risk, and matches the technical facts in the ground truth perfectly."
+    },
+    {
+      "id": "gen_276",
+      "category": "cybersec",
+      "question": "What is the name of the new technique used by the Russia-aligned threat actor UAC-0099 to interfere with AI-assisted analysis, and what is its primary objective?",
+      "retrieval_ms": 2318.88,
+      "generation_ms": 500.98,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.8,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact details required (technique name 'GuardBreaker' and objective to trip LLM safety mechanisms). The generated answer is strictly grounded in this context with no hallucinations. It directly answers the user's question concisely. It captures all core technical facts from the ground truth, including the technique name and its primary objective."
+    },
+    {
+      "id": "gen_275",
+      "category": "cybersec",
+      "question": "What is the full name of the organization METR, and what was the estimated value of the AI credits consumed by attackers after stealing its API key?",
+      "retrieval_ms": 3237.25,
+      "generation_ms": 817.8,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact full name of METR and the specific dollar amount of the stolen credits. The generated answer accurately extracts these facts without hallucination, directly addresses the user's question, and matches the ground truth perfectly."
+    },
+    {
+      "id": "gen_274",
+      "category": "cybersec",
+      "question": "What is the name of the technique where a web page places a command on the clipboard and instructs the user to paste it into a terminal, and what was its significance according to Microsoft's team?",
+      "retrieval_ms": 2402.6,
+      "generation_ms": 928.43,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context explicitly states that the technique is called ClickFix and that it was the most common initial access method observed by Microsoft's team last year. The generated answer accurately extracts these two key facts without adding any hallucinated information. It directly answers the user's question and matches the ground truth perfectly in terms of technical facts and meaning."
+    },
+    {
+      "id": "gen_273",
+      "category": "cybersec",
+      "question": "Which malware families and programming languages are associated with the Iranian Nimbus Manticore hacking group's cross-platform RATs?",
+      "retrieval_ms": 1904.35,
+      "generation_ms": 630.05,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact factual details required (Nimbus Manticore, two undocumented families, Node.js, JavaScript). The generated answer is strictly grounded in this context, directly addresses the question, and matches the ground truth technical facts perfectly."
+    },
+    {
+      "id": "gen_272",
+      "category": "cybersec",
+      "question": "What specific type of malicious packages were identified on Packagist and what was their primary target?",
+      "retrieval_ms": 1650.08,
+      "generation_ms": 536.25,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact article describing the 13 malicious Composer theme packages on Packagist targeting unpatched iPhones to steal crypto wallet seeds. The generated answer accurately reflects this information without hallucination. It directly answers the question and aligns perfectly with the ground truth facts regarding the type of packages, the injection method, and the target devices."
+    },
+    {
+      "id": "gen_271",
+      "category": "cybersec",
+      "question": "Who is the threat actor dubbed Breeze Comet and what is their primary specialization according to Google Threat Intelligence Group and Mandiant?",
+      "retrieval_ms": 4414.1,
+      "generation_ms": 785.9,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact factual details required to answer the question, including the actor's name, former alias, motivation, targets, and specialization as described by GTIG and Mandiant. The generated answer is strictly grounded in this context with no hallucinations. It directly and concisely addresses the user's question. The answer captures all core technical facts stated in the ground truth, resulting in perfect semantic similarity."
+    },
+    {
+      "id": "gen_270",
+      "category": "cybersec",
+      "question": "What is the CVE ID and CVSS score of the critical JFrog Artifactory flaw being exploited by attackers days after disclosure?",
+      "retrieval_ms": 2946.82,
+      "generation_ms": 434.99,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact CVE ID (CVE-2026-82329) and CVSS score (9.8) required to answer the question. The generated answer is strictly grounded in this context with no hallucinations. It directly and concisely answers the specific question asked. While the ground truth includes additional details about the nature of the flaw (authentication bypass), the generated answer captures the core technical facts requested (CVE ID and Score) accurately, resulting in a perfect semantic similarity for the specific query constraints."
+    },
+    {
+      "id": "gen_269",
+      "category": "cybersec",
+      "question": "Which private industry partners collaborated with authorities from the U.S., Bulgaria, Hungary, and Romania in the takedown of the Sality botnet?",
+      "retrieval_ms": 2977.9,
+      "generation_ms": 453.13,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.8,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact factual details required (CrowdStrike and Shadowserver Foundation). The generated answer is strictly grounded in this context, directly answers the specific question about private industry partners, and matches the technical facts in the ground truth perfectly."
+    },
+    {
+      "id": "gen_268",
+      "category": "cybersec",
+      "question": "What is the CVE ID and CVSS score of the critical unauthenticated SQL injection vulnerability in Sangoma Switchvox SMB Edition 8.3 (104997)?",
+      "retrieval_ms": 3930.66,
+      "generation_ms": 515.82,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact CVE ID (CVE-2026-9586) and CVSS score (9.3) required to answer the question. The generated answer is strictly grounded in this context, directly addresses the user's specific request for the ID and score, and matches the technical facts in the ground truth perfectly."
+    },
+    {
+      "id": "gen_267",
+      "category": "cybersec",
+      "question": "Which specific CVE and vulnerability type did the exploit target in the WAGO PLC, and what was the outcome of using Claude to port it?",
+      "retrieval_ms": 4207.24,
+      "generation_ms": 700.68,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact details required (CVE-2021-31886, stack-based buffer overflow, Nucleus FTP USER command, ARM shellcode execution). The generated answer is strictly grounded in this context with no hallucinations. It directly answers the specific question about the CVE, vulnerability type, and outcome. The technical facts in the answer match the ground truth perfectly."
+    },
+    {
+      "id": "gen_266",
+      "category": "cybersec",
+      "question": "How many fake accounts did the charged Russian national use to send malware-laced Excel attachments, and how many users were targeted?",
+      "retrieval_ms": 4237.71,
+      "generation_ms": 624.39,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact figures (255 fake accounts, 80,000 users) and details required to answer the question. The generated answer is strictly grounded in this context, directly addresses the user's specific questions about the numbers, and matches the technical facts in the ground truth perfectly."
+    },
+    {
+      "id": "gen_265",
+      "category": "cybersec",
+      "question": "Which specific versions of GeoNetwork shipped fixes for the unauthenticated RCE chain, and when were these fixes released?",
+      "retrieval_ms": 8279.89,
+      "generation_ms": 932.83,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 0.9
+      },
+      "reasoning": "The retrieved context contains the exact versions (4.4.12 and 4.2.17) and release date (July 8, 2026) required to answer the question, making context precision perfect. The generated answer is strictly grounded in this context with no hallucinations, resulting in perfect faithfulness. It directly and concisely answers the user's specific question about versions and dates, earning full marks for relevancy. Regarding semantic similarity, the answer captures the core technical facts (versions and date) stated in the ground truth. It omits the detail about the publication date of vulnerability details (August 31), but since the question specifically asked for the fix versions and their release dates, the omission does not detract from the correctness of the answer relative to the prompt, though it is not an identical match to the full ground truth string. A score of 0.9 reflects the high accuracy with a minor omission of non-essential context from the ground truth snippet."
+    },
+    {
+      "id": "gen_264",
+      "category": "cybersec",
+      "question": "What is the CVSS score and type of the vulnerability identified as CVE-2026-83548 in SonicWall SMA 1000 series appliances?",
+      "retrieval_ms": 4367.27,
+      "generation_ms": 972.52,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact CVSS score (10.0) and vulnerability type (SSRF/pre-authentication) for CVE-2026-83548 in SonicWall SMA 1000 appliances. The generated answer accurately reflects these details without hallucination, directly answers the user's question, and matches the ground truth facts perfectly."
+    },
+    {
+      "id": "gen_263",
+      "category": "cybersec",
+      "question": "According to the article, what is the primary challenge organizations face regarding AI implementation in 2026?",
+      "retrieval_ms": 4017.73,
+      "generation_ms": 517.92,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.2,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains articles about specific cyber attacks (NatJack, Sality botnet, Node.js malware) and does not contain any information regarding the primary challenges of AI implementation in 2026. Therefore, context precision is 0.0. The generated answer correctly states that there is not enough information in the sources, which is a faithful reflection of the provided context (no hallucinations), so faithfulness is 1.0. However, the answer fails to address the user's question with the required information, making answer relevancy 0.0. Since the answer does not capture any of the technical facts from the ground truth (scaling, security, board pressure), semantic similarity is 0.0."
+    },
+    {
+      "id": "gen_262",
+      "category": "cybersec",
+      "question": "How many Meta accounts in the European Union were reached by the StreamRat campaign according to ThreatFabric?",
+      "retrieval_ms": 5972.22,
+      "generation_ms": 525.51,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact figure (570,950) and source (ThreatFabric) required to answer the question. The generated answer is strictly grounded in this context, directly addresses the user's specific query about the number of accounts, and matches the core technical facts of the ground truth perfectly."
+    },
+    {
+      "id": "gen_261",
+      "category": "cybersec",
+      "question": "How did the hackers deliver the malicious Virtualizor package and what was the reported impact on one hosting provider's hypervisors?",
+      "retrieval_ms": 3998.81,
+      "generation_ms": 603.93,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact factual details required (BGP hijack, Softaculous traffic diversion, 5 of 34 hypervisors compromised). The generated answer is strictly grounded in this context with no hallucinations. It directly answers both parts of the user's question (delivery method and impact) and matches the ground truth in all technical facts."
+    },
+    {
+      "id": "gen_260",
+      "category": "cybersec",
+      "question": "Which cybercrime cluster is responsible for installing malicious Apache modules on Brazilian government and educational institution servers to divert traffic to gambling pages?",
+      "retrieval_ms": 3447.23,
+      "generation_ms": 708.34,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact factual details required, including the name 'Gambling Goblin', the target (Brazilian government/educational institutions), the method (malicious Apache modules), and the goal (diverting traffic to gambling pages). The generated answer is strictly grounded in this context with no hallucinations. It directly answers the specific question asked. The semantic similarity is perfect as it captures all core technical facts from the ground truth, including the actor name, language profile, and specific actions."
+    },
+    {
+      "id": "gen_259",
+      "category": "cybersec",
+      "question": "How many security flaws did Manifold Security disclose across command-line AI coding agents, and how many were unpatched at publication?",
+      "retrieval_ms": 3223.11,
+      "generation_ms": 448.92,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact factual details required (8 flaws, 7 agents, 4 unpatched). The generated answer is strictly grounded in this context with no hallucinations. It directly and concisely answers the specific question. The technical facts in the answer are identical to the ground truth."
+    },
+    {
+      "id": "gen_258",
+      "category": "cybersec",
+      "question": "Which specific groups and organizations have been primarily affected by the malware campaign distributing fake software installers?",
+      "retrieval_ms": 2208.37,
+      "generation_ms": 591.46,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact factual details required to answer the question (China-based operations of multinational organizations and Chinese-speaking users). The generated answer is strictly grounded in this context, directly addresses the user's question, and matches the ground truth technical facts perfectly."
+    },
+    {
+      "id": "gen_257",
+      "category": "cybersec",
+      "question": "What is the name of the new initiative by Google that provides early access to Gemini 3.8 Flash Cyber for trusted defenders?",
+      "retrieval_ms": 2404.32,
+      "generation_ms": 430.4,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context explicitly states that the initiative is called the 'Fairwind Program' and provides early access to Gemini 3.8 Flash Cyber for trusted defenders. The generated answer correctly identifies this name, is fully grounded in the context, directly answers the specific question, and captures the core technical fact from the ground truth."
+    },
+    {
+      "id": "gen_256",
+      "category": "cybersec",
+      "question": "What is the CVSS score and the type of vulnerability associated with CVE-2026-83548 in SonicWall SMA 1000 Appliances?",
+      "retrieval_ms": 2540.78,
+      "generation_ms": 564.71,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context explicitly states the CVSS score (10.0) and the vulnerability type (SSRF) for CVE-2026-83548 in SonicWall SMA 1000 Appliances. The generated answer accurately reflects these details without hallucination. It directly answers the user's question and aligns perfectly with the ground truth facts."
+    },
+    {
+      "id": "gen_255",
+      "category": "cybersec",
+      "question": "What is the name of the zero-day privilege escalation flaw released by Chaotic Eclipse, and how does it exploit CrowdStrike Falcon Sensor?",
+      "retrieval_ms": 2850.03,
+      "generation_ms": 558.37,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact details required: the name 'FalconFlank', the researcher 'Chaotic Eclipse', and the exploitation method ('abuses the office malicious macros remediation'). The generated answer is strictly grounded in this context, directly answers the specific questions asked, and matches the technical facts in the ground truth perfectly."
+    },
+    {
+      "id": "gen_254",
+      "category": "cybersec",
+      "question": "What specific type of exploit was used to infect the iPhone of the Serbian student movement member with Pegasus spyware?",
+      "retrieval_ms": 2937.58,
+      "generation_ms": 424.42,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context explicitly states that an iMessage zero-click exploit was used. The generated answer accurately reflects this information without hallucination. It directly answers the specific question about the type of exploit. The semantic content matches the ground truth perfectly, identifying the iMessage zero-click exploit as the method used."
+    },
+    {
+      "id": "gen_253",
+      "category": "cybersec",
+      "question": "How many credential locations does the recent Shai-Hulud infostealer worm variant scan, and how does this compare to earlier variants?",
+      "retrieval_ms": 2733.62,
+      "generation_ms": 477.15,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact figures (469 vs 189) and context needed to answer the question. The generated answer is strictly grounded in this context, directly addresses the user's query, and matches the ground truth facts perfectly."
+    },
+    {
+      "id": "gen_252",
+      "category": "cybersec",
+      "question": "Which specific organizations have been targeted by attackers leveraging the Node.js runtime since February 2026, and which team published the report?",
+      "retrieval_ms": 3197.11,
+      "generation_ms": 510.04,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact details required: the target organizations (government departments, technology companies, hotels) and the publishing team (Symantec Threat Hunter Team). The generated answer accurately extracts these facts without hallucination, directly addresses the user's question, and matches the ground truth perfectly."
+    },
+    {
+      "id": "gen_251",
+      "category": "cybersec",
+      "question": "What percentage of the observed activity in the RMM phishing campaign was associated with the United States, and how many cases did ANY.RUN research connect to the operation?",
+      "retrieval_ms": 2485.09,
+      "generation_ms": 663.98,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact figures (45% and 601 cases) required to answer the question. The generated answer is strictly grounded in this context, directly addresses the user's specific questions without evasion, and matches the technical facts in the ground truth perfectly."
+    },
+    {
+      "id": "gen_250",
+      "category": "cybersec",
+      "question": "When did West Publishing discover the unauthorized activity on the C-Track platform, and which specific jurisdictions were affected by the breach?",
+      "retrieval_ms": 2446.25,
+      "generation_ms": 478.32,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact factual details required (discovery date and affected jurisdictions). The generated answer is strictly grounded in this context with no hallucinations. It directly and concisely answers the user's question. The answer matches the ground truth perfectly in terms of technical facts."
+    },
+    {
+      "id": "gen_249",
+      "category": "cybersec",
+      "question": "What is the name of the Python-based Windows malware framework disclosed by cybersecurity researchers, and how does it differ from the standard infostealer model?",
+      "retrieval_ms": 2855.52,
+      "generation_ms": 620.71,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact details required (name: BraZetsu, difference: comprehensive master toolkit for IABs vs infostealer). The generated answer is strictly grounded in this context, directly answers the question, and matches the ground truth facts perfectly."
+    },
+    {
+      "id": "gen_248",
+      "category": "cybersec",
+      "question": "What is the CVE ID and CVSS score for the critical security flaw affecting 10 Silicon One-based Nexus 9000 switches that allows unauthenticated remote attackers to execute code as root?",
+      "retrieval_ms": 2444.46,
+      "generation_ms": 455.63,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact CVE ID (CVE-2026-20212) and CVSS score (9.8) required to answer the question. The generated answer is strictly grounded in this context, directly addresses the user's specific request for the ID and score, and matches the technical facts in the ground truth perfectly."
+    },
+    {
+      "id": "gen_247",
+      "category": "cybersec",
+      "question": "What specific social engineering tactics and tools do attackers use according to the article?",
+      "retrieval_ms": 1382.61,
+      "generation_ms": 844.16,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.8,
+      "scores": {
+        "context_precision": 0.9,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact text needed to answer the question, including the specific tactics and tools mentioned in the ground truth. The generated answer is strictly grounded in this context, accurately listing all the tactics (IT calls, shared files, trusted apps, 'Allow' requests, typosquatting) and tools (real tools, fake login pages, old account links, unsafe software guides) without hallucination. It directly addresses the user's question and captures all core technical facts from the ground truth."
+    },
+    {
+      "id": "gen_246",
+      "category": "webdev",
+      "question": "What is the title of the article?",
+      "retrieval_ms": 2391.75,
+      "generation_ms": 658.78,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.333,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context does not contain the ground truth title ('How to get a free .arpa domain'), resulting in a context precision of 0.0. The generated answer is strictly grounded in the provided (irrelevant) context, listing the titles found there, so faithfulness is 1.0. However, the answer fails to address the user's specific question regarding the correct article, and it completely misses the ground truth fact, resulting in 0.0 for both answer relevancy and semantic similarity."
+    },
+    {
+      "id": "gen_244",
+      "category": "webdev",
+      "question": "What is the title of the article regarding OpenAI's GPT-6 Astra?",
+      "retrieval_ms": 2418.84,
+      "generation_ms": 583.54,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 0.8
+      },
+      "reasoning": "The retrieved context contains the exact title mentioned in the ground truth ('OpenAI's GPT-6 Astra on ARC-AGI-3') along with another relevant title. The generated answer is strictly grounded in the context, listing both titles found. It directly addresses the question. However, semantic similarity is slightly reduced because the answer provides two options instead of identifying the single specific title highlighted in the ground truth, though it does include the correct one."
+    },
+    {
+      "id": "gen_243",
+      "category": "webdev",
+      "question": "According to the article title, where does the true horror of Edgar Allan Poe's stories lie?",
+      "retrieval_ms": 1815.04,
+      "generation_ms": 464.58,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact article title mentioned in the question. The generated answer is strictly grounded in this context, directly answers the specific question, and matches the ground truth perfectly."
+    },
+    {
+      "id": "gen_242",
+      "category": "webdev",
+      "question": "How is the LED on the PCB business card powered?",
+      "retrieval_ms": 1471.85,
+      "generation_ms": 364.52,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 0.8,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 0.8
+      },
+      "reasoning": "The retrieved context contains the specific article title and snippet that directly answers the question, though it is mixed with irrelevant cybersecurity noise, resulting in a high but not perfect precision score. The generated answer is strictly grounded in the context with no hallucinations. It directly addresses the user's question. It captures the core fact (powered by the phone) but omits the specific detail that the device is 'batteryless' which is present in the ground truth, leading to a slight deduction in semantic similarity."
+    },
+    {
+      "id": "gen_241",
+      "category": "webdev",
+      "question": "What is the potential consequence for using Google Antigravity with third-party services according to the article title?",
+      "retrieval_ms": 2081.29,
+      "generation_ms": 748.44,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact article title mentioned in the question ('Google Antigravity TOS: 3rd party usage can get Google account suspended'), providing perfect factual details. The generated answer is strictly grounded in this context, directly addresses the user's question about the consequence, and matches the ground truth perfectly in terms of technical facts."
+    },
+    {
+      "id": "gen_238",
+      "category": "webdev",
+      "question": "What specific health outcome is GLP-1s being linked to according to the article title?",
+      "retrieval_ms": 1874.95,
+      "generation_ms": 552.13,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact article title and snippet relevant to the question, despite including unrelated cybersecurity noise. The generated answer is strictly grounded in the context, directly answers the specific question about the article title, and matches the ground truth perfectly."
+    },
+    {
+      "id": "gen_237",
+      "category": "webdev",
+      "question": "What specific role is Tasklet (YC P26) currently hiring for?",
+      "retrieval_ms": 1927.72,
+      "generation_ms": 419.49,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact title and URL confirming the role is 'Customer Success Engineer'. The generated answer is strictly grounded in this context, directly answers the question, and matches the ground truth perfectly."
+    },
+    {
+      "id": "gen_236",
+      "category": "webdev",
+      "question": "What is the title of the blog post regarding virtual threads in Java 8?",
+      "retrieval_ms": 2622.45,
+      "generation_ms": 803.32,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact title of the blog post requested. The generated answer is strictly grounded in this context, directly answers the question, and matches the ground truth perfectly."
+    },
+    {
+      "id": "gen_234",
+      "category": "webdev",
+      "question": "What is the main feature of the new type of dice mentioned in the article title?",
+      "retrieval_ms": 2032.16,
+      "generation_ms": 1123.04,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact title and snippet relevant to the question, despite including unrelated cybersecurity news. The generated answer is strictly grounded in the context, directly answers the question, and matches the ground truth perfectly."
+    },
+    {
+      "id": "gen_233",
+      "category": "webdev",
+      "question": "Who defeated the AI KataGo with a two-stone handicap?",
+      "retrieval_ms": 1858.43,
+      "generation_ms": 525.45,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact title of the article answering the question. The generated answer is strictly grounded in this context, directly addresses the user's question, and matches the ground truth perfectly."
+    },
+    {
+      "id": "gen_232",
+      "category": "webdev",
+      "question": "What is the title of the Show HN post?",
+      "retrieval_ms": 1738.0,
+      "generation_ms": 696.18,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.8,
+        "semantic_similarity": 0.8
+      },
+      "reasoning": "The retrieved context contains the correct title 'Show HN: Reactor Atlas' along with another Show HN post, making it highly relevant. The generated answer is strictly grounded in the context, listing both Show HN posts found. However, the question asks for 'the' title (singular), implying a specific target (likely the first one or the one associated with the specific query intent which the ground truth clarifies as 'Reactor Atlas'). By listing both, the answer is slightly less direct than the ground truth which identifies the specific post. It captures the core fact (Reactor Atlas is a title) but adds extra information (the second post) which dilutes the directness slightly, though it is not incorrect based on the provided context."
+    },
+    {
+      "id": "gen_231",
+      "category": "webdev",
+      "question": "What is the title and description of the website anyhumanever.com?",
+      "retrieval_ms": 2624.35,
+      "generation_ms": 436.96,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact title and URL for anyhumanever.com, providing all necessary factual details. The generated answer strictly uses this information without hallucination. It directly answers the user's request for the title and description (derived from the title tag). The answer matches the ground truth's core technical fact (the title) perfectly."
+    },
+    {
+      "id": "gen_230",
+      "category": "webdev",
+      "question": "What is the name of the connected fleet of six open models described in the article?",
+      "retrieval_ms": 1005.15,
+      "generation_ms": 483.01,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact title 'K2 Horizon: A connected fleet of six open models', providing the necessary factual detail. The generated answer correctly identifies 'K2 Horizon' as the name, strictly grounded in the context. It directly answers the question concisely and matches the ground truth perfectly."
+    },
+    {
+      "id": "gen_229",
+      "category": "webdev",
+      "question": "What was the maximum extent of the GPS glitch across the US?",
+      "retrieval_ms": 2154.7,
+      "generation_ms": 587.0,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the specific fact (33 feet) in the first snippet. The generated answer is strictly grounded in this context, directly answers the question, and matches the ground truth perfectly."
+    },
+    {
+      "id": "gen_228",
+      "category": "webdev",
+      "question": "How many runs were measured to determine which tools Claude, Codex, and Cursor choose?",
+      "retrieval_ms": 2776.97,
+      "generation_ms": 417.1,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context explicitly states 'We measured 17k runs' in the title of the first result, which directly answers the question. The generated answer '17,000 runs were measured' is strictly grounded in this context, directly addresses the user's query, and matches the technical fact in the ground truth (17k runs)."
+    },
+    {
+      "id": "gen_227",
+      "category": "webdev",
+      "question": "What specific technology and tool were used to port the 1993 Amiga game to Godot?",
+      "retrieval_ms": 1786.43,
+      "generation_ms": 918.43,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 0.8,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the first result which is highly relevant and includes the specific details (Godot, LLM, 68000 assembly) needed to answer the question, though it is mixed with irrelevant cybersecurity noise. The generated answer is strictly grounded in this relevant context, accurately identifying Godot and the LLM reading 68000 assembly. It directly addresses the user's question and matches the technical facts in the ground truth perfectly."
+    },
+    {
+      "id": "gen_226",
+      "category": "webdev",
+      "question": "What was the change in juvenile coho salmon survival rates due to artificial beaver dams?",
+      "retrieval_ms": 2039.72,
+      "generation_ms": 414.62,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact factual details (survival rates increasing from 8% to 60%) required to answer the question, despite containing irrelevant cybersecurity noise. The generated answer is strictly grounded in this context, directly addresses the user's question, and matches the ground truth facts perfectly."
+    },
+    {
+      "id": "gen_223",
+      "category": "webdev",
+      "question": "What is the title of the video?",
+      "retrieval_ms": 1499.1,
+      "generation_ms": 647.48,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 0.333,
+      "scores": {
+        "context_precision": 0.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "semantic_similarity": 0.0
+      },
+      "reasoning": "The retrieved context contains no information about the video title mentioned in the ground truth ('The largest electric aircraft just flew [video]'), making context precision 0.0. The generated answer correctly states that there is not enough information, which is faithful to the provided context (no hallucinations), resulting in a faithfulness score of 1.0. However, the answer fails to address the user's specific question with the correct fact, and completely misses the ground truth content, resulting in 0.0 for both answer relevancy and semantic similarity."
+    },
+    {
+      "id": "gen_222",
+      "category": "webdev",
+      "question": "What is the title of the article describing the origin of the Julia programming language?",
+      "retrieval_ms": 2683.34,
+      "generation_ms": 410.83,
+      "model_used": "qwen/qwen3.8-27b",
+      "keyword_recall": 1.0,
+      "scores": {
+        "context_precision": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevancy": 1.0,
+        "semantic_similarity": 1.0
+      },
+      "reasoning": "The retrieved context contains the exact title of the article regarding the origin of the Julia programming language. The generated answer correctly extracts this title without hallucination. It directly answers the user's question. The answer matches the core technical fact (the title) stated in the ground truth, although it omits the publisher detail which was not explicitly asked for in the question."
+    }
+  ]
+}

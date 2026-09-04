@@ -1,0 +1,1674 @@
+[
+  {
+    "id": "gen_321",
+    "category": "cybersec",
+    "question": "Welke specifieke kwetsbaarheden in libcurl kunnen leiden tot het lekken van OAuth2 bearer tokens en onder welke omstandigheden gebeurt dit?",
+    "ground_truth": "Bij libcurl kunnen OAuth2 bearer tokens bijvoorbeeld gelekt worden naar een tweede host tijdens HTTP(S) redirects in combinatie met .netrc bestand gebruik.",
+    "keywords": [
+      "libcurl",
+      "OAuth2 bearer tokens",
+      "HTTP(S) redirects",
+      ".netrc bestand"
+    ],
+    "type": "advisory",
+    "difficulty": "medium",
+    "source_urls": [
+      "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0319"
+    ]
+  },
+  {
+    "id": "gen_320",
+    "category": "cybersec",
+    "question": "Welke specifieke actie in de Zabbix Frontend webserver kan door niet-geauthenticeerde gebruikers worden misbruikt om een denial of service te veroorzaken via overmatige CPU-belasting?",
+    "ground_truth": "De Frontend webserver bevat een actie (popup.testtriggerexpr) die door niet-geauthenticeerde gebruikers kan worden misbruikt om een denial of service (DoS) te veroorzaken door overmatige CPU-belasting.",
+    "keywords": [
+      "popup.testtriggerexpr",
+      "denial of service",
+      "CPU-belasting",
+      "Frontend webserver"
+    ],
+    "type": "cve",
+    "difficulty": "medium",
+    "source_urls": [
+      "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0320"
+    ]
+  },
+  {
+    "id": "gen_319",
+    "category": "cybersec",
+    "question": "Welke categorie\u00ebn schade kunnen optreden als een kwaadwillende de kwetsbaarheden in IBM AIX en PowerVM VIOS misbruikt?",
+    "ground_truth": "Een kwaadwillende kan de kwetsbaarheden misbruiken om aanvallen uit te voeren die kunnen leiden tot Denial-of-Service, omzeilen van een beveiligingsmaatregel, uitvoer van willekeurige code (root/admin-rechten), uitvoer van willekeurige code (gebruikersrechten), toegang tot gevoelige gegevens, manipulatie van gegevens en verhogen van privileges.",
+    "keywords": [
+      "Denial-of-Service",
+      "Uitvoer van willekeurige code",
+      "Toegang tot gevoelige gegevens",
+      "Manipulatie van gegevens",
+      "Verhogen van privileges"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0321"
+    ]
+  },
+  {
+    "id": "gen_318",
+    "category": "cybersec",
+    "question": "Welke specifieke versies van Splunk Enterprise zijn kwetsbaar volgens het NCSC-2026-0322 advies en wat zijn de belangrijkste impacten van deze kwetsbaarheden?",
+    "ground_truth": "Splunk heeft kwetsbaarheden verholpen in versies v\u00f3\u00f3r 10.4.2, 10.2.6, 10.0.9 en 9.4.14. De impact omvat ongeautoriseerde toegang tot data, manipulatie van systeemconfiguraties, uitvoering van code met verhoogde rechten, en mogelijke verstoring van de beschikbaarheid van de dienst.",
+    "keywords": [
+      "Splunk Enterprise",
+      "10.4.2",
+      "10.2.6",
+      "10.0.9",
+      "9.4.14",
+      "NCSC-2026-0322"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0322"
+    ]
+  },
+  {
+    "id": "gen_317",
+    "category": "cybersec",
+    "question": "Welke specifieke CWE-codes worden genoemd in de NCSC-2026-0323 melding voor de kwetsbaarheden in Cisco Secure Workload?",
+    "ground_truth": "De kwetsbaarheden betreffen onder andere improper neutralization of special elements (CWE-74), improper access control (CWE-284), improper authentication (CWE-287), improper input validation (CWE-20) en buffer management problemen (CWE-119). Deze kwetsbaarheden zijn intern ontdekt tijdens een uitgebreide security review door het engineering team van Cisco Secure Workload.",
+    "keywords": [
+      "CWE-74",
+      "CWE-284",
+      "CWE-287",
+      "CWE-20",
+      "CWE-119",
+      "Cisco Secure Workload"
+    ],
+    "type": "cve",
+    "difficulty": "medium",
+    "source_urls": [
+      "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0323"
+    ]
+  },
+  {
+    "id": "gen_316",
+    "category": "cybersec",
+    "question": "Welke versie van Zimbra Collaboration Suite is kwetsbaar voor ongeauthenticeerde OS-commando injectie via SMTP-verzoeken en welke specifieke voorwaarden moeten aanwezig zijn?",
+    "ground_truth": "De kwetsbaarheid bevindt zich in Zimbra Collaboration Suite, versie voor 10.1.20. Dit vereist dat het zimbra-snmp pakket ge\u00efnstalleerd is en SNMP-notificaties zijn ingeschakeld.",
+    "keywords": [
+      "Zimbra Collaboration Suite",
+      "10.1.20",
+      "SMTP-verzoeken",
+      "zimbra-snmp",
+      "SNMP-notificaties"
+    ],
+    "type": "cve",
+    "difficulty": "medium",
+    "source_urls": [
+      "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0324"
+    ]
+  },
+  {
+    "id": "gen_315",
+    "category": "cybersec",
+    "question": "Welke producten van Atlassian zijn getroffen door de kwetsbaarheden die in NCSC-2026-0325 worden genoemd, en waarom adviseert het NCSC om de updates met voorrang in te zetten?",
+    "ground_truth": "De kwetsbaarheden bevinden zich in diverse Third-Party producten en zijn verholpen in Atlassian producten zoals Bamboo, Bitbucket, Confluence, Jira, Crowd en Fisheye. Het NCSC adviseert om de updates met voorrang in te zetten door de grote hoeveelheid verholpen kwetsbaarheden, met name op systemen die toegankelijk zijn vanaf publieke infrastructuur.",
+    "keywords": [
+      "Atlassian",
+      "Bamboo",
+      "Bitbucket",
+      "Confluence",
+      "Jira",
+      "Crowd"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0325"
+    ]
+  },
+  {
+    "id": "gen_314",
+    "category": "cybersec",
+    "question": "Welke specifieke kwetsbaarheid in Keycloak, ge\u00efdentificeerd als CVE-2026-18963, stelt een ongeauthenticeerde externe aanvaller in staat om gebruikersaccounts over te nemen?",
+    "ground_truth": "De kwetsbaarheid met CVE-2026-18963 kan een ongeauthenticeerde externe aanvaller in staat stellen om elke gebruikersaccount over te nemen door een wachtwoordreset af te dwingen. Door deze kwetsbaarheid valt het e-mailverificatieproces bij wachtwoordreset te omzeilen en wachtwoorden van gebruikers te wijzigen.",
+    "keywords": [
+      "CVE-2026-18963",
+      "Keycloak",
+      "wachtwoordreset",
+      "e-mailverificatieproces",
+      "ongegeauthenticeerde externe aanvaller"
+    ],
+    "type": "cve",
+    "difficulty": "medium",
+    "source_urls": [
+      "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0326"
+    ]
+  },
+  {
+    "id": "gen_313",
+    "category": "cybersec",
+    "question": "Welke twee specifieke kwetsbaarheden in de GraphQL-implementatie van GitLab zijn verholpen en wat is de impact van de beschikbaarheid van publieke PoC code?",
+    "ground_truth": "De kwetsbaarheden bevinden zich in de GraphQL-implementatie van GitLab, waarbij de eerste niet-geauthenticeerde gebruikers toeliet om via een GraphQL-directive ongeautoriseerde wijzigingen uit te voeren op publieke projecten, en de tweede mutaties via GET-requests mogelijk maakte door onjuiste validatie van GraphQL multiplex queries. Inmiddels is er publieke PoC code beschikbaar waardoor de kans op actief misbruik aanzienlijk toeneemt.",
+    "keywords": [
+      "GraphQL-implementatie",
+      "niet-geauthenticeerde gebruikers",
+      "GraphQL multiplex queries",
+      "publieke PoC code",
+      "GitLab Community Edition"
+    ],
+    "type": "advisory",
+    "difficulty": "medium",
+    "source_urls": [
+      "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0303"
+    ]
+  },
+  {
+    "id": "gen_312",
+    "category": "cybersec",
+    "question": "Welke specifieke functies en componenten van de DrayTek VigorAP apparaten bevatten kwetsbaarheden die leiden tot willekeurige commando-uitvoering met root-privileges?",
+    "ground_truth": "De kwetsbaarheden bevinden zich in verschillende functies en componenten van de DrayTek VigorAP apparaten, waaronder tr069TestInform, ExportSettings, setLan, setcamset, mesh_start_speed_test, InquierTime, apautotest, upload_settings.cgi en dray_apm. Deze kwetsbaarheden maken het mogelijk voor aanvallers met geldige authenticatie om via onvoldoende inputvalidatie en filtering willekeurige commando's uit te voeren met root-privileges.",
+    "keywords": [
+      "DrayTek VigorAP",
+      "tr069TestInform",
+      "ExportSettings",
+      "setLan",
+      "root-privileges",
+      "inputvalidatie"
+    ],
+    "type": "advisory",
+    "difficulty": "medium",
+    "source_urls": [
+      "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0327"
+    ]
+  },
+  {
+    "id": "gen_311",
+    "category": "cybersec",
+    "question": "Welke specifieke functies bevatten command injection kwetsbaarheden in de DrayTek VigorSwitch en wat is het gevolg van exploitatie?",
+    "ground_truth": "Command injection kwetsbaarheden bevinden zich onder andere in functies zoals jsonstatus, commandTable, pingtrace, webBackupAction, sysreboot, auth_set, getVid, getDetail, setDevice, rebDevice, fdftDevice, setDevProto, setTime, tftp_upgrade en setDevNet. Deze maken het mogelijk voor een aanvaller om willekeurige commando's met root privileges uit te voeren.",
+    "keywords": [
+      "command injection",
+      "jsonstatus",
+      "commandTable",
+      "root privileges",
+      "DrayTek VigorSwitch"
+    ],
+    "type": "cve",
+    "difficulty": "medium",
+    "source_urls": [
+      "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0328"
+    ]
+  },
+  {
+    "id": "gen_310",
+    "category": "cybersec",
+    "question": "Welke specifieke versie van Next.js is kwetsbaar voor CVE-2026-75604 en onder welke omstandigheden kan deze kwetsbaarheid worden misbruikt?",
+    "ground_truth": "De kwetsbaarheid CVE-2026-75604 is alleen aanwezig in Next.js-applicaties die op een Windows-omgeving worden gehost en die een Pages- en App-router gebruiken zonder de Cache Component. Een kwaadwillende kan deze kwetsbaarheid misbruiken voor het uitvoeren van willekeurige code op de applicatieserver.",
+    "keywords": [
+      "CVE-2026-75604",
+      "Windows-omgeving",
+      "Pages- en App-router",
+      "Cache Component",
+      "willekeurige code"
+    ],
+    "type": "cve",
+    "difficulty": "medium",
+    "source_urls": [
+      "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0329"
+    ]
+  },
+  {
+    "id": "gen_309",
+    "category": "cybersec",
+    "question": "Welke specifieke kwetsbaarheid in UniFi OS-apparaten kan leiden tot het omzeilen van authenticatiemechanismen en ongeautoriseerde toegang tot beheerinterfaces?",
+    "ground_truth": "Sommige UniFi OS-apparaten bevatten een kwetsbaarheid waarbij improper neutralization van CRLF-sequenties kan leiden tot het omzeilen van authenticatiemechanismen, wat ongeautoriseerde toegang tot apparaatfuncties of beheerinterfaces mogelijk maakt.",
+    "keywords": [
+      "improper neutralization",
+      "CRLF-sequenties",
+      "authenticatiemechanismen",
+      "beheerinterfaces",
+      "UniFi OS"
+    ],
+    "type": "advisory",
+    "difficulty": "medium",
+    "source_urls": [
+      "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0330"
+    ]
+  },
+  {
+    "id": "gen_308",
+    "category": "cybersec",
+    "question": "Welke specifieke kwetsbaarheden zijn verholpen in Adobe Campaign Classic volgens NCSC-2026-0331 en wat zijn de mogelijke gevolgen?",
+    "ground_truth": "De kwetsbaarheden betreffen een Server-Side Request Forgery (SSRF) en OS Command Injection in Adobe Campaign Classic. De SSRF-kwetsbaarheid maakt het mogelijk voor een aanvaller om verzoeken op de server te manipuleren, wat kan leiden tot het uitvoeren van willekeurige code zonder gebruikersinteractie.",
+    "keywords": [
+      "Adobe Campaign Classic",
+      "Server-Side Request Forgery",
+      "SSRF",
+      "OS Command Injection",
+      "NCSC-2026-0331"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0331"
+    ]
+  },
+  {
+    "id": "gen_307",
+    "category": "cybersec",
+    "question": "Welke specifieke kwetsbaarheden zijn verholpen in Apache CloudStack versies 4.12.0.0 tot en met 4.22.1.0 volgens NCSC-2026-0332?",
+    "ground_truth": "De kwetsbaarheden betreffen onder andere OS Command Injection in de NAS backup provider plugin, Server-Side Request Forgery (SSRF) in verschillende modules zoals metalink mirror URL resolutie en webhook, onvoldoende toegangscontrole in userdata-gerelateerde API's, OAuth en LDAP authenticatie plugins, en improper privilege management in de two-factor authentication plugin. Verder zijn er kwetsbaarheden in de user interface met betrekking tot onjuiste encoding of escaping, command injection in diagnostics APIs, en improper access control in Kubernetes Service plugin en annotation APIs.",
+    "keywords": [
+      "Apache CloudStack",
+      "OS Command Injection",
+      "Server-Side Request Forgery",
+      "SSRF",
+      "two-factor authentication plugin",
+      "Kubernetes Service plugin"
+    ],
+    "type": "advisory",
+    "difficulty": "medium",
+    "source_urls": [
+      "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0332"
+    ]
+  },
+  {
+    "id": "gen_306",
+    "category": "cybersec",
+    "question": "Welke kwetsbaarheid vereist volgens de NCSC-advisory actie en in welk product bevindt deze zich?",
+    "ground_truth": "De kwetsbaarheid met kenmerk CVE-2026-70306 heeft een CVSS score hoger dan 9 en vereist wel actie. Deze kwetsbaarheid bevindt zich in Sharepoint.",
+    "keywords": [
+      "CVE-2026-70306",
+      "Sharepoint",
+      "actie",
+      "CVSS score"
+    ],
+    "type": "advisory",
+    "difficulty": "medium",
+    "source_urls": [
+      "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0286"
+    ]
+  },
+  {
+    "id": "gen_305",
+    "category": "cybersec",
+    "question": "Welke specifieke kwetsbaarheid in de logger module van CodeMeter Runtime kan leiden tot crashes en informatielekken, en met welke CVE is deze vooral in combinatie aangetroffen?",
+    "ground_truth": "Er is een input sanitization probleem in de logger module, waardoor format specifiers kunnen worden ge\u00efnjecteerd, wat kan leiden tot crashes en mogelijk informatielekken, zowel lokaal als op afstand, vooral in combinatie met CVE-2026-81573.",
+    "keywords": [
+      "logger module",
+      "input sanitization",
+      "format specifiers",
+      "CVE-2026-81573",
+      "informatielekken"
+    ],
+    "type": "cve",
+    "difficulty": "medium",
+    "source_urls": [
+      "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0333"
+    ]
+  },
+  {
+    "id": "gen_304",
+    "category": "cybersec",
+    "question": "Welke specifieke kwetsbaarheid heeft gepubliceerde proof-of-concept-code en wat is de impact van deze kwetsbaarheid?",
+    "ground_truth": "Voor de kwetsbaarheid met kenmerk CVE-2026-62911 is proof-of-concept-code gepubliceerd. Deze kwetsbaarheid stelt een ongeauthenticeerde kwaadwillende in staat om willekeurige code uit te voeren, waardoor de kwaadwillende toegang krijgt tot mailboxen van Exchange-gebruikers.",
+    "keywords": [
+      "CVE-2026-62911",
+      "proof-of-concept-code",
+      "willekeurige code",
+      "mailboxen",
+      "ongegeauthenticeerde kwaadwillende"
+    ],
+    "type": "cve",
+    "difficulty": "medium",
+    "source_urls": [
+      "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0289"
+    ]
+  },
+  {
+    "id": "gen_303",
+    "category": "cybersec",
+    "question": "Welke acties kan een ongeauthenticeerde kwaadwillende uitvoeren door de kwetsbaarheden in PaperCut MF en PaperCut NG achtereenvolgens te misbruiken?",
+    "ground_truth": "Een ongeauthenticeerde kwaadwillende kan de kwetsbaarheden mogelijk achtereenvolgens misbruiken om een PaperCut-omgeving over te nemen en hierop willekeurige code uit te voeren. Hiertoe dient de kwaadwillige malafide netwerkverkeer naar de kwetsbare PaperCut-omgeving te sturen.",
+    "keywords": [
+      "PaperCut MF",
+      "PaperCut NG",
+      "ongegeauthenticeerde kwaadwillende",
+      "willekeurige code",
+      "malafide netwerkverkeer"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0334"
+    ]
+  },
+  {
+    "id": "gen_302",
+    "category": "cybersec",
+    "question": "Welke specifieke kwetsbaarheden bevinden zich in het iked-proces en de epm-service van WatchGuard Fireware OS volgens NCSC-2026-0335?",
+    "ground_truth": "Het iked-proces bevat een stack-based buffer overflow, een type confusion kwetsbaarheid en een heap overflow. De epm-service, die onderdeel is van het verouderde Mobile Security-component, bevat een stack-based buffer overflow.",
+    "keywords": [
+      "iked-proces",
+      "epm-service",
+      "stack-based buffer overflow",
+      "type confusion",
+      "heap overflow",
+      "Mobile Security"
+    ],
+    "type": "advisory",
+    "difficulty": "medium",
+    "source_urls": [
+      "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0335"
+    ]
+  },
+  {
+    "id": "gen_301",
+    "category": "cybersec",
+    "question": "Welke kwetsbaarheid is verholpen in JFrog Artifactory volgens NCSC-2026-0336 en wat is het risico voor een niet-geauthenticeerde aanvaller?",
+    "ground_truth": "JFrog heeft een kwetsbaarheid verholpen in JFrog Artifactory die zich bevindt in de standaardconfiguratie, waarbij onvoldoende authenticatiecontroles aanwezig zijn. Hierdoor kan een niet-geauthenticeerde aanvaller met netwerktoegang de privileges escaleren naar administratief niveau, wat kan leiden tot volledige administratieve controle over het systeem.",
+    "keywords": [
+      "JFrog Artifactory",
+      "standaardconfiguratie",
+      "authenticatiecontroles",
+      "privileges escaleren",
+      "administratief niveau"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0336"
+    ]
+  },
+  {
+    "id": "gen_300",
+    "category": "cybersec",
+    "question": "Welke twee specifieke kwetsbaarheden zijn verholpen in de SonicWall SMA1000 Appliance en hoe zijn deze misbruikt?",
+    "ground_truth": "De SMA1000 Appliance bevatte een pre-authenticatie Server-Side Request Forgery (SSRF) in de Work Place interface en een post-authenticatie remote code execution. Beide kwetsbaarheden zijn als zero-days misbruikt.",
+    "keywords": [
+      "SMA1000 Appliance",
+      "Server-Side Request Forgery",
+      "SSRF",
+      "remote code execution",
+      "zero-days"
+    ],
+    "type": "cve",
+    "difficulty": "medium",
+    "source_urls": [
+      "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0337"
+    ]
+  },
+  {
+    "id": "gen_299",
+    "category": "cybersec",
+    "question": "Welke specifieke TCP-poorten moeten bereikbaar zijn voor een aanvaller om zonder authenticatie code met rootrechten uit te voeren op Cisco Nexus 9000 Series Switches met Silicon One technologie?",
+    "ground_truth": "Als TCP 43210 of 43211 bereikbaar is, kan een aanvaller zonder authenticatie code met rootrechten uitvoeren en de switch laten herstarten.",
+    "keywords": [
+      "TCP 43210",
+      "TCP 43211",
+      "rootrechten",
+      "Silicon One",
+      "Cisco Nexus 9000"
+    ],
+    "type": "cve",
+    "difficulty": "medium",
+    "source_urls": [
+      "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0338"
+    ]
+  },
+  {
+    "id": "gen_298",
+    "category": "cybersec",
+    "question": "Welke specifieke CVE kan door ongeauthoriseerde aanvallers van buitenaf worden misbruikt voor volledige overname van het achterliggende datacenter-netwerk als de SSH beheerinterface publiekelijk via het internet bereikbaar is?",
+    "ground_truth": "Als de SSH beheerinterface publiekelijk via het internet bereikbaar is, kan CVE-2026-76658 door ongeauthoriseerde aanvallers van buitenaf worden misbruikt voor volledige overname van het achterliggende datacenter-netwerk. Het is goed gebruik een dergelijk beheerinterface niet direct aan het internet te ontsluiten of af te schermen middels een VPN of whitelist.",
+    "keywords": [
+      "CVE-2026-76658",
+      "SSH beheerinterface",
+      "datacenter-netwerk",
+      "HPE Networking Fabric Composer",
+      "VPN"
+    ],
+    "type": "cve",
+    "difficulty": "medium",
+    "source_urls": [
+      "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0339"
+    ]
+  },
+  {
+    "id": "gen_297",
+    "category": "cybersec",
+    "question": "Welke specifieke aanvalsvectoren worden genoemd in de NCSC-2026-0340 melding voor kwetsbaarheden in ArubaOS-CX?",
+    "ground_truth": "Specifieke aanvalsvectoren omvatten onder meer het schrijven van bestanden via API endpoints, CSRF-aanvallen op de webinterface, SSRF-aanvallen, en het omzeilen van signature verificatie.",
+    "keywords": [
+      "API endpoints",
+      "CSRF-aanvallen",
+      "SSRF-aanvallen",
+      "signature verificatie",
+      "ArubaOS-CX"
+    ],
+    "type": "advisory",
+    "difficulty": "medium",
+    "source_urls": [
+      "https://advisories.ncsc.nl/advisory?id=NCSC-2026-0340"
+    ]
+  },
+  {
+    "id": "gen_296",
+    "category": "cybersec",
+    "question": "What are the names and CVE identifiers of the two factory implants disclosed by VulnCheck in ZBT routers that allow unauthenticated remote attackers to run commands as root?",
+    "ground_truth": "The implants are named SPEAKINGSTONE and DARKLANTERN and are tracked as CVE-2026-74232 and CVE-2026-74233. Each implant gives an unauthenticated remote attacker the ability to run commands as root on affected devices.",
+    "keywords": [
+      "SPEAKINGSTONE",
+      "DARKLANTERN",
+      "CVE-2026-74232",
+      "CVE-2026-74233",
+      "ZBT",
+      "VulnCheck"
+    ],
+    "type": "cve",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/08/china-made-zbt-routers-ship-with-two.html"
+    ]
+  },
+  {
+    "id": "gen_295",
+    "category": "cybersec",
+    "question": "How many security flaws impacting the ServiceNow AI Platform were rated 10.0 on the CVSS scoring system, and who can exploit them in certain circumstances?",
+    "ground_truth": "ServiceNow has released patches for four security flaws impacting the ServiceNow AI Platform, three of them rated 10.0 on the CVSS scoring system and exploitable, in certain circumstances, by an unauthenticated attacker.",
+    "keywords": [
+      "ServiceNow AI Platform",
+      "CVSS scoring system",
+      "unauthenticated attacker",
+      "security flaws"
+    ],
+    "type": "cve",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/08/three-cvss-100-servicenow-flaws-could.html"
+    ]
+  },
+  {
+    "id": "gen_294",
+    "category": "cybersec",
+    "question": "What is the primary function of an Identity Fabric and how does it change the dependency of identity security?",
+    "ground_truth": "An Identity Fabric knits fragmented identity systems into a coherent layer that observes how identities behave across applications, APIs, and infrastructure. As enterprise access spans more cloud services and automated workloads, identity security depends less on static configuration and more on runtime visibility.",
+    "keywords": [
+      "Identity Fabric",
+      "fragmented identity systems",
+      "runtime visibility",
+      "static configuration",
+      "automated workloads"
+    ],
+    "type": "howto",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/08/key-reasons-why-identity-fabric-matters.html"
+    ]
+  },
+  {
+    "id": "gen_293",
+    "category": "cybersec",
+    "question": "What are the two CVE IDs associated with the root remote code execution flaws in the Unitree G1 EDU, and what specific component does the Bluetooth Low Energy path target?",
+    "ground_truth": "The flaws are tracked as CVE-2026-76639 and CVE-2026-76640. The Bluetooth Low Energy (BLE) path can reach root on the robot's Locomotion PC.",
+    "keywords": [
+      "CVE-2026-76639",
+      "CVE-2026-76640",
+      "Unitree G1 EDU",
+      "Locomotion PC",
+      "Bluetooth Low Energy"
+    ],
+    "type": "cve",
+    "difficulty": "medium",
+    "source_urls": [
+      "https://thehackernews.com/2026/08/two-unitree-g1-edu-humanoid-robot-flaws.html"
+    ]
+  },
+  {
+    "id": "gen_292",
+    "category": "cybersec",
+    "question": "How many Chrome and Edge extensions were found with wallet-stealing and crypto-draining code, and who identified the similarities in their code?",
+    "ground_truth": "Cybersecurity researchers discovered a cluster of 18 Google Chrome and one Microsoft Edge extensions that harbored wallet secret stealing and cryptocurrency draining capabilities. Socket security researcher Karlo Zanki noted that the extensions share similarities in code and tradecraft.",
+    "keywords": [
+      "18 Google Chrome",
+      "one Microsoft Edge",
+      "wallet secret stealing",
+      "cryptocurrency draining",
+      "Karlo Zanki",
+      "Socket security"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/08/19-chrome-and-edge-extensions-found.html"
+    ]
+  },
+  {
+    "id": "gen_291",
+    "category": "cybersec",
+    "question": "Which specific vulnerability was added to the CISA KEV catalog after being exploited to target a nuclear research body in the Philippines?",
+    "ground_truth": "The vulnerability is tracked as CVE-2023-49105 with a CVSS score of 9.8. It was added to the CISA Known Exploited Vulnerabilities (KEV) catalog following reports that a Chinese-speaking threat actor weaponized it to target a nuclear research body in the Philippines.",
+    "keywords": [
+      "CVE-2023-49105",
+      "ownCloud",
+      "CISA",
+      "KEV",
+      "Philippines"
+    ],
+    "type": "cve",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/08/snowflake-github-actions-flaw-lets.html"
+    ]
+  },
+  {
+    "id": "gen_290",
+    "category": "cybersec",
+    "question": "What is the primary function of the Encrypted Client Hello (ECH) standard added in Android 17?",
+    "ground_truth": "Encrypted Client Hello (ECH) is a privacy standard that prevents networks from eavesdropping on which websites a user is visiting. It is part of new network security protections in Android 17 designed to bolster connection privacy.",
+    "keywords": [
+      "Android 17",
+      "Encrypted Client Hello",
+      "ECH",
+      "privacy standard",
+      "networks"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/08/android-17-adds-os-wide-ech-to-hide.html"
+    ]
+  },
+  {
+    "id": "gen_289",
+    "category": "cybersec",
+    "question": "What specific capability does the newly patched security flaw in PaperCut NG and MF provide to an unauthenticated attacker?",
+    "ground_truth": "This vulnerability gives an unauthenticated attacker remote control over PaperCut's trusted configuration, which could be used to execute arbitrary Java code inside the application's.",
+    "keywords": [
+      "PaperCut NG and MF",
+      "unauthenticated attacker",
+      "remote control",
+      "trusted configuration",
+      "arbitrary Java code"
+    ],
+    "type": "cve",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/08/attackers-chain-two-papercut-flaws-to.html"
+    ]
+  },
+  {
+    "id": "gen_288",
+    "category": "cybersec",
+    "question": "What is the designation of the critical balance-handling flaw in the Cosmos EVM module, and what specific metadata was missing from its publication?",
+    "ground_truth": "The vulnerability is designated GHSA-7g4w-cg88-2cq2 and is rated Critical by Cosmos Labs. It was published without a CVE identifier, a weakness classification, or a CVSS score.",
+    "keywords": [
+      "GHSA-7g4w-cg88-2cq2",
+      "Cosmos EVM",
+      "CVE identifier",
+      "CVSS score",
+      "Critical"
+    ],
+    "type": "cve",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/08/cosmos-evm-flaw-exploited-after-cosmos.html"
+    ]
+  },
+  {
+    "id": "gen_287",
+    "category": "cybersec",
+    "question": "Which specific Senate Department was identified by forensic work as having further data outflows following the August compromise?",
+    "ground_truth": "Forensic work found further data outflows in the portfolio of the Senate Department for Mobility, Transport, Climate Protection and Environment. Berlin's state government confirmed it is the target of an extortion attempt and said it will not meet the extortionists' demands.",
+    "keywords": [
+      "Senate Department for Mobility, Transport, Climate Protection and Environment",
+      "extortion attempt",
+      "data outflows",
+      "state administrative network"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/08/berlin-refuses-to-pay-hackers-who-stole.html"
+    ]
+  },
+  {
+    "id": "gen_286",
+    "category": "cybersec",
+    "question": "Which WordPress plugins and themes are affected by the critical security flaws disclosed by Wordfence and Patchstack, and what is the CVSS score for CVE-2026-76581?",
+    "ground_truth": "The critical security flaws affect the WordPress plugins and themes WPMU DEV Dashboard, Avada, TranslatePress, Pods, and GiveWP. CVE-2026-76581 is an authentication bypass flaw with a CVSS score of 9.8.",
+    "keywords": [
+      "WPMU DEV Dashboard",
+      "Avada",
+      "TranslatePress",
+      "Pods",
+      "GiveWP",
+      "CVE-2026-76581"
+    ],
+    "type": "cve",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/08/five-critical-wordpress-plugin-and.html"
+    ]
+  },
+  {
+    "id": "gen_285",
+    "category": "cybersec",
+    "question": "How does the TerminalFix ClickFix variant differ from traditional ClickFix campaigns in terms of the target interface?",
+    "ground_truth": "While traditional ClickFix campaigns direct victims to the Windows Run dialog, TerminalFix campaigns apply the same technique but direct users to Windows Terminal or PowerShell instead, increasing the likelihood that complex",
+    "keywords": [
+      "TerminalFix",
+      "ClickFix",
+      "Windows Run dialog",
+      "Windows Terminal",
+      "PowerShell"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/08/terminalfix-uses-fake-cloudflare.html"
+    ]
+  },
+  {
+    "id": "gen_284",
+    "category": "cybersec",
+    "question": "How did the U.S. Department of Justice correct its previous statement regarding the status of its agencies in relation to attacks by Chinese threat actors?",
+    "ground_truth": "The U.S. Department of Justice (DoJ) corrected a previously issued press statement that several of its agencies were victims of attacks carried out by Chinese threat actors, instead now pointing out that they were among those targeted.",
+    "keywords": [
+      "Department of Justice",
+      "Chinese threat actors",
+      "victims",
+      "targeted",
+      "press statement"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/08/doj-corrects-china-hacking-claim-says.html"
+    ]
+  },
+  {
+    "id": "gen_283",
+    "category": "cybersec",
+    "question": "Which specific network infrastructure components did the Fire Ant actor compromise in their expanded campaign?",
+    "ground_truth": "The actor compromised Cisco IOS XR routers, Terminal Access Controller Access-Control System (TACACS) servers, and Linux management hosts used to route, authenticate, and manage high-value networks.",
+    "keywords": [
+      "Fire Ant",
+      "Cisco IOS XR",
+      "TACACS",
+      "Linux management hosts",
+      "Sygnia"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/08/china-linked-fire-ant-hijacks-cisco.html"
+    ]
+  },
+  {
+    "id": "gen_282",
+    "category": "cybersec",
+    "question": "What specific capabilities does Claude Code have that the new Compliance API endpoints help security teams monitor?",
+    "ground_truth": "Claude Code reads files, runs shell commands, invokes MCP tools, and acts through the credentials available on a developer\u2019s machine. Anthropic\u2019s new Compliance API endpoints give security teams their clearest view yet into that activity.",
+    "keywords": [
+      "Claude Code",
+      "Compliance API",
+      "MCP tools",
+      "shell commands",
+      "credentials"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/08/securing-claude-code-new-compliance-api.html"
+    ]
+  },
+  {
+    "id": "gen_281",
+    "category": "cybersec",
+    "question": "Which AI-powered coding assistant did Aurora ransomware operators use to break into target networks, and which two security firms reported this finding?",
+    "ground_truth": "Threat actors associated with Aurora (aka Aur0ra) ransomware have been observed using SpaceX's artificial intelligence (AI)-powered coding assistant Cursor to break into target networks, according to findings from CloudSEK and Gambit Security.",
+    "keywords": [
+      "Aurora",
+      "Cursor",
+      "CloudSEK",
+      "Gambit Security",
+      "SpaceX"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/08/aurora-ransomware-operators-use-cursor.html"
+    ]
+  },
+  {
+    "id": "gen_280",
+    "category": "cybersec",
+    "question": "How does the Silver Fox threat actor disguise the ValleyRAT backdoor to evade antivirus detection?",
+    "ground_truth": "The threat actor known as Silver Fox has been observed distributing the ValleyRAT backdoor disguised as a signed Chinese adware application, running the malware under a trusted process to slip past users who add such software to their antivirus exclusions. The attackers built the disguise around QN Wallpaper, a genuine Chinese desktop-wallpaper tool.",
+    "keywords": [
+      "Silver Fox",
+      "ValleyRAT",
+      "QN Wallpaper",
+      "antivirus exclusions",
+      "Kaspersky"
+    ],
+    "type": "advisory",
+    "difficulty": "medium",
+    "source_urls": [
+      "https://thehackernews.com/2026/08/valleyrat-backdoor-hides-in-signed.html"
+    ]
+  },
+  {
+    "id": "gen_279",
+    "category": "cybersec",
+    "question": "What specific behaviors or issues are described in the article regarding the router, the fake check, trusted systems, and the AI agent?",
+    "ground_truth": "A router shipped ready to listen. A fake check turned the user into the installer. Trusted systems collected traffic and passwords, then cleaned the logs. Even an AI agent decided its assigned task was optional.",
+    "keywords": [
+      "router",
+      "fake check",
+      "trusted systems",
+      "AI agent",
+      "cleaned the logs"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/08/weekly-recap-chinese-spy-proxy-ai.html"
+    ]
+  },
+  {
+    "id": "gen_278",
+    "category": "cybersec",
+    "question": "Which non-IT sectors have recent investigations identified as having suspected North Korean workers employed in them?",
+    "ground_truth": "Recent investigations have identified suspected workers employed in sales and marketing and the medical profession. This expansion is part of the ongoing insider threat described as the IT worker scheme.",
+    "keywords": [
+      "sales and marketing",
+      "medical profession",
+      "IT worker scheme",
+      "insider threat",
+      "DPRK"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/08/north-korean-job-fraud-expands-beyond.html"
+    ]
+  },
+  {
+    "id": "gen_277",
+    "category": "cybersec",
+    "question": "What is the CVSS score for CVE-2026-0768 and what specific risk does it pose to the Langflow application?",
+    "ground_truth": "CVE-2026-0768 has a CVSS score of 9.8. It is a lack of proper validation of a user-supplied input vulnerability that could be exploited to execute arbitrary Python code in the context of the root user.",
+    "keywords": [
+      "CVE-2026-0768",
+      "CVSS score: 9.8",
+      "Langflow",
+      "arbitrary Python code",
+      "root user"
+    ],
+    "type": "cve",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/09/attackers-exploit-critical-langflow-and.html"
+    ]
+  },
+  {
+    "id": "gen_276",
+    "category": "cybersec",
+    "question": "What is the name of the new technique used by the Russia-aligned threat actor UAC-0099 to interfere with AI-assisted analysis, and what is its primary objective?",
+    "ground_truth": "The technique is dubbed GuardBreaker and was used by UAC-0099 against a target in Ukraine. Its aim is to deliberately trip a large language model's (LLM) safety mechanisms to interfere with artificial intelligence (AI)-assisted analysis.",
+    "keywords": [
+      "GuardBreaker",
+      "UAC-0099",
+      "LLM",
+      "safety mechanisms",
+      "AI-assisted analysis"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/09/russia-aligned-uac-0099-plants-nuclear.html"
+    ]
+  },
+  {
+    "id": "gen_275",
+    "category": "cybersec",
+    "question": "What is the full name of the organization METR, and what was the estimated value of the AI credits consumed by attackers after stealing its API key?",
+    "ground_truth": "METR stands for Model Evaluation and Threat Research. Attackers consumed AI credits worth about $600,000.",
+    "keywords": [
+      "METR",
+      "Model Evaluation and Threat Research",
+      "API Key",
+      "AI Credits",
+      "$600,000"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/09/attackers-steal-metr-api-key-and.html"
+    ]
+  },
+  {
+    "id": "gen_274",
+    "category": "cybersec",
+    "question": "What is the name of the technique where a web page places a command on the clipboard and instructs the user to paste it into a terminal, and what was its significance according to Microsoft's team?",
+    "ground_truth": "The technique is called ClickFix, and it was the most common initial access method Microsoft\u2019s team observed last year.",
+    "keywords": [
+      "ClickFix",
+      "initial access",
+      "clipboard",
+      "terminal",
+      "Microsoft"
+    ],
+    "type": "howto",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/09/threat-actors-dont-want-better-attacks.html"
+    ]
+  },
+  {
+    "id": "gen_273",
+    "category": "cybersec",
+    "question": "Which malware families and programming languages are associated with the Iranian Nimbus Manticore hacking group's cross-platform RATs?",
+    "ground_truth": "The Iranian Nimbus Manticore hacking group has been attributed to two previously undocumented malware families that use cross-platform remote access trojans (RATs) developed using Node.js and JavaScript.",
+    "keywords": [
+      "Nimbus Manticore",
+      "cross-platform remote access trojans",
+      "Node.js",
+      "JavaScript",
+      "Kaspersky"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/09/iranian-hackers-pose-as-recruiters-to.html"
+    ]
+  },
+  {
+    "id": "gen_272",
+    "category": "cybersec",
+    "question": "What specific type of malicious packages were identified on Packagist and what was their primary target?",
+    "ground_truth": "Researchers identified 13 malicious Composer theme packages on Packagist designed to inject JavaScript into Vietnamese movie and comic streaming sites. These packages initiate the deployment of spyware aimed at unpatched iOS devices.",
+    "keywords": [
+      "13 malicious Composer theme packages",
+      "Packagist",
+      "Vietnamese movie and comic streaming sites",
+      "unpatched iOS devices",
+      "spyware"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/09/13-malicious-packagist-packages-target.html"
+    ]
+  },
+  {
+    "id": "gen_271",
+    "category": "cybersec",
+    "question": "Who is the threat actor dubbed Breeze Comet and what is their primary specialization according to Google Threat Intelligence Group and Mandiant?",
+    "ground_truth": "The threat actor is dubbed Breeze Comet (formerly UNC5669) and has targeted Brazilian financial services, retail, and e-commerce organizations since 2024. Google Threat Intelligence Group (GTIG) and Mandiant described the actor as specializing in manipulating payment systems and banking software in Brazil to conduct fraudulent transfers.",
+    "keywords": [
+      "Breeze Comet",
+      "UNC5669",
+      "Google Threat Intelligence Group",
+      "Mandiant",
+      "fraudulent transfers"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/09/breeze-comet-executes-hundreds-of.html"
+    ]
+  },
+  {
+    "id": "gen_270",
+    "category": "cybersec",
+    "question": "What is the CVE ID and CVSS score of the critical JFrog Artifactory flaw being exploited by attackers days after disclosure?",
+    "ground_truth": "The vulnerability is CVE-2026-82329 with a CVSS score of 9.8. It is an authentication bypass that could lead to administrative access in Artifactory.",
+    "keywords": [
+      "CVE-2026-82329",
+      "CVSS score: 9.8",
+      "JFrog Artifactory",
+      "authentication bypass",
+      "administrative access"
+    ],
+    "type": "cve",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/09/attackers-exploit-critical-jfrog.html"
+    ]
+  },
+  {
+    "id": "gen_269",
+    "category": "cybersec",
+    "question": "Which private industry partners collaborated with authorities from the U.S., Bulgaria, Hungary, and Romania in the takedown of the Sality botnet?",
+    "ground_truth": "The effort was undertaken on August 31, 2026, by authorities from the U.S., Bulgaria, Hungary, and Romania, in collaboration with private industry partners CrowdStrike and the Shadowserver Foundation.",
+    "keywords": [
+      "Sality",
+      "CrowdStrike",
+      "Shadowserver Foundation",
+      "August 31, 2026",
+      "P2P botnet"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/09/authorities-turn-salitys-p2p-network.html"
+    ]
+  },
+  {
+    "id": "gen_268",
+    "category": "cybersec",
+    "question": "What is the CVE ID and CVSS score of the critical unauthenticated SQL injection vulnerability in Sangoma Switchvox SMB Edition 8.3 (104997)?",
+    "ground_truth": "The vulnerability is CVE-2026-9586 with a CVSS score of 9.3. It is a critical unauthenticated SQL injection vulnerability in Sangoma Switchvox SMB Edition 8.3 (104997) that allows attackers to remotely execute arbitrary code.",
+    "keywords": [
+      "CVE-2026-9586",
+      "CVSS score: 9.3",
+      "Sangoma Switchvox",
+      "SMB Edition 8.3 (104997)",
+      "SQL injection"
+    ],
+    "type": "cve",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/09/attackers-exploit-critical-switchvox.html"
+    ]
+  },
+  {
+    "id": "gen_267",
+    "category": "cybersec",
+    "question": "Which specific CVE and vulnerability type did the exploit target in the WAGO PLC, and what was the outcome of using Claude to port it?",
+    "ground_truth": "The exploit targets CVE-2021-31886, a stack-based buffer overflow in the Nucleus FTP server's handling of the USER command. Researchers used Claude to port the pre-authentication RCE exploit from one WAGO PLC model to another, executing attacker-supplied ARM shellcode on live hardware.",
+    "keywords": [
+      "CVE-2021-31886",
+      "stack-based buffer overflow",
+      "Nucleus FTP server",
+      "WAGO",
+      "ARM shellcode"
+    ],
+    "type": "cve",
+    "difficulty": "medium",
+    "source_urls": [
+      "https://thehackernews.com/2026/09/researchers-use-claude-to-port-pre-auth.html"
+    ]
+  },
+  {
+    "id": "gen_266",
+    "category": "cybersec",
+    "question": "How many fake accounts did the charged Russian national use to send malware-laced Excel attachments, and how many users were targeted?",
+    "ground_truth": "The U.S. Department of Justice (DoJ) has charged a Russian national with using roughly 255 fake accounts on a freelance platform to send malware-laced Excel attachments to about 80,000 of its users in 2016 and 2017.",
+    "keywords": [
+      "255 fake accounts",
+      "malware-laced Excel attachments",
+      "80,000",
+      "freelance platform",
+      "Searzhudin Tamirlanovich Aktulaev"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/09/extradited-russian-hacker-faces-charges.html"
+    ]
+  },
+  {
+    "id": "gen_265",
+    "category": "cybersec",
+    "question": "Which specific versions of GeoNetwork shipped fixes for the unauthenticated RCE chain, and when were these fixes released?",
+    "ground_truth": "The project shipped fixes in versions 4.4.12 and 4.2.17 on July 8, 2026, and published the vulnerability details on August 31.",
+    "keywords": [
+      "GeoNetwork",
+      "4.4.12",
+      "4.2.17",
+      "unauthenticated remote code execution",
+      "July 8, 2026"
+    ],
+    "type": "cve",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/09/geonetwork-fixes-unauthenticated-rce.html"
+    ]
+  },
+  {
+    "id": "gen_264",
+    "category": "cybersec",
+    "question": "What is the CVSS score and type of the vulnerability identified as CVE-2026-83548 in SonicWall SMA 1000 series appliances?",
+    "ground_truth": "CVE-2026-83548 has a CVSS score of 10.0 and is described as a pre-authentication SSRF vulnerability in the Appliance.",
+    "keywords": [
+      "CVE-2026-83548",
+      "CVSS score: 10.0",
+      "pre-authentication SSRF",
+      "SonicWall SMA 1000"
+    ],
+    "type": "cve",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/09/attackers-exploit-two-sonicwall-sma.html"
+    ]
+  },
+  {
+    "id": "gen_263",
+    "category": "cybersec",
+    "question": "According to the article, what is the primary challenge organizations face regarding AI implementation in 2026?",
+    "ground_truth": "The challenge now is implementing it at scale and securely across every function while meeting board-level pressure to move fast. Organizations must focus on adopting AI at business speed without losing control of cyber risk.",
+    "keywords": [
+      "AI",
+      "scale",
+      "cyber risk",
+      "board-level pressure",
+      "business speed"
+    ],
+    "type": "howto",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/09/how-to-secure-enterprise-ai-from.html"
+    ]
+  },
+  {
+    "id": "gen_262",
+    "category": "cybersec",
+    "question": "How many Meta accounts in the European Union were reached by the StreamRat campaign according to ThreatFabric?",
+    "ground_truth": "ThreatFabric said the campaign's advertisement focused on Spain and reached an estimated 570,950 Meta accounts in the European Union.",
+    "keywords": [
+      "StreamRat",
+      "ThreatFabric",
+      "570,950",
+      "Meta accounts",
+      "European Union"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/09/meta-ads-push-streamrat-android-trojan.html"
+    ]
+  },
+  {
+    "id": "gen_261",
+    "category": "cybersec",
+    "question": "How did the hackers deliver the malicious Virtualizor package and what was the reported impact on one hosting provider's hypervisors?",
+    "ground_truth": "Hackers used a Border Gateway Protocol (BGP) hijack to divert Softaculous traffic to deliver a malicious Virtualizor package. A hosting-provider account said 5 of its 34 checked Virtualizor hypervisors sustained root-level compromise.",
+    "keywords": [
+      "BGP hijack",
+      "Softaculous",
+      "Virtualizor",
+      "root-level compromise",
+      "hypervisors"
+    ],
+    "type": "advisory",
+    "difficulty": "medium",
+    "source_urls": [
+      "https://thehackernews.com/2026/09/bgp-hijack-delivers-malicious.html"
+    ]
+  },
+  {
+    "id": "gen_260",
+    "category": "cybersec",
+    "question": "Which cybercrime cluster is responsible for installing malicious Apache modules on Brazilian government and educational institution servers to divert traffic to gambling pages?",
+    "ground_truth": "A Chinese-speaking cybercrime cluster known as Gambling Goblin has been observed installing malicious Apache modules on compromised web servers run by Brazilian government and educational institutions, and using them to divert visitors to attacker-controlled pages promoting online gambling and sports betting. Check Point Research said it has tracked the campaign since mid-2025.",
+    "keywords": [
+      "Gambling Goblin",
+      "Apache modules",
+      "Brazilian government",
+      "Check Point Research",
+      "online gambling"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/09/malicious-apache-modules-hijack.html"
+    ]
+  },
+  {
+    "id": "gen_259",
+    "category": "cybersec",
+    "question": "How many security flaws did Manifold Security disclose across command-line AI coding agents, and how many were unpatched at publication?",
+    "ground_truth": "Manifold Security has disclosed eight security flaws across seven command-line AI coding agents. Four of them were still unpatched at publication.",
+    "keywords": [
+      "Manifold Security",
+      "eight security flaws",
+      "seven command-line AI coding agents",
+      "four of them still unpatched"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/09/malicious-git-configs-can-make-claude.html"
+    ]
+  },
+  {
+    "id": "gen_258",
+    "category": "cybersec",
+    "question": "Which specific groups and organizations have been primarily affected by the malware campaign distributing fake software installers?",
+    "ground_truth": "The campaign has resulted in compromises across multiple organizations and industries, primarily affecting China-based operations of multinational organizations and Chinese-speaking users.",
+    "keywords": [
+      "China-based operations",
+      "multinational organizations",
+      "Chinese-speaking users",
+      "malware campaign",
+      "fake software installers"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/09/fake-software-installers-disable.html"
+    ]
+  },
+  {
+    "id": "gen_257",
+    "category": "cybersec",
+    "question": "What is the name of the new initiative by Google that provides early access to Gemini 3.8 Flash Cyber for trusted defenders?",
+    "ground_truth": "Google announced Gemini 3.8 Flash Cyber, described as its most capable cybersecurity model, and made it available to trusted defenders via a new initiative called the Fairwind Program. The Fairwind Program gives high-priority defenders, such as governments, healthcare providers, and telecommunications services, early access to advanced models.",
+    "keywords": [
+      "Gemini 3.8 Flash Cyber",
+      "Fairwind Program",
+      "cybersecurity model",
+      "trusted defenders",
+      "early access"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/09/google-anthropic-and-openai-unveil.html"
+    ]
+  },
+  {
+    "id": "gen_256",
+    "category": "cybersec",
+    "question": "What is the CVSS score and the type of vulnerability associated with CVE-2026-83548 in SonicWall SMA 1000 Appliances?",
+    "ground_truth": "CVE-2026-83548 has a CVSS score of 10.0 and is a server-side request forgery vulnerability in SonicWall SMA 1000 Appliances that could allow a remote unauthenticated attack.",
+    "keywords": [
+      "CVE-2026-83548",
+      "CVSS score: 10.0",
+      "server-side request forgery",
+      "SonicWall SMA 1000 Appliances",
+      "remote unauthenticated"
+    ],
+    "type": "cve",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/09/cisa-adds-seven-exploited-flaws-as.html"
+    ]
+  },
+  {
+    "id": "gen_255",
+    "category": "cybersec",
+    "question": "What is the name of the zero-day privilege escalation flaw released by Chaotic Eclipse, and how does it exploit CrowdStrike Falcon Sensor?",
+    "ground_truth": "The zero-day is dubbed FalconFlank and is a proof-of-concept for a privilege escalation flaw impacting Crowdstrike Falcon. It abuses the office malicious macros remediation in CrowdStrike Falcon Sensor.",
+    "keywords": [
+      "FalconFlank",
+      "Chaotic Eclipse",
+      "privilege escalation",
+      "CrowdStrike Falcon Sensor",
+      "office malicious macros remediation"
+    ],
+    "type": "cve",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/09/researcher-releases-falconflank-poc.html"
+    ]
+  },
+  {
+    "id": "gen_254",
+    "category": "cybersec",
+    "question": "What specific type of exploit was used to infect the iPhone of the Serbian student movement member with Pegasus spyware?",
+    "ground_truth": "The Citizen Lab confirmed that an iMessage zero-click exploit was used to infect the device with NSO Group's Pegasus spyware.",
+    "keywords": [
+      "iMessage",
+      "zero-click exploit",
+      "Pegasus spyware",
+      "NSO Group",
+      "Citizen Lab"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/09/pegasus-zero-click-spyware-exploit.html"
+    ]
+  },
+  {
+    "id": "gen_253",
+    "category": "cybersec",
+    "question": "How many credential locations does the recent Shai-Hulud infostealer worm variant scan, and how does this compare to earlier variants?",
+    "ground_truth": "A recent Shai-Hulud infostealer worm variant had evolved to scan for credentials across 469 locations. Earlier variants of the infostealer worm only checked 189 paths.",
+    "keywords": [
+      "Shai-Hulud",
+      "infostealer worm",
+      "469 locations",
+      "189 paths",
+      "GitGuardian"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/09/shai-huluds-reach-just-grew-to-469.html"
+    ]
+  },
+  {
+    "id": "gen_252",
+    "category": "cybersec",
+    "question": "Which specific organizations have been targeted by attackers leveraging the Node.js runtime since February 2026, and which team published the report?",
+    "ground_truth": "The attack method has been put to use in attacks targeting government departments, technology companies, and hotels since February 2026. The report was published by the Symantec Threat Hunter Team.",
+    "keywords": [
+      "Node.js",
+      "Symantec Threat Hunter Team",
+      "government departments",
+      "technology companies",
+      "hotels",
+      "February 2026"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/09/attackers-turn-trusted-nodejs-runtime.html"
+    ]
+  },
+  {
+    "id": "gen_251",
+    "category": "cybersec",
+    "question": "What percentage of the observed activity in the RMM phishing campaign was associated with the United States, and how many cases did ANY.RUN research connect to the operation?",
+    "ground_truth": "Around 45% of observed activity was associated with the United States, making it the campaign's top geographic target. ANY.RUN research connected 601 cases to the wider operation.",
+    "keywords": [
+      "RMM phishing campaign",
+      "United States",
+      "45%",
+      "ANY.RUN",
+      "601 cases"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/09/us-becomes-top-target-in-rmm-phishing.html"
+    ]
+  },
+  {
+    "id": "gen_250",
+    "category": "cybersec",
+    "question": "When did West Publishing discover the unauthorized activity on the C-Track platform, and which specific jurisdictions were affected by the breach?",
+    "ground_truth": "West Publishing said it discovered the activity on June 30, 2026. The breach affected courts in 11 U.S. states, the U.S. Virgin Islands, and Ontario, Canada.",
+    "keywords": [
+      "West Publishing",
+      "C-Track",
+      "June 30, 2026",
+      "11 U.S. states",
+      "U.S. Virgin Islands",
+      "Ontario, Canada"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/09/thomson-reuters-court-software-breach.html"
+    ]
+  },
+  {
+    "id": "gen_249",
+    "category": "cybersec",
+    "question": "What is the name of the Python-based Windows malware framework disclosed by cybersecurity researchers, and how does it differ from the standard infostealer model?",
+    "ground_truth": "The malware framework is called BraZetsu. Unlike the standard infostealer model, BraZetsu is a comprehensive master toolkit that empowers Initial Access Brokers (IABs) by turning compromised systems into highly valuable commercial inventory.",
+    "keywords": [
+      "BraZetsu",
+      "Python-based",
+      "Initial Access Brokers",
+      "infostealer model",
+      "master toolkit"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/09/brazetsu-malware-turns-compromised.html"
+    ]
+  },
+  {
+    "id": "gen_248",
+    "category": "cybersec",
+    "question": "What is the CVE ID and CVSS score for the critical security flaw affecting 10 Silicon One-based Nexus 9000 switches that allows unauthenticated remote attackers to execute code as root?",
+    "ground_truth": "The Nexus vulnerability is tracked as CVE-2026-20212 with a CVSS score of 9.8. It affects 10 Silicon One-based Nexus 9000 switches and allows an unauthenticated, remote attacker to execute code as root.",
+    "keywords": [
+      "CVE-2026-20212",
+      "CVSS score: 9.8",
+      "Silicon One-based Nexus 9000",
+      "unauthenticated, remote attacker",
+      "execute code as root"
+    ],
+    "type": "cve",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/09/critical-cisco-nexus-9000-flaw-lets.html"
+    ]
+  },
+  {
+    "id": "gen_247",
+    "category": "cybersec",
+    "question": "What specific social engineering tactics and tools do attackers use according to the article?",
+    "ground_truth": "Attackers use real tools, fake login pages, old account links, and software guides that point to unsafe downloads. They also use a call from IT, a shared file, a trusted app, and a simple request to click \u201cAllow.\u201d",
+    "keywords": [
+      "real tools",
+      "fake login pages",
+      "old account links",
+      "unsafe downloads",
+      "click \u201cAllow\u201d"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://thehackernews.com/2026/09/threatsday-ceo-phishing-kits-5k-dropbox.html"
+    ]
+  },
+  {
+    "id": "gen_246",
+    "category": "webdev",
+    "question": "What is the title of the article?",
+    "ground_truth": "The title of the article is 'How to get a free .arpa domain'.",
+    "keywords": [
+      "free",
+      ".arpa",
+      "domain"
+    ],
+    "type": "howto",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://hawksley.dev/blog/get-free-arpa-domain"
+    ]
+  },
+  {
+    "id": "gen_244",
+    "category": "webdev",
+    "question": "What is the title of the article regarding OpenAI's GPT-6 Astra?",
+    "ground_truth": "The title of the article is 'OpenAI's GPT-6 Astra on ARC-AGI-3'.",
+    "keywords": [
+      "OpenAI",
+      "GPT-6 Astra",
+      "ARC-AGI-3"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://arcprize.org/blog/astra"
+    ]
+  },
+  {
+    "id": "gen_243",
+    "category": "webdev",
+    "question": "According to the article title, where does the true horror of Edgar Allan Poe's stories lie?",
+    "ground_truth": "The true horror of Edgar Allan Poe\u2019s stories lies in their confessions.",
+    "keywords": [
+      "Edgar Allan Poe",
+      "true horror",
+      "confessions",
+      "stories"
+    ],
+    "type": "howto",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://yalereview.org/article/emily-ogden-edgar-allan-poe"
+    ]
+  },
+  {
+    "id": "gen_242",
+    "category": "webdev",
+    "question": "How is the LED on the PCB business card powered?",
+    "ground_truth": "The LED is powered by the phone that taps it. The device is batteryless.",
+    "keywords": [
+      "PCB",
+      "business card",
+      "batteryless",
+      "LED",
+      "phone"
+    ],
+    "type": "howto",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://www.kevin.md/the-business-card-that-lights-up.md/"
+    ]
+  },
+  {
+    "id": "gen_241",
+    "category": "webdev",
+    "question": "What is the potential consequence for using Google Antigravity with third-party services according to the article title?",
+    "ground_truth": "The article title states that 3rd party usage can get Google account suspended.",
+    "keywords": [
+      "Google Antigravity",
+      "3rd party usage",
+      "Google account",
+      "suspended"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://twitter.com/GergelyOrosz/status/2095453567955968398"
+    ]
+  },
+  {
+    "id": "gen_238",
+    "category": "webdev",
+    "question": "What specific health outcome is GLP-1s being linked to according to the article title?",
+    "ground_truth": "GLP-1s are being linked to fewer serious infections, including TB.",
+    "keywords": [
+      "GLP-1s",
+      "fewer serious infections",
+      "TB"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://gizmodo.com/ozempic-and-other-glp-1s-are-being-linked-to-fewer-serious-infections-including-tb-2000806796"
+    ]
+  },
+  {
+    "id": "gen_237",
+    "category": "webdev",
+    "question": "What specific role is Tasklet (YC P26) currently hiring for?",
+    "ground_truth": "Tasklet (YC P26) is hiring a Customer Success Engineer.",
+    "keywords": [
+      "Tasklet",
+      "YC P26",
+      "Customer Success Engineer",
+      "hiring"
+    ],
+    "type": "howto",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://tasklet.ai/careers/customer-success-engineer"
+    ]
+  },
+  {
+    "id": "gen_236",
+    "category": "webdev",
+    "question": "What is the title of the blog post regarding virtual threads in Java 8?",
+    "ground_truth": "The title of the blog post is 'Virtual Threads for a scripting language in Java 8 without Loom'.",
+    "keywords": [
+      "Virtual Threads",
+      "scripting language",
+      "Java 8",
+      "Loom"
+    ],
+    "type": "howto",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://jactl.io/blog/2026/08/28/jactl-virtual-threads"
+    ]
+  },
+  {
+    "id": "gen_234",
+    "category": "webdev",
+    "question": "What is the main feature of the new type of dice mentioned in the article title?",
+    "ground_truth": "The new type of dice guarantees no tie when deciding who goes first.",
+    "keywords": [
+      "dice",
+      "no tie",
+      "deciding who goes first"
+    ],
+    "type": "howto",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://www.cbc.ca/lite/story/9.7328614"
+    ]
+  },
+  {
+    "id": "gen_233",
+    "category": "webdev",
+    "question": "Who defeated the AI KataGo with a two-stone handicap?",
+    "ground_truth": "Go grandmaster Shin defeated AI KataGo with a two-stone handicap.",
+    "keywords": [
+      "Go grandmaster Shin",
+      "KataGo",
+      "two-stone handicap"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://www.kedglobal.com/artificial-intelligence/newsView/ked202607210007"
+    ]
+  },
+  {
+    "id": "gen_232",
+    "category": "webdev",
+    "question": "What is the title of the Show HN post?",
+    "ground_truth": "The title of the post is 'Show HN: Reactor Atlas'. The URL provided is https://reactoratlas.com.",
+    "keywords": [
+      "Show HN",
+      "Reactor Atlas",
+      "reactoratlas.com"
+    ],
+    "type": "howto",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://reactoratlas.com"
+    ]
+  },
+  {
+    "id": "gen_231",
+    "category": "webdev",
+    "question": "What is the title and description of the website anyhumanever.com?",
+    "ground_truth": "The title is 'Any Human Ever \u2013 One life, drawn at random from all who have ever lived'. The URL is https://anyhumanever.com/.",
+    "keywords": [
+      "Any Human Ever",
+      "One life",
+      "drawn at random",
+      "all who have ever lived",
+      "anyhumanever.com"
+    ],
+    "type": "howto",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://anyhumanever.com/"
+    ]
+  },
+  {
+    "id": "gen_230",
+    "category": "webdev",
+    "question": "What is the name of the connected fleet of six open models described in the article?",
+    "ground_truth": "The article describes a connected fleet of six open models named K2 Horizon.",
+    "keywords": [
+      "K2 Horizon",
+      "connected fleet",
+      "six open models"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://ifm.ai/blog/k2/"
+    ]
+  },
+  {
+    "id": "gen_229",
+    "category": "webdev",
+    "question": "What was the maximum extent of the GPS glitch across the US?",
+    "ground_truth": "GPS glitched across the US by as much as 33 feet.",
+    "keywords": [
+      "GPS",
+      "glitched",
+      "US",
+      "33 feet"
+    ],
+    "type": "advisory",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://www.sciencealert.com/gps-glitched-across-the-us-by-as-much-as-33-feet-scientists-have-never-seen-this-before"
+    ]
+  },
+  {
+    "id": "gen_228",
+    "category": "webdev",
+    "question": "How many runs were measured to determine which tools Claude, Codex, and Cursor choose?",
+    "ground_truth": "The study measured 17k runs to find out which tools Claude, Codex, and Cursor choose.",
+    "keywords": [
+      "Claude",
+      "Codex",
+      "Cursor",
+      "17k runs"
+    ],
+    "type": "comparison",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://armature.tech/blog/which-tools-coding-agents-install"
+    ]
+  },
+  {
+    "id": "gen_227",
+    "category": "webdev",
+    "question": "What specific technology and tool were used to port the 1993 Amiga game to Godot?",
+    "ground_truth": "The 1993 Amiga game was ported to Godot using an LLM that read the 68000 assembly.",
+    "keywords": [
+      "1993 Amiga game",
+      "Godot",
+      "LLM",
+      "68000 assembly"
+    ],
+    "type": "howto",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://babyloniantwins.com/blog/porting-a-1993-amiga-game-to-godot/"
+    ]
+  },
+  {
+    "id": "gen_226",
+    "category": "webdev",
+    "question": "What was the change in juvenile coho salmon survival rates due to artificial beaver dams?",
+    "ground_truth": "Artificial beaver dams saw juvenile coho salmon survival rates go from 8% to 60%.",
+    "keywords": [
+      "artificial beaver dams",
+      "juvenile coho salmon",
+      "survival rates",
+      "8%",
+      "60%"
+    ],
+    "type": "howto",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://www.discoverwildlife.com/animal-facts/artificial-beaver-dams-california"
+    ]
+  },
+  {
+    "id": "gen_223",
+    "category": "webdev",
+    "question": "What is the title of the video?",
+    "ground_truth": "The title of the video is 'The largest electric aircraft just flew [video]'.",
+    "keywords": [
+      "largest electric aircraft",
+      "flew",
+      "video"
+    ],
+    "type": "howto",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://www.youtube.com/watch?v=nM86DBOqgPM"
+    ]
+  },
+  {
+    "id": "gen_222",
+    "category": "webdev",
+    "question": "What is the title of the article describing the origin of the Julia programming language?",
+    "ground_truth": "The article is titled 'How an MIT research project became the Julia programming language'. It is published on the MIT News website.",
+    "keywords": [
+      "MIT",
+      "Julia",
+      "programming language",
+      "research project"
+    ],
+    "type": "howto",
+    "difficulty": "easy",
+    "source_urls": [
+      "https://news.mit.edu/2026/how-mit-research-project-became-global-programming-language-0831"
+    ]
+  }
+]

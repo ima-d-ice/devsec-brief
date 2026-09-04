@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+groq
+python-dotenv
+feedparser
+aiohttp
+beautifulsoup4
+langchain-text-splitters
+python-dateutil
+numpy
+sentence-transformers[onnx]
+psycopg[binary,pool]>=3.2
+pytest
