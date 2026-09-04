@@ -13,6 +13,20 @@ jobs:
   build-and-deliver:
     name: Build & Publish Container
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: devsec
+          POSTGRES_PASSWORD: devsec
+          POSTGRES_DB: devsec
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U devsec"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
     steps:
       - uses: actions/checkout@v4
 
@@ -48,10 +62,25 @@ jobs:
 
       - name: Smoke Test Container Boot & Health
         run: |
-          docker run -d --name test_api -p 8000:8000 ${{ steps.meta.outputs.tags }}
-          sleep 5
+          # meta tags output is multi-line; docker run takes exactly one image
+          IMAGE=$(echo "${{ steps.meta.outputs.tags }}" | head -n 1)
+          echo "Smoking image: $IMAGE"
+          docker run -d --name test_api -p 8000:8000 \
+            -e DATABASE_URL=postgresql://devsec:devsec@localhost:5432/devsec \
+            "$IMAGE"
+          cleanup() { docker rm -f test_api; }
+          trap cleanup EXIT
+          # Boot downloads/loads ONNX models: allow up to ~8 min for /health
+          for i in $(seq 1 96); do
+            if curl -sf http://127.0.0.1:8000/health; then
+              echo; echo "Smoke test passed"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "Smoke test FAILED: /health never returned 200"
           docker logs test_api
-          docker rm -f test_api
+          exit 1
 
       - name: Push Container to GHCR
         uses: docker/build-push-action@v5
