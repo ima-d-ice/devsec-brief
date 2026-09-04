@@ -61,7 +61,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ github.repository }}:sha-{{sha}}
+          tags: ghcr.io/${{ github.repository }}:sha-${{ github.sha }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
