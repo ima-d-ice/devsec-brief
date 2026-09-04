@@ -18,7 +18,7 @@ from src.rag import (
 )
 from src.sanitize import sanitize_query, sanitize_history, contains_injection_pattern
 from src.db import get_chat_history, save_chat_message, save_semantic_cache
-from src.logger import get_logger
+from src.logger import get_logger, bind
 
 log = get_logger("api")
 
@@ -30,11 +30,18 @@ app = FastAPI(
 
 @app.middleware("http")
 async def add_process_time(request: Request, call_next):
-    """Measures end-to-end request latency and adds it as a response header."""
+    """Measures end-to-end request latency, sets response header, and emits structured log."""
     start = time.perf_counter()
     response = await call_next(request)
-    ms = (time.perf_counter() - start) * 1000
-    response.headers["X-Process-Time-Ms"] = f"{ms:.1f}"
+    duration_ms = round((time.perf_counter() - start) * 1000, 2)
+    response.headers["X-Process-Time-Ms"] = f"{duration_ms:.1f}"
+    bind(
+        log,
+        method=request.method,
+        path=request.url.path,
+        status=response.status_code,
+        latency_ms=duration_ms,
+    ).info("http_request")
     return response
 
 app.add_middleware(
@@ -94,6 +101,13 @@ def ask(req: AskRequest, response: Response):
     if cached:
         response.headers["X-Cache-Hit"] = "true"
         response.headers["X-Model-Used"] = cached["model_used"]
+        bind(
+            log,
+            event_type="cache_hit",
+            topic=topic,
+            model=cached["model_used"],
+            lookup_ms=cached["cache_time_ms"],
+        ).info("ask_cache_hit")
         return AskResponse(
             answer=cached["answer"],
             sources=[Source(**{k: s.get(k) for k in ("title", "url", "source", "category", "published_at")}) for s in cached["sources"]],
@@ -140,6 +154,14 @@ def ask(req: AskRequest, response: Response):
 
     response.headers["X-Cache-Hit"] = "false"
     response.headers["X-Model-Used"] = model_used
+
+    bind(
+        log,
+        event_type="ask_served",
+        topic=topic,
+        model=model_used,
+        retrieval_ms=retrieval_res.get("timings", {}).get("total_retrieval_ms"),
+    ).info("ask_served")
 
     return AskResponse(
         answer=answer, 
@@ -228,6 +250,16 @@ def ask_stream(req: AskRequest):
             "stream_duration_ms": total_stream_ms,
         }
         yield f"event: metrics\ndata: {json.dumps(metrics_payload)}\n\n"
+
+        bind(
+            log,
+            event_type="stream_completed",
+            model=model_used,
+            ttft_ms=ttft_val,
+            tps=tps_val,
+            tokens=token_count,
+            stream_ms=total_stream_ms,
+        ).info("stream_completed")
 
         # Persist session & cache
         try:

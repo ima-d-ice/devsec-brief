@@ -1,16 +1,74 @@
-name: ci
+name: CI
+
 on:
   push:
+    branches: [ main ]
   pull_request:
+    branches: [ main ]
 
 jobs:
-  test:
+  lint-and-unit:
+    name: Lint & Unit Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install -r requirements.txt
-      - run: python -m py_compile src/*.py
-      - run: python -m pytest tests/ -q -m "not integration"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Bytecode compilation check
+        run: python -m py_compile src/*.py tests/*.py
+
+      - name: Run Pytest Unit Tests
+        run: |
+          python -m pytest tests/test_sanitize.py tests/test_api_validation.py -v --tb=short
+
+  integration:
+    name: Database Integration Tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: devsec
+          POSTGRES_PASSWORD: devsec
+          POSTGRES_DB: devsec
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Initialize Database Schema
+        env:
+          DATABASE_URL: postgresql://devsec:devsec@localhost:5432/devsec
+        run: |
+          python -c "from src.db import init_db; init_db()"
+
+      - name: Run Integration Tests
+        env:
+          DATABASE_URL: postgresql://devsec:devsec@localhost:5432/devsec
+        run: |
+          python -m pytest tests/test_retrieval_integration.py -v -m integration --tb=short
