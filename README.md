@@ -27,7 +27,7 @@ A full-stack RAG-powered AI news system that aggregates, processes, and serves d
 
 ## Core Features
 
-- Automated fetching of DevSec feeds (`fetch_feeds.py`).
+- Scheduled fetching of DevSec feeds (6 RSS sources, 6-hour loop with overlap lock via `refresh` service, `src/refresh.py` + `src/fetch_feeds.py`).
 - Entity extraction and semantic chunking using zero-VRAM CPU-optimized ONNX binaries.
 - RAG-augmented querying with hybrid search and cross-encoder reranking (`rag.py`).
 - Server-Sent Events (SSE) streaming endpoint for frontend integration (`api.py`).
@@ -95,7 +95,7 @@ The system implements defense-in-depth against prompt injection attacks:
 - Centralized sanitization utility: `src/sanitize.py` (16 regex patterns covering common injection techniques)
 - Input validation: `AskRequest` model rejects queries >2000 chars or containing suspicious patterns
 - Structured prompts: System prompt instructs LLM to only use content between explicit delimiters
-- Tests: `tests/test_sanitize.py` + `tests/test_api_validation.py` (11 tests, run via `python -m pytest tests/`; CI runs them on every push)
+- Tests: `tests/test_sanitize.py` + `tests/test_api_validation.py` (11 unit tests, CI on every push) + `tests/test_retrieval_integration.py` (3 DB-backed tests: upsert lifecycle, keyword search, cache round-trip; run via `python -m pytest tests/ -q -m integration` with live Postgres)
 
 ---
 
@@ -120,13 +120,18 @@ How context is built for every answer (`src/rag.py`, `src/db.py`):
 
 ## Benchmarks
 
-### Latency Performance
-The end-to-end RAG pipeline has been heavily optimized for CPU execution. Based on a 50-query benchmark running purely on ONNX across multiple API keys, it yields the following average latencies:
+### Latency Performance (measured, 94-question probe, k=6, Docker: 6 CPU / 3 GB)
+End-to-end retrieval over the live index (321 articles, 1525 chunks), no LLM calls:
 
-- **Query Expansion & Semantic Embedding:** ~179ms
-- **Hybrid DB Search (pgvector + keyword):** ~45ms
-- **Cross-Encoder Reranking:** ~264ms
-- **Total Retrieval Latency:** `~489ms`
+| Stage | Avg | p50 | p95 |
+|---|---|---|---|
+| Query embedding (bge-m3 INT8 ONNX) | 57ms | 55ms | 85ms |
+| Hybrid DB search (pgvector + keyword) | 12ms | 11ms | 14ms |
+| RRF fusion | 1ms | 1ms | 3ms |
+| Cross-encoder rerank, pool of 20 (mMARCO INT8 ONNX) | 358ms | 332ms | 593ms |
+| **Total retrieval** | **~431ms** | **~406ms** | **~654ms** |
+
+Tuning: thread-pinned ORT sessions (`intra_op=4`), `OMP/MKL/OpenBLAS=4`, boot warmup, guaranteed container CPUs/RAM — same models and recall, ~2.9× faster than untuned defaults (~1257ms). Rerank is 83% of total and the next lever. Reproduce: temp probe script pattern in `src/eval.py --retrieval-only` (retrieval timings per question, zero Groq calls).
 
 
 ### Evaluation Scores (LLM-as-judge, 94 grounded questions)

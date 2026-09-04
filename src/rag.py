@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 import time
 import functools
 import json
@@ -13,6 +14,22 @@ from src.db import search_keyword, search_semantic, check_semantic_cache, check_
 from src.groq_pool import safe_groq_call, stream_groq_call, PRIMARY_MODEL
 from src.paths import ONNX_EMBED_PATH, GLOSSARY_PATH
 
+
+def _ort_session_options():
+    """Pinned CPU session options: quality-neutral, latency-only tuning."""
+    import onnxruntime as ort
+    opts = ort.SessionOptions()
+    try:
+        opts.intra_op_num_threads = int(os.getenv("ONNX_INTRA_OP_THREADS", "4"))
+    except ValueError:
+        opts.intra_op_num_threads = 4
+    opts.execution_mode = ort.ExecutionMode.ORT_SEQUENTIAL
+    opts.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_ALL
+    return opts
+
+
+_ORT_OPTS = _ort_session_options()
+
 EMBED_MODEL_NAME = "BAAI/bge-m3"
 
 if ONNX_EMBED_PATH.exists():
@@ -22,14 +39,15 @@ if ONNX_EMBED_PATH.exists():
         backend="onnx",
         model_kwargs={
             "file_name": "onnx/model_qint8_arm64.onnx",
-            "provider": "CPUExecutionProvider"
+            "provider": "CPUExecutionProvider",
+            "session_options": _ORT_OPTS,
         }
     )
 else:
     print("Loading Embedding model (CPU)...")
     embed_model = SentenceTransformer(
-        EMBED_MODEL_NAME, 
-        trust_remote_code=True, 
+        EMBED_MODEL_NAME,
+        trust_remote_code=True,
         device="cpu"
     )
 
@@ -42,15 +60,23 @@ if ONNX_RERANK_PATH.exists():
         backend="onnx",
         model_kwargs={
             "file_name": "onnx/model_qint8_arm64.onnx",
-            "provider": "CPUExecutionProvider"
+            "provider": "CPUExecutionProvider",
+            "session_options": _ORT_OPTS,
         }
     )
 else:
     print("Loading CrossEncoder natively...")
     reranker_model = CrossEncoder(
-        RERANKER_MODEL_NAME, 
+        RERANKER_MODEL_NAME,
         device="cpu"
     )
+
+# Warmup: initialize ORT arenas before real traffic (kills slow-first-request tail)
+try:
+    embed_model.encode(["warmup"])
+    reranker_model.predict([["warmup query", "warmup passage"]])
+except Exception as _warm_e:
+    print(f"Warmup skipped: {_warm_e}")
 
 CONTEXT_DOC_LIMIT = 3
 CROSSENCODER_MAX_CHARS = 1000

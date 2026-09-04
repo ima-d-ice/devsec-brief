@@ -15,6 +15,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+    mem_limit: 1g
+    cpus: 2.0
 
   api:
     build: .
@@ -43,10 +45,31 @@ services:
       - GROQ_API_KEY_10=${GROQ_API_KEY_10}
       - GROQ_API_KEY_11=${GROQ_API_KEY_11}
       - GROQ_API_KEY_12=${GROQ_API_KEY_12}
+      - OMP_NUM_THREADS=4
+      - MKL_NUM_THREADS=4
+      - OPENBLAS_NUM_THREADS=4
+      - ONNX_INTRA_OP_THREADS=4
     ports:
       - "8000:8000"
     volumes:
       - ./data:/app/data
+    mem_limit: 3g
+    cpus: 6.0
+
+  refresh:
+    build: .
+    container_name: devsec_refresh
+    profiles: ["refresh"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://devsec:devsec@postgres:5432/devsec
+      - REFRESH_INTERVAL_HOURS=${REFRESH_INTERVAL_HOURS:-6}
+    volumes:
+      - ./data:/app/data
+    command: ["sh", "-c", "while true; do python -m src.refresh; sleep ${REFRESH_INTERVAL_HOURS:-6}h; done"]
+    restart: unless-stopped
 
   eval:
     build: .
