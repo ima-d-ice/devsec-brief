@@ -9,10 +9,16 @@ permissions:
   contents: read
   packages: write
 
+# One delivery at a time per ref; never cancel a run that may be promoting.
+concurrency:
+  group: cd-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   build-and-deliver:
-    name: Build & Publish Container
+    name: Build, Gate, Publish Container
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     services:
       postgres:
         image: pgvector/pgvector:pg16
@@ -48,30 +54,37 @@ jobs:
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=semver,pattern={{version}}
-            type=sha
+            type=raw,value=sha-{{sha}}
 
-      - name: Build Docker Image
+      - name: Build & Push SHA-tagged Image
         uses: docker/build-push-action@v5
         with:
           context: .
-          load: true
-          tags: ${{ steps.meta.outputs.tags }}
+          push: true
+          tags: ghcr.io/${{ github.repository }}:sha-{{sha}}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      - name: Assert Baked ONNX Models Present
+        run: |
+          IMAGE="ghcr.io/${{ github.repository }}:sha-${{ github.sha }}"
+          docker run --rm --entrypoint sh "$IMAGE" -c \
+            "test -f /app/data/onnx_st/bge-m3-onnx/onnx/model_qint8_arm64.onnx && \
+             test -f /app/data/onnx_st/mmarco-onnx/onnx/model_qint8_arm64.onnx && \
+             echo 'baked ONNX models present'"
+
       - name: Smoke Test Container Boot & Health
         run: |
-          # meta tags output is multi-line; docker run takes exactly one image
-          IMAGE=$(echo "${{ steps.meta.outputs.tags }}" | head -n 1)
+          IMAGE="ghcr.io/${{ github.repository }}:sha-${{ github.sha }}"
           echo "Smoking image: $IMAGE"
           docker run -d --name test_api -p 8000:8000 \
             -e DATABASE_URL=postgresql://devsec:devsec@localhost:5432/devsec \
             "$IMAGE"
           cleanup() { docker rm -f test_api; }
           trap cleanup EXIT
-          # Boot downloads/loads ONNX models: allow up to ~8 min for /health
-          for i in $(seq 1 96); do
+          # Models are baked in; boot is load + migrate only (~1-2 min)
+          for _ in $(seq 1 60); do
             if curl -sf http://127.0.0.1:8000/health; then
               echo; echo "Smoke test passed"
               exit 0
@@ -82,11 +95,19 @@ jobs:
           docker logs test_api
           exit 1
 
-      - name: Push Container to GHCR
-        uses: docker/build-push-action@v5
+      - name: Scan Image for Critical CVEs
+        uses: aquasecurity/trivy-action@0.28.0
         with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          image-ref: ghcr.io/${{ github.repository }}:sha-${{ github.sha }}
+          format: table
+          severity: CRITICAL
+          exit-code: '1'
 
+      - name: Promote SHA Image to Release Tags
+        run: |
+          # Alias the gated SHA image as latest/semver with zero rebuild.
+          TAGS=$(echo "${{ steps.meta.outputs.tags }}" | grep -v ':sha-' | sed 's/^/-t /' | tr '\n' ' ')
+          echo "Promoting to: $TAGS"
+          # shellcheck disable=SC2086
+          docker buildx imagetools create $TAGS \
+            "ghcr.io/${{ github.repository }}:sha-${{ github.sha }}"
