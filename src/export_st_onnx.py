@@ -1,6 +1,7 @@
 import os
 import shutil
 from pathlib import Path
+from huggingface_hub import snapshot_download
 from sentence_transformers import SentenceTransformer
 from sentence_transformers.backend.quantize import export_dynamic_quantized_onnx_model
 
@@ -14,6 +15,27 @@ os.environ["TMP"] = str(tmp_dir)
 ONNX_DIR = Path(os.getenv("ONNX_OUT_DIR", Path(__file__).resolve().parents[1] / "data" / "onnx_st"))
 
 QUANTIZE_CONFIG = os.getenv("ONNX_QUANTIZE_CONFIG", "arm64")
+EMBED_ID = "BAAI/bge-m3"
+RERANK_ID = "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1"
+
+
+def real_snapshot(repo_id: str, dest: Path) -> str:
+    """Download HF repo to a real directory (no symlinks).
+
+    The HF cache stores blobs as symlinks, which ONNX's checker refuses
+    when loading external tensor data during quantization. A dereferenced
+    copy sidesteps that entirely.
+    """
+    if dest.exists():
+        print(f"Snapshot already exists at {dest}")
+        return str(dest)
+    print(f"Downloading {repo_id} to real dir {dest}...")
+    snapshot_download(
+        repo_id,
+        local_dir=str(dest),
+        local_dir_use_symlinks=False,
+    )
+    return str(dest)
 
 
 def export_embedding(onnx_dir: Path):
@@ -21,12 +43,13 @@ def export_embedding(onnx_dir: Path):
     if embed_path.exists():
         print(f"ONNX embedding model already exists at {embed_path}")
         return
-    # Load straight from the Hub into the ONNX backend in one step.
-    # (Previous save-to-tmp + reload round-trip broke on newer transformers:
-    # AutoProcessor rejects the locally-saved dir.)
+    # Load from a real (symlink-free) snapshot into the ONNX backend in one
+    # step. (The old save-to-tmp + reload round-trip broke on newer
+    # transformers: AutoProcessor rejects the locally-saved dir.)
     print("Exporting BAAI/bge-m3 to ONNX...")
+    src = real_snapshot(EMBED_ID, tmp_dir / "bge-m3-src")
     model = SentenceTransformer(
-        "BAAI/bge-m3",
+        src,
         backend="onnx",
         processor_kwargs={"fix_mistral_regex": True},
     )
@@ -49,8 +72,9 @@ def export_reranker(onnx_dir: Path):
     try:
         from sentence_transformers.cross_encoder import CrossEncoder
 
+        src = real_snapshot(RERANK_ID, tmp_dir / "mmarco-src")
         model = CrossEncoder(
-            "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
+            src,
             backend="onnx",
             processor_kwargs={"fix_mistral_regex": True},
         )
