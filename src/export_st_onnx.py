@@ -38,6 +38,53 @@ def real_snapshot(repo_id: str, dest: Path) -> str:
     return str(dest)
 
 
+# Wrapper files that make an output dir loadable by SentenceTransformer /
+# CrossEncoder. Heavy weights and the quantizer's own onnx/ dir are excluded.
+WRAPPER_FILES = {
+    "modules.json",
+    "config.json",
+    "config_sentence_transformers.json",
+    "sentence_bert_config.json",
+    "tokenizer.json",
+    "tokenizer_config.json",
+    "special_tokens_map.json",
+    "README.md",
+}
+WRAPPER_DIRS = {"1_Pooling", "2_Normalize"}
+
+
+def copy_wrapper_files(src_dir: Path, dest_dir: Path):
+    """Copy ST wrapper files (configs, tokenizer, pooling) without weights."""
+    for name in WRAPPER_FILES:
+        src = src_dir / name
+        if src.is_file():
+            shutil.copy2(src, dest_dir / name)
+    for name in WRAPPER_DIRS:
+        src = src_dir / name
+        if src.is_dir():
+            shutil.copytree(src, dest_dir / name, dirs_exist_ok=True)
+
+
+def ensure_wrapper(saved_dir: Path, snapshot_dir: Path, dest_dir: Path):
+    """Ensure dest has wrapper files: prefer torch-save output, fill gaps from snapshot."""
+    copy_wrapper_files(saved_dir, dest_dir)
+    copy_wrapper_files(snapshot_dir, dest_dir)
+
+
+def assert_bundle(path: Path, kind: str):
+    """Fail fast with a clear message if the bundle can't be loaded later."""
+    missing = []
+    if not (path / "onnx" / "model_qint8_arm64.onnx").is_file():
+        missing.append("onnx/model_qint8_arm64.onnx")
+    if kind == "st" and not (path / "modules.json").is_file():
+        missing.append("modules.json")
+    if not (path / "config.json").is_file():
+        missing.append("config.json")
+    if missing:
+        raise RuntimeError(f"Broken {kind} bundle at {path}, missing: {missing}")
+    print(f"Bundle OK: {path}")
+
+
 def export_embedding(onnx_dir: Path):
     embed_path = onnx_dir / "bge-m3-onnx"
     if embed_path.exists():
@@ -62,6 +109,17 @@ def export_embedding(onnx_dir: Path):
     )
     print(f"Embedding model successfully quantized and saved to {embed_path}")
 
+    # The quantizer writes only onnx/ — add the torch-save wrapper files so
+    # the dir loads as a SentenceTransformer later. Weights excluded.
+    print("Saving wrapper files...")
+    pt_model = SentenceTransformer(src)
+    wrapper_src = tmp_dir / "bge-m3-wrapper"
+    pt_model.save(str(wrapper_src))
+    ensure_wrapper(wrapper_src, Path(src), embed_path)
+    shutil.rmtree(wrapper_src, ignore_errors=True)
+    del pt_model
+    assert_bundle(embed_path, "st")
+
 
 def export_reranker(onnx_dir: Path):
     rerank_path = onnx_dir / "mmarco-onnx"
@@ -85,6 +143,15 @@ def export_reranker(onnx_dir: Path):
             model_name_or_path=str(rerank_path),
         )
         print(f"Reranker successfully quantized and saved to {rerank_path}")
+
+        print("Saving wrapper files...")
+        pt_model = CrossEncoder(src)
+        wrapper_src = tmp_dir / "mmarco-wrapper"
+        pt_model.save(str(wrapper_src))
+        ensure_wrapper(wrapper_src, Path(src), rerank_path)
+        shutil.rmtree(wrapper_src, ignore_errors=True)
+        del pt_model
+        assert_bundle(rerank_path, "ce")
     except Exception as e:
         print(f"Failed to export CrossEncoder via backend: {e}")
         print("Falling back to optimum-cli for CrossEncoder export...")
@@ -94,6 +161,8 @@ def export_reranker(onnx_dir: Path):
         )
         if ret != 0:
             raise RuntimeError(f"optimum-cli CrossEncoder export failed (exit {ret})")
+        copy_wrapper_files(Path(src), rerank_path)
+        assert_bundle(rerank_path, "ce")
 
 
 def main():
