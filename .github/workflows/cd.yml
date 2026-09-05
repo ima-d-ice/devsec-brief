@@ -103,6 +103,11 @@ jobs:
           image-ref: ghcr.io/${{ github.repository }}:sha-${{ github.sha }}
           format: table
           severity: CRITICAL
+          # Fail only on fixable findings: base-image CVEs with no patch
+          # available are re-checked every run instead of blocking delivery.
+          ignore-unfixed: true
+          # Skip 16MB tokenizer blobs: secret-scan memory warnings, no findings.
+          skip-files: app/data/onnx_st/bge-m3-onnx/tokenizer.json,app/data/onnx_st/mmarco-onnx/tokenizer.json
           exit-code: '1'
 
       - name: Promote SHA Image to Release Tags
