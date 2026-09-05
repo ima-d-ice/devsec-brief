@@ -78,7 +78,9 @@ jobs:
         run: |
           IMAGE="ghcr.io/${{ github.repository }}:sha-${{ github.sha }}"
           echo "Smoking image: $IMAGE"
-          docker run -d --name test_api -p 8000:8000 \
+          # Host network: the container's localhost must be the runner's
+          # localhost, where the postgres service port is mapped.
+          docker run -d --name test_api --network host \
             -e DATABASE_URL=postgresql://devsec:devsec@localhost:5432/devsec \
             "$IMAGE"
           cleanup() { docker rm -f test_api; }
