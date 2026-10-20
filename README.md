@@ -16,7 +16,7 @@ I built this as a final-year B.Tech project around the parts a RAG demo usually 
 - **Measured cache impact:** 5.08 req/s at p95 44.45 ms with a 97.3% hit rate on a repeated query set, versus 0.94 req/s at p95 15.67 s on the cold path.
 - **Failure drills:** bounded 503s with liveness staying 200 during DB outages; Groq timeout bounded at 27.71 s; SSE disconnects counted correctly.
 - **Operational surface:** 15 alert rules, 9 SLO rules, two Grafana dashboards, Alertmanager routing, 33 tests, and CI image/import checks.
-- **Measured quality:** 94-question current-corpus evaluation; context precision 0.911, faithfulness 0.957, answer relevancy 0.910, semantic similarity 0.891. Nine questions still miss retrieval.
+- **Measured quality:** 94-question current-corpus evaluation; context precision 0.923, faithfulness 0.968, answer relevancy 0.919, semantic similarity 0.903. Four questions still miss their expected source URL at k=4.
 
 ## Demo
 
@@ -90,20 +90,20 @@ SSE contract: `sources` → repeated `token` → `metrics` → `done`, with hear
 
 The cache result is a 97.3% hit rate on a fixed repeated query set, not a general throughput claim. The cold path is CPU-bound and misses the 6-second latency target. A second Uvicorn worker did not improve throughput (0.929 req/s) and used ~1.82 GiB.
 
-**Evaluation:** 94 questions in the current corpus (75 cybersecurity / 19 web development), scored with `qwen/qwen3.8-27b`. All 94 expected source URLs are present in the index; 9 questions still miss retrieval.
+**Evaluation:** 94 questions in the current corpus (75 cybersecurity / 19 web development), scored with `qwen/qwen3.8-27b`. All 94 expected source URLs are present in the index; 4 questions still miss their expected source URL at k=4.
 
 | Metric | Score | Target | Result |
 |---|---:|---:|---|
-| Context precision | 0.911 | ≥ 0.70 | passes |
-| Faithfulness | 0.957 | ≥ 0.85 | passes |
-| Answer relevancy | 0.910 | ≥ 0.80 | passes |
-| Semantic similarity | 0.891 | ≥ 0.75 | passes |
-| Avg retrieval latency | 760 ms | — | — |
-| Avg generation latency | 523 ms | — | — |
+| Context precision | 0.923 | ≥ 0.70 | passes |
+| Faithfulness | 0.968 | ≥ 0.85 | passes |
+| Answer relevancy | 0.919 | ≥ 0.80 | passes |
+| Semantic similarity | 0.903 | ≥ 0.75 | passes |
+| Retrieval latency, p50 / mean | 506 ms / 528 ms | — | — |
+| Generation latency, p50 / mean | 445 ms / 543 ms | — | — |
 
 These are custom LLM-as-judge scores, not RAGAS. The judge sees up to 4,500 characters of retrieved context. The older 139-question artifact mixed in 45 questions outside the current corpus; those are not included in this quality table.
 
-Raw results: [`data/eval_results_94.json`](data/eval_results_94.json). Latency values are sequential evaluation timings, not load-test throughput.
+Raw results: [`data/eval_results_94.json`](data/eval_results_94.json). Latency values are sequential, cache-bypassed eval timings from the 6-CPU eval service, not load-test throughput.
 
 Reproduce the load tests:
 
@@ -118,7 +118,7 @@ Cache-path runs need `LOADTEST_CACHE_ENABLED=true`. See [`loadtest/README.md`](l
 
 ## Design decisions and trade-offs
 
-**Hybrid retrieval over dense-only.** CVEs, product names, and version strings are exact-token problems; dense search alone misses them. Combining pgvector with `tsvector` and RRF improves keyword coverage at the cost of more ranking state. Nine of 94 evaluation questions still miss retrieval, so this is not solved.
+**Hybrid retrieval over dense-only.** CVEs, product names, and version strings are exact-token problems; dense search alone misses them. Combining pgvector with `tsvector` and RRF improves keyword coverage at the cost of more ranking state. Four of 94 evaluation questions still miss their expected source URL at k=4, so this is not solved.
 
 **Big-to-small retrieval.** Embedding 400-character children improves recall; expanding to 1,500-character parents gives the model better context. Parents are fetched in one query to avoid N+1 lookups. The trade-off is a second storage layer and more index maintenance.
 
@@ -216,7 +216,7 @@ Unit tests stub transformer imports in `tests/conftest.py`; integration tests ne
 - Single Postgres primary. Standby promotion is manual; no automatic failover, fencing, continuous WAL/PITR, or off-host backup copy.
 - Cold retrieval is CPU-bound at ~0.94 req/s and misses the 6-second target.
 - Load tests use a deterministic mock. One real-provider request proves the path works, not real-Groq capacity.
-- Nine of 94 evaluation questions still miss retrieval, and the quality scores come from a custom judge rather than RAGAS.
+- Four of 94 evaluation questions still miss their expected source URL at k=4, and the quality scores come from a custom judge rather than RAGAS.
 - Rate limits, Groq key state, and circuit breakers are per process; a multi-replica deployment needs a shared store.
 - No TLS, identity, RBAC, or WAF. Use an authenticated TLS proxy before exposing the stack.
 - The tracked frontend is a minimal shell; the UI and accessibility pass are future work.

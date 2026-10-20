@@ -214,7 +214,7 @@ services:
       - ./data:/app/data
     restart: "no"
     mem_limit: 3g
-    cpus: 4.0
+    cpus: 6.0
 
   # ---------- load-test profile ----------
   mock-groq:
