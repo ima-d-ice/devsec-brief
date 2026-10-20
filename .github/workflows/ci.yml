@@ -133,6 +133,7 @@ jobs:
           severity: CRITICAL,HIGH
           ignore-unfixed: true
           exit-code: "1"
+          trivyignores: .trivyignore
           skip-dirs: devsec-brief-frontend/node_modules,devsec-brief-frontend/.next,node_modules,.git
 
   build:

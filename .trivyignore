@@ -1,0 +1,10 @@
+# Trivy findings accepted for this deployment, with rationale.
+#
+# The service loads only baked local ONNX/tokenizer artifacts from trusted
+# build inputs. It does not set trust_remote_code and does not save models from
+# untrusted chat templates. The fixed releases are transformers 5.x, which
+# optimum-onnx (required by sentence-transformers[onnx]) currently rejects by
+# pinning transformers<4.58. Revisit when optimum-onnx supports transformers 5.
+CVE-2026-4372
+CVE-2026-5241
+CVE-2026-9856

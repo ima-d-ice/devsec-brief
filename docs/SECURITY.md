@@ -18,6 +18,13 @@
 - No schema DDL at API boot; only the migration job can change the schema.
 - Postgres is published on `127.0.0.1` only by default.
 - CI includes Gitleaks and Trivy filesystem scanning.
+- Gitleaks has a narrow allowlist for the placeholder-only `.env.example`;
+  CI asserts that sensitive keys in that file remain empty.
+- Trivy findings for `transformers` (CVE-2026-4372, CVE-2026-5241,
+  CVE-2026-9856) are documented in `.trivyignore`: only local, trusted ONNX
+  artifacts are loaded, `trust_remote_code` is not enabled, and the fixed
+  transformers 5.x line conflicts with the pinned `optimum-onnx` requirement.
+  Revisit when the ONNX export stack supports transformers 5.
 - CD includes a Trivy critical-CVE gate before promotion.
 
 ## Not implemented / residual risk
@@ -31,7 +38,7 @@
 | Groq key state is in-process | open | Shared limiter store before scaling API replicas |
 | No audit trail of who asked what | open | Add privacy-reviewed audit logging if required |
 | Prompt injection is mitigated, not solved | open | Keep retrieved text untrusted; no tool execution from context |
-| Postgres single primary | open | Managed HA/failover and tested restore |
+| Postgres single primary | open | Managed HA/failover; logical restore is tested, automatic failover is not |
 | No WAF / request-size limit | open | Edge proxy limits and bot protection |
 | Frontend dependencies not covered by this review | open | Separate frontend security review |
 | Image runs with a writable root filesystem | open | Add `read_only: true` after testing ONNX/tmp behavior |
