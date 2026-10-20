@@ -1,7 +1,0 @@
-2026-10-20T07:31:55Z drill=db_down api=http://127.0.0.1:8000
-2026-10-20T07:31:55Z stopping postgres
-2026-10-20T07:32:08Z live_status=200 ready_status=503 ask_status=503
-2026-10-20T07:32:08Z ask_body={"detail":"Database temporarily unavailable"}
-2026-10-20T07:32:08Z starting postgres
-2026-10-20T07:32:14Z recovered_ready_status=200
-2026-10-20T07:32:14Z RESULT=PASS (liveness survived; readiness recovered)

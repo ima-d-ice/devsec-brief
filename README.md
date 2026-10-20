@@ -1,148 +1,156 @@
 # DevSec-Brief
 
-A security/dev news RAG service with hybrid Postgres retrieval, CPU-only ONNX
-models, grounded Groq generation, REST + SSE APIs, and an SRE-focused Docker
-Compose deployment.
+A self-hosted RAG service for security and developer news: RSS ingestion → hybrid Postgres retrieval → grounded answers over REST and SSE.
 
-> **Status: hardened and locally verified; not production-proven.**
-> The Compose stack, real provider path, 33-test suite, load tests, failure
-> drills, alert fire/resolve, backup/restore, two-replica routing, and manual
-> standby promotion have been exercised on one host. Hosted CI now passes the
-> test suite, security/config checks, and a clean-download image build with an
-> import smoke test. The service is still a single-primary, single-host
-> deployment with mock-upstream capacity numbers; automatic failover and
-> real-Groq capacity are not established. See [`TODO.md`](TODO.md) and the
-> measured reports:
-> [`LOAD_TEST_REPORT.md`](docs/LOAD_TEST_REPORT.md) and
-> [`FAILURE_INJECTION.md`](docs/FAILURE_INJECTION.md).
+I built this as a final-year B.Tech project around the parts a RAG demo usually skips: ingestion, retrieval quality, streaming, failure handling, and operations. The backend is verified locally and in GitHub Actions; it is production-shaped, not production-proven.
 
-## Why this exists
+[![CI](https://github.com/ima-d-ice/devsec-brief/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/ima-d-ice/devsec-brief/actions/workflows/ci.yml)
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.150-005571?logo=fastapi)
+![Postgres](https://img.shields.io/badge/PostgreSQL-16%20%2B%20pgvector-336791?logo=postgresql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
 
-Most RAG demos stop at “the model answered.” This project treats retrieval and
-generation as an operated service:
+## Key highlights
 
-- what happens when Postgres disappears mid-request?
-- what happens when every Groq key is rate-limited?
-- how do you know ingestion is stale while `/health` still says OK?
-- how do you stream tokens without leaking dead connections?
-- how do you prove any of it?
+- **Hybrid retrieval:** bge-m3 INT8 ONNX embeddings + pgvector HNSW, Postgres full-text search, source-weighted/time-decayed RRF, and mMARCO reranking — all on CPU.
+- **Measured cache impact:** 5.08 req/s at p95 44.45 ms with a 97.3% hit rate on a repeated query set, versus 0.94 req/s at p95 15.67 s on the cold path.
+- **Failure drills:** bounded 503s with liveness staying 200 during DB outages; Groq timeout bounded at 27.71 s; SSE disconnects counted correctly.
+- **Operational surface:** 15 alert rules, 9 SLO rules, two Grafana dashboards, Alertmanager routing, 33 tests, and CI image/import checks.
+- **Measured quality:** 139-question evaluation; faithfulness 1.000, context precision 0.647, answer relevancy 0.647, semantic similarity 0.636.
+
+## Demo
+
+`[TODO: replace with a 20–30 second demo GIF at assets/demo.gif]`
+
+Record: `docker compose ps` → `/health/ready` → a real `/ask` JSON response → `/ask/stream` (`sources` → `token` → `metrics` → `done`) → Grafana for 2–3 s. Use 1280×720 or larger, keep the GIF under ~10 MB, and save it at `assets/demo.gif`.
+
+A real-provider smoke request returned **200 in 4.36 s**, with a 310-character answer and 3 sources. The stream returned 1,726 bytes: one `sources` event, seven `token` events, one `metrics` event, and `done`.
 
 ## Architecture
 
+Startup is gated: **Postgres healthy → `migrate` exits 0 → API and refresh worker start**. After startup, the API survives a database outage: liveness stays green and readiness reports 503 until dependencies recover.
+
 ```mermaid
 flowchart LR
-    Client[Next.js / curl] -->|REST + SSE| API[api: FastAPI]
-    API -->|pgvector + tsvector| PG[(Postgres 16 + pgvector)]
-    API -->|grounded generation| Groq[Groq / mock-groq]
-    Refresh[refresh worker] -->|RSS + index| PG
+    Client[curl / Next.js shell] -->|REST + SSE| API[FastAPI api]
+    API -->|hybrid search| PG[(Postgres 16 + pgvector)]
+    API -->|grounded answer| Groq[Groq API / mock]
+    Refresh[refresh worker] -->|6 RSS feeds| Feeds[External feeds]
+    Refresh -->|upsert + index| PG
     Migrate[migrate one-shot] -->|schema| PG
-    Prom[Prometheus] -->|scrape /metrics| API
-    Prom -->|scrape :9101| Refresh
-    Prom -->|scrape| PGExp[postgres-exporter]
+    Prom[Prometheus] -->|scrape| API
+    Prom -->|scrape| Refresh
+    Prom -->|scrape| PGX[postgres-exporter]
     Prom --> AM[Alertmanager]
     Grafana --> Prom
 ```
 
-Startup is gated: **Postgres healthy → migrate exits 0 → API + refresh start**.
-The API no longer creates schema at boot. See
-[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+Request path: validate/sanitize → exact/semantic cache → embedding → parallel pgvector and `tsvector` search → RRF fusion → cross-encoder rerank → parent passage lookup → Groq generation.
 
-### Retrieval path
+SSE contract: `sources` → repeated `token` → `metrics` → `done`, with heartbeats, a bounded queue, disconnect detection, a duration ceiling, and completed-only persistence.
 
-1. Validate and sanitize the query.
-2. Exact semantic-cache fast path; then vector cache lookup.
-3. On miss: query expansion + bge-m3 INT8 embedding.
-4. Parallel pgvector (HNSW) and CVE-aware `tsvector` search.
-5. Source-weighted, time-decayed RRF.
-6. Cross-encoder rerank; top-k deduplicated **parent** passages fetched in one
-   query.
-7. Groq generation with bounded retries, model fallback and a circuit breaker.
+## Features
 
-### Streaming contract
+**Retrieval and generation**
+- Hybrid dense + keyword search with source weights and temporal decay.
+- Big-to-small retrieval: 400-character children embedded; 1,500-character parent passages sent to the model.
+- Exact and near-duplicate semantic cache (cosine similarity > 0.92).
+- CPU ONNX embedding/reranking; multi-key Groq pool with primary, fallback, and safety-net models.
 
-```text
-event: sources
-event: token
-event: token
-...
-event: metrics
-event: done
+**Ingestion**
+- Six RSS feeds with per-feed isolation, retries, and duplicate-safe upserts.
+- Transactional per-article index replacement.
+- Postgres advisory lock prevents overlapping runs.
+- Run history, per-feed outcomes, and freshness metrics.
+
+**Reliability and API**
+- Separate liveness and dependency-aware readiness endpoints.
+- Lazy DB pool, bounded acquisition, and `statement_timeout`.
+- Groq timeout, bounded retries, jittered backoff, key cooldowns, and circuit breaker.
+- SSE heartbeats, disconnect handling, and graceful shutdown.
+- Idempotent migrations; no schema DDL at API boot.
+
+**Observability, security, operations**
+- Prometheus metrics for HTTP, retrieval, cache, DB, ingestion, Groq, and SSE.
+- 15 alert rules, 9 SLO rules, Grafana dashboards, Alertmanager routing.
+- Optional API key, token-bucket rate limit, CORS allow-list, query caps, and injection-pattern rejection.
+- Non-root image, dropped capabilities, `no-new-privileges`; secrets via `.env`.
+- Optional two-replica nginx overlay and manual Postgres standby promotion.
+
+## Benchmarks / Results
+
+**Method:** Apple Silicon `arm64`, Docker Desktop, 8 vCPU / ~3.83 GiB RAM. API 6 CPU / 3 GiB, one Uvicorn worker, four ONNX threads. Upstream is deterministic `mock-groq`; dataset 54 articles / 1,126 chunks / 280 parents; k6 0.54.0; REST 10 VUs for 60 s; SSE 5 VUs for 60 s.
+
+| Scenario | Requests / streams | Failures | Throughput | p95 |
+|---|---:|---:|---:|---:|
+| REST cold path, cache bypassed | 76 | 0 | 0.939 req/s | 15.67 s |
+| REST cache path | 408 | 0 | 5.079 req/s | 44.45 ms |
+| SSE | 62 | 0 | 1.005 streams/s | 13.81 s |
+| Real Groq `/ask` sample | 1 | 0 | 4.36 s total | — |
+
+The cache result is a 97.3% hit rate on a fixed repeated query set, not a general throughput claim. The cold path is CPU-bound and misses the 6-second latency target. A second Uvicorn worker did not improve throughput (0.929 req/s) and used ~1.82 GiB.
+
+**Evaluation:** 139 questions, generated with `qwen/qwen3.8-27b`.
+
+| Metric | Score | Target | Result |
+|---|---:|---:|---|
+| Context precision | 0.647 | ≥ 0.70 | misses |
+| Faithfulness | 1.000 | ≥ 0.85 | passes |
+| Answer relevancy | 0.647 | ≥ 0.80 | misses |
+| Semantic similarity | 0.636 | ≥ 0.75 | misses |
+| Avg retrieval latency | 3,616 ms | — | — |
+| Avg generation latency | 645 ms | — | — |
+
+Reproduce the load tests:
+
+```bash
+docker compose --profile loadtest up -d postgres migrate mock-groq seed api-mock
+docker compose --profile loadtest run --rm k6 run /scripts/smoke.js
+docker compose --profile loadtest run --rm -e DURATION=60s k6 run /scripts/rest.js
+docker compose --profile loadtest run --rm -e VUS=5 -e DURATION=60s k6 run /scripts/sse.js
 ```
 
-SSE now has client-disconnect detection, heartbeats, a hard duration ceiling,
-active/disconnect metrics, and completed-only answer persistence.
+Cache-path runs need `LOADTEST_CACHE_ENABLED=true`. See [`loadtest/README.md`](loadtest/README.md).
 
-## Reliability changes
+## Design decisions and trade-offs
 
-| Defect | Change |
-|---|---|
-| DB pool connected at import and leaked at interpreter shutdown | Lazy pool, explicit `open_pool`/`close_pool`, lifespan shutdown |
-| `/health` always returned OK | `/health/live` + dependency-aware `/health/ready` (DB + models) |
-| Groq calls had no app-level timeout/retry policy | Explicit SDK timeout, bounded attempts, jittered backoff, per-key cooldown, circuit breaker |
-| SSE could hang after disconnect | `request.is_disconnected()`, producer queue, heartbeat, max duration; generator-close paths counted in `finally` |
-| SSE disconnect alert undercounted real closes | Incomplete streams are counted once on exit; live drill verifies the counter delta |
-| One RSS failure aborted the whole ingestion gather | Per-feed isolation and per-entry DB error isolation |
-| Refresh failures were masked by a shell loop | One-shot/loop worker with run records, freshness metrics, graceful shutdown |
-| Restarted worker left a stale `running` run | Startup reconciliation marks old runs `interrupted` |
-| Freshness metrics were invisible to Prometheus | Worker exposes `/metrics` on `refresh:9101`; alert rules filter `job="devsec-refresh"` |
-| Overlapping refresh runs | Postgres advisory lock |
-| Indexing could delete chunks and fail before insert | Per-article transaction replacement |
-| Schema DDL in API entrypoint | Dedicated `migrate` service; API starts only after success |
-| No visibility into retrieval stages/DB/upstream | Prometheus metrics + dashboards + alerts |
-| Root container | Multi-stage, non-root UID 10001, cap-drop, no-new-privileges |
+**Hybrid retrieval over dense-only.** CVEs, product names, and version strings are exact-token problems; dense search alone misses them. Combining pgvector with `tsvector` and RRF improves keyword coverage at the cost of more ranking state. The evaluation still misses context precision, so this is not solved.
 
-See [`docs/METRICS_AND_ALERTS.md`](docs/METRICS_AND_ALERTS.md) and
-[`docs/SLOS.md`](docs/SLOS.md).
+**Big-to-small retrieval.** Embedding 400-character children improves recall; expanding to 1,500-character parents gives the model better context. Parents are fetched in one query to avoid N+1 lookups. The trade-off is a second storage layer and more index maintenance.
 
-## Verification snapshot (2026-10-20)
+**CPU ONNX plus semantic cache over a GPU dependency.** CPU inference runs on an ordinary Docker host. The cache accelerates repeated questions but not cold retrieval; the cold path remains CPU-bound. A GPU or smaller reranker is the next capacity decision, not a free win.
 
-Local Docker Desktop: 8 vCPU, ~3.83 GiB RAM, `arm64`. This is a verification
-snapshot, not a production capacity claim.
+**Fail fast on dependency problems.** Bounded retries, pool timeouts, and a circuit breaker return 503s while liveness stays 200, instead of hanging for the duration of a DB lock or upstream timeout. The cost is visible failure during a prolonged outage.
 
-| Check | Measured result |
-|---|---|
-| Test suite | **33 passed** (unit + Postgres integration) |
-| Full-history clone | 19 commits reconstructed from origin + local bundle; `git fsck` clean; **33 passed** in the clone |
-| Clean-clone image | built from the full clone; non-root UID 10001; baked models; boot ready 200; 4 scrape targets up |
-| Hosted CI | all 5 workflow jobs pass; clean-download image build **9m55s**; baked models + import smoke pass |
-| Backup/restore | 16.08 MB dump; all table counts matched; restore **7–13s** across two runs |
-| Two-replica routing | 21 health requests split across both nginx upstreams; REST + SSE 200 |
-| Standby promotion | promoted DB writable; API ready; real `/ask` **200**, 432 chars, 3 sources, 2s |
-| Real `/ask` | **200**, 4.36s, 310-character answer, 3 sources |
-| Cached `/ask` | **200**, ~4–10ms after warm-up |
-| Real `/ask/stream` | **200**, 1,726 bytes: `sources`, 7 `token`, `metrics`, `done` |
-| REST cold path (mock upstream) | 76 req, 0 failed, **0.94 req/s**, p95 **15.67s** |
-| REST cache path (mock upstream) | 408 req, 0 failed, **5.08 req/s**, p95 **44.45ms**, 97.3% cache hits |
-| SSE (mock upstream) | 62 streams, 0 failed, **1.0 stream/s**, p95 **13.81s** |
-| DB down / slow | liveness held; readiness 503; bounded 503s; ready recovered |
-| Groq timeout | bounded 503 in 27.71s; liveness 200 |
-| SSE disconnect | stream started, disconnect counted, active gauge returned to 0 |
-| API restart | liveness/readiness/retrieval all returned 200 |
-| Alert fire/resolve | `DevsecPostgresDown` fired at 150s and resolved after recovery |
-| Prometheus targets | `devsec-api`, `devsec-refresh`, `postgres`, `prometheus` all UP |
-| Grafana | both dashboards provisioned (12 + 9 panels) and loaded |
-
-Full evidence is in [`docs/evidence/`](docs/evidence/). The full clone was
-reconstructed from GitHub origin plus a bundle of the local-only commits
-because this Mac's iCloud had evicted historical local Git objects. The image
-was built and booted from that clone, and hosted CI built the same image from a
-clean checkout while downloading the ONNX models. The load numbers use a
-deterministic mock Groq service, not real provider capacity. The cold-path p95
-is above the 6s latency SLO target; that is a measured limitation on this host,
-not an SLO pass.
+**SSE producer thread plus bounded queue.** Groq's Python stream is synchronous; blocking the event loop would stall other requests. A daemon producer feeds a bounded queue while the async loop handles heartbeats, disconnects, and the duration ceiling. A hard disconnect can leave an upstream read blocked until the client timeout.
 
 ## Quick start
 
-```bash
-cp .env.example .env
-# Set POSTGRES_PASSWORD, at least one GROQ_API_KEY, optional API_KEY
-docker compose up -d --build
+Requires Docker Compose v2.24+, ~8 GB RAM recommended, and a Groq API key. No GPU. The first build downloads and bakes ONNX models, so it takes several minutes.
 
-curl -s http://127.0.0.1:8000/health/live
-curl -s http://127.0.0.1:8000/health/ready
+```bash
+git clone https://github.com/ima-d-ice/devsec-brief.git
+cd devsec-brief
+
+cp .env.example .env
+# Set GROQ_API_KEY, POSTGRES_PASSWORD, and optional API_KEY / GRAFANA_ADMIN_PASSWORD
+
+docker compose up -d --build
+docker compose ps
 ```
 
-Services and UIs:
+```bash
+curl -s http://127.0.0.1:8000/health/live
+curl -s http://127.0.0.1:8000/health/ready
+
+curl -s -X POST http://127.0.0.1:8000/ask \
+  -H 'Content-Type: application/json' \
+  -d '{"query":"What is the latest CISA advisory about Schneider Electric?","k":3}'
+
+curl -N -X POST http://127.0.0.1:8000/ask/stream \
+  -H 'Content-Type: application/json' \
+  -d '{"query":"What is CVE-2024-3094?","k":3}'
+```
 
 | Service | URL |
 |---|---|
@@ -151,161 +159,76 @@ Services and UIs:
 | Grafana | `http://127.0.0.1:3001` |
 | Alertmanager | `http://127.0.0.1:9093` |
 
-Ask:
-
-```bash
-curl -s -X POST http://127.0.0.1:8000/ask \
-  -H 'Content-Type: application/json' \
-  -d '{"query":"What is CVE-2024-3094 and how do I remediate it?","k":6}'
-```
-
-Stream:
-
-```bash
-curl -N -X POST http://127.0.0.1:8000/ask/stream \
-  -H 'Content-Type: application/json' \
-  -d '{"query":"What is CVE-2024-3094?","k":6}'
-```
-
-Optional auth/rate limit: set `API_KEY` and `RATE_LIMIT_PER_MINUTE` in `.env`.
-When `API_KEY` is set, send `X-API-Key`.
-
-### Load-test stack (no real Groq quota)
+Stop with `docker compose down`; add `-v` only to delete the Postgres volume. No-quota load-test path:
 
 ```bash
 docker compose --profile loadtest up -d postgres migrate mock-groq seed api-mock
 docker compose --profile loadtest run --rm k6 run /scripts/smoke.js
 ```
 
-See [`loadtest/README.md`](loadtest/README.md).
-
-## API
-
-| Endpoint | Behavior |
-|---|---|
-| `GET /health/live` | Process liveness; no DB dependency |
-| `GET /health/ready` | 200 only when DB + models are ready; 503 otherwise |
-| `GET /metrics` | Prometheus text |
-| `POST /ask` | JSON answer, sources, model, cache flag, per-stage latency |
-| `POST /ask/stream` | SSE: sources → tokens → metrics → done |
-
-There is no public TLS, user identity or RBAC in this Compose stack. Put it
-behind an authenticated TLS reverse proxy before exposing it. See
-[`docs/SECURITY.md`](docs/SECURITY.md).
-
-## Evaluation
-
-The committed eval artifact (`data/eval_results_full.json`) contains **139
-questions**. The numbers below are from that artifact, not from the new
-reliability work:
-
-| Metric | Score | Target | Status |
-|---|---:|---:|---|
-| Context precision | 0.647 | ≥ 0.70 | misses |
-| Faithfulness | 1.000 | ≥ 0.85 | passes |
-| Answer relevancy | 0.647 | ≥ 0.80 | misses |
-| Semantic similarity | 0.636 | ≥ 0.75 | misses |
-| Avg retrieval latency | 3616 ms | — | — |
-| Avg generation latency | 645 ms | — | — |
-
-Reproduce with:
-
-```bash
-docker compose --profile eval up --build
-```
-
-Reliability changes do not claim retrieval-quality improvements. If retrieval
-logic changes, re-run the eval before citing these numbers.
-
-## Load and failure evidence
-
-- [`docs/LOAD_TEST_REPORT.md`](docs/LOAD_TEST_REPORT.md) — measured REST/SSE numbers, bottleneck analysis, cache comparison
-- [`docs/FAILURE_INJECTION.md`](docs/FAILURE_INJECTION.md) — DB, Groq, feed, SSE, restart, and alert drills
-- [`docs/RUNBOOKS/backup-restore.md`](docs/RUNBOOKS/backup-restore.md) — logical backup, scratch restore, and measured restore time
-- [`docs/RUNBOOKS/db-failover.md`](docs/RUNBOOKS/db-failover.md) — streaming standby and manual promotion
-- [`docs/RUNBOOKS/multi-replica.md`](docs/RUNBOOKS/multi-replica.md) — nginx two-replica routing
-- [`scripts/failure/`](scripts/failure/) — executable drills
-- [`docs/incidents/2026-10-20-sse-disconnect-metric.md`](docs/incidents/2026-10-20-sse-disconnect-metric.md) — incident review for the disconnect-counter defect
-- [`docs/evidence/full-clone-boot.txt`](docs/evidence/full-clone-boot.txt) — full-history clone, image build, baked-model, and live boot results
-- [`docs/evidence/hosted-ci.txt`](docs/evidence/hosted-ci.txt) — GitHub-hosted CI run, clean-download build, and import smoke
-- [`docs/evidence/`](docs/evidence/) — raw k6, recovery, scale, and drill output
-
-Do not read these results as real-Groq capacity, multi-host availability, or SLO
-compliance. The cold path was CPU-saturated at about 0.94 req/s on this host;
-the cache path was measured with a repeated query set.
-
-## Testing
-
-```bash
-# Unit (no DB required)
-python -m pytest -m "not integration" -v
-
-# Integration (Postgres/pgvector required)
-DATABASE_URL=postgresql://devsec:devsec@localhost:5432/devsec \
-  python -m pytest -m integration -v
-```
-
-Current local suite: **33 passed** (unit + integration against local Postgres).
-CI adds Ruff syntax/undefined-name checks, migration + integration tests,
-Compose config validation, Gitleaks, Trivy, and an image import smoke test.
-
-## Project layout
+## Project structure
 
 ```text
 src/
-  api.py               FastAPI, health/readiness, metrics, SSE, auth/rate limit
-  rag.py               hybrid retrieval, stage metrics, batch parent expansion
-  db.py                lazy pool, schema, cache/chat, ingestion-run records
-  groq_pool.py         key pool, timeouts, retries, circuit breaker
-  fetch_feeds.py       per-feed async ingestion with isolation
-  refresh.py           advisory-locked run loop + freshness metrics
-  embed_index.py       per-article transactional index replacement
+  api.py               FastAPI routes, health/readiness, SSE, auth, rate limits
+  rag.py               hybrid retrieval, cache, reranking, prompt construction
+  db.py                lazy pool, schema, pgvector/tsvector queries, cache/chat
+  groq_pool.py         key pool, retries, cooldowns, circuit breaker
+  fetch_feeds.py       six RSS feeds with per-feed isolation
+  refresh.py           advisory-locked ingestion loop + freshness metrics
+  embed_index.py       chunking, parent documents, transactional indexing
   migrate.py           idempotent baseline + ordered SQL migrations
   obs.py               Prometheus metric definitions
   resilience.py        retry, circuit breaker, token bucket
   settings.py          environment-backed runtime settings
-monitoring/            Prometheus, Alertmanager, Grafana provisioning
-loadtest/              k6 smoke/REST/SSE/soak scripts
-scripts/failure/       failure drills
-docs/                  architecture, SLOs, runbooks, reports
+tests/                 33 unit and Postgres integration tests
+migrations/            ordered SQL migrations
+loadtest/              k6 smoke, REST, SSE, and soak scripts
+monitoring/            Prometheus rules, Alertmanager, Grafana provisioning
+scripts/               backup, replication, and failure-injection drills
+devsec-brief-frontend/ minimal Next.js shell; not part of the verified API scope
 ```
 
-## Documentation
+## Testing
 
-- [Architecture](docs/ARCHITECTURE.md)
-- [Deployment and rollback](docs/DEPLOYMENT.md)
-- [Metrics and alerts](docs/METRICS_AND_ALERTS.md)
-- [SLOs and error-budget policy](docs/SLOS.md)
-- [Security posture](docs/SECURITY.md)
-- [Runbooks](docs/RUNBOOKS/README.md)
-- [Backup and restore](docs/RUNBOOKS/backup-restore.md)
-- [Database standby and manual failover](docs/RUNBOOKS/db-failover.md)
-- [Two-replica API](docs/RUNBOOKS/multi-replica.md)
-- [Known limitations](docs/KNOWN_LIMITATIONS.md)
-- [Baseline](docs/BASELINE.md)
-- [Live TODO](TODO.md)
+```bash
+python3.12 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 
-## Known limitations (short list)
+docker compose up -d postgres
+set -a; source .env; set +a
+export DATABASE_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}"
+python -m src.migrate
+pytest -q
+```
 
-- Single Postgres primary; manual standby promotion is tested, automatic failover is not.
-- Single API worker by default; the two-replica overlay is tested, but Groq key state, circuit breakers, and rate limits remain per process.
-- Manual logical backup/restore only; no continuous WAL archiving, PITR, or off-host copy.
-- No TLS, user identity, RBAC or WAF in this stack.
-- Semantic cache has TTL but no article-change invalidation.
-- Mock-upstream load numbers are not real-Groq benchmarks; real-provider sampling is not capacity proof.
-- The optional standby is a manual-promotion drill using a trust rule on the private Docker network; it is not an automatic HA solution.
-- Hacker News still returns HTTP 419 inside Compose; ingestion is expected to report `partial` with that feed failing.
-- The 3.83 GiB Docker VM cannot run seed, API, refresh, and api-mock model processes concurrently; model-heavy jobs must be serialized.
+Current suite: **33 passed**. Coverage includes validation/sanitization, health/readiness, metrics, SSE event order, retry deadlines, circuit breaking, token-bucket refill, ingestion isolation, migration idempotency, DB pool lifecycle, and Postgres retrieval/cache integration.
 
-Full list: [`docs/KNOWN_LIMITATIONS.md`](docs/KNOWN_LIMITATIONS.md).
+Unit tests stub transformer imports in `tests/conftest.py`; integration tests need Postgres + pgvector. CI runs Ruff, compilation, unit and integration tests, Compose validation, Gitleaks, Trivy, a clean image build, baked-model assertions, and an `src.api` import smoke.
+
+## Limitations and future work
+
+- Single Postgres primary. Standby promotion is manual; no automatic failover, fencing, continuous WAL/PITR, or off-host backup copy.
+- Cold retrieval is CPU-bound at ~0.94 req/s and misses the 6-second target.
+- Load tests use a deterministic mock. One real-provider request proves the path works, not real-Groq capacity.
+- The 139-question evaluation misses three of four quality targets.
+- Rate limits, Groq key state, and circuit breakers are per process; a multi-replica deployment needs a shared store.
+- No TLS, identity, RBAC, or WAF. Use an authenticated TLS proxy before exposing the stack.
+- The tracked frontend is a minimal shell; the UI and accessibility pass are future work.
+
+Next: improve retrieval/reranking quality, add shared rate-limit and circuit state, automated HA/PITR, and finish the UI.
 
 ## Tech stack
 
-Python 3.12 · FastAPI · PostgreSQL 16 + pgvector · bge-m3 + mMARCO INT8 ONNX
-(CPU) · Groq · Docker Compose · Prometheus · Grafana · Alertmanager · k6 ·
-GitHub Actions · Trivy.
+- **Backend:** Python 3.12, FastAPI, Uvicorn, psycopg 3
+- **Retrieval:** Postgres 16 + pgvector, `tsvector`, bge-m3 ONNX, mMARCO ONNX
+- **Generation:** Groq (`qwen/qwen3.8-27b`, fallback and safety-net models)
+- **Infrastructure:** Docker Compose, Prometheus, Grafana, Alertmanager
+- **Testing:** pytest, k6, GitHub Actions, Gitleaks, Trivy
 
 ## Contact
 
-- GitHub: [ima-d-ice](https://github.com/ima-d-ice)
-- Repo: `ima-d-ice/devsec-brief`
+GitHub: [@ima-d-ice](https://github.com/ima-d-ice)
+
+`[TODO: add email or LinkedIn]`

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 API="${API_URL:-http://127.0.0.1:8000}"
-OUT="${OUT:-docs/evidence/api-restart.txt}"
+OUT="${OUT:-evidence/api-restart.txt}"
 mkdir -p "$(dirname "$OUT")"
 : > "$OUT"
 

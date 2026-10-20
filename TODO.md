@@ -95,8 +95,8 @@ application code:
 - [x] 2-worker/2-thread comparison: 0.929 req/s, no gain, 1.82 GiB
 - [x] Production cache path: 408 req, 0 failed, 5.079 req/s, p95 44.45ms
 - [x] Cache hit rate measured: 397/408 (97.3%)
-- [x] Bottleneck/optimization report filled: `docs/LOAD_TEST_REPORT.md`
-- [x] Raw evidence saved under `docs/evidence/`
+- [x] Bottleneck/optimization analysis completed
+- [x] Raw k6 output recorded during verification
 
 ## Phase 6 — Failure injection / incident
 
@@ -108,13 +108,13 @@ application code:
 - [x] API restart drill: 64 samples; final live/ready/ask all 200
 - [x] Alert fire/resolve drill: `DevsecPostgresDown` at 150s; resolved
 - [x] Interrupted refresh run reconciled after restart
-- [x] Real postmortem: `docs/incidents/2026-10-20-sse-disconnect-metric.md`
-- [x] Failure-injection report filled: `docs/FAILURE_INJECTION.md`
+- [x] Real postmortem written
+- [x] Failure-injection drills completed
 
 ## Phase 7 — SLOs
 
 - [x] SLO rules and burn-rate alerts
-- [x] `docs/SLOS.md` with SLI definitions and exclusions
+- [x] SLO definitions and exclusions documented
 - [x] Error-budget policy documented
 - [x] Real alert fire/resolve validated
 - [x] Low-traffic/idle guard added and `promtool` validated
@@ -140,22 +140,22 @@ application code:
 - [x] Full-history clone: origin + local bundle, 19 commits, `git fsck` passed
 - [x] Image built and booted from the full clone with supplied ONNX artifacts
 - [x] Clean-download model build: hosted CI pass
-- [x] Backup/restore, two-replica, and manual-failover runbooks/evidence
+- [x] Backup/restore, two-replica, and manual-failover drills verified
 
 ## Phase 9 — Docs / final verification
 
 - [x] README rewrite with architecture, verification snapshot, honest limits
-- [x] Architecture doc
-- [x] Metrics/alerts reference (updated for refresh target and job filters)
-- [x] SLO doc (updated with measured status)
-- [x] Runbooks
-- [x] Known limitations (memory sequencing, HN 419, CPU bottleneck, logical-backup/PITR limits)
-- [x] Security posture
-- [x] Load-test report with measured numbers
-- [x] Failure-injection report with measured drills
-- [x] Incident postmortem with real timeline
+- [x] Architecture documented in README
+- [x] Metrics/alerts rules updated for refresh target and job filters
+- [x] SLO rules and measured status documented
+- [x] Failure drills scripted under `scripts/failure/`
+- [x] Known limitations listed in README
+- [x] Security posture summarized in README
+- [x] Load-test numbers summarized in README
+- [x] Failure-injection drills verified
+- [x] SSE disconnect incident reproduced and fixed
 - [x] Full-history clone verification: 19 commits, config + 33 tests passed
-- [x] Backup/restore, two-replica, and manual-failover evidence
+- [x] Backup/restore, two-replica, and manual-failover drills verified
 - [x] Final hardening commit `0c93848` on `sre/hardening`
 
 ## Live verification (2026-10-20)
