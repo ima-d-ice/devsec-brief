@@ -1,21 +1,20 @@
 # DevSec-Brief SRE Upgrade — Live TODO
 
-Last updated: 2026-10-20 08:15 UTC
+Last updated: 2026-10-20 08:45 UTC
 Status: **hardened and locally verified; not production-proven**
 
 Legend: `[x]` done and verified · `[~]` implemented/partly verified · `[ ]` pending
 
-Progress estimate: **~94% overall** · implementation ~97% · end-to-end
-verification ~92% · production evidence ~85%
+Progress estimate: **~97% overall** · implementation 100% of scoped work ·
+local end-to-end verification ~98% · production evidence ~85%
 
-The remaining percentage is mostly deployment/operability evidence, not missing
+The remaining percentage is deployment/operability evidence, not missing
 application code:
 
-- fresh-clone verification
-- final commit
-- backup/restore and multi-replica behavior
+- full-history clone, image build/boot from a clone, and GitHub-hosted CI
+- backup/restore
+- multi-replica and DB failover behavior
 - real-Groq capacity and production query mix
-- GitHub-hosted CI execution
 
 ## Baseline
 
@@ -136,7 +135,8 @@ application code:
 - [x] CI: lint, unit, integration, build, security scan (written)
 - [ ] CI run on GitHub (not executed locally)
 - [x] Deployment/rollback docs
-- [ ] Fresh-clone verification on a clean directory
+- [x] Fresh shallow clone at `0c93848`: Compose configs valid, 33 tests passed
+- [ ] Full image build/boot from a fresh clone on a clean host
 
 ## Phase 9 — Docs / final verification
 
@@ -150,8 +150,8 @@ application code:
 - [x] Load-test report with measured numbers
 - [x] Failure-injection report with measured drills
 - [x] Incident postmortem with real timeline
-- [ ] Fresh-clone verification
-- [ ] Final commit
+- [x] Fresh-clone verification (shallow; config + tests)
+- [x] Final hardening commit `0c93848` on `sre/hardening`
 
 ## Live verification (2026-10-20)
 
@@ -192,15 +192,28 @@ application code:
   `partial` unless that feed is fixed/disabled.
 - The 3.83 GiB Docker VM cannot run all model services at once; seed/API/refresh
   and mock API must be serialized.
-- Backup/restore, multi-replica behavior, real-Groq capacity, and GitHub CI are
-  still unverified.
+- The fresh-clone gate used a shallow clone of the final branch. A full-history
+  clone was blocked by iCloud-evicted historical Git objects on this Mac; a
+  full image build/boot from a clone and GitHub CI are still unverified.
+- Backup/restore, multi-replica behavior, and real-Groq capacity are still
+  unverified.
 
 ## Remaining critical path
 
-1. Run final tests and static/config checks.
-2. Verify a fresh clone can validate Compose and run the unit suite.
-3. Commit the hardening work on `sre/hardening` (leave unrelated frontend
-   changes untouched).
-4. Re-check the final tree and TODO.
+Completed for this local milestone:
 
-No hard blocker.
+- [x] Final tests and static/config checks.
+- [x] Fresh shallow clone validates Compose and the 33-test suite.
+- [x] Hardening work committed on `sre/hardening` at `0c93848`; evidence and
+      TODO closure committed separately.
+- [x] Final tree and unrelated frontend changes preserved.
+
+Production gates still open:
+
+- [ ] Backup/restore drill.
+- [ ] Multi-replica / DB failover validation.
+- [ ] Real-Groq capacity and production query mix.
+- [ ] GitHub-hosted CI run.
+- [ ] Full-history clone and full image build/boot from a clean host.
+
+No hard blocker for the local milestone.

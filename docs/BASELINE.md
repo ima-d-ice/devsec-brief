@@ -67,5 +67,7 @@ The baseline gaps above have since been closed locally:
   disconnect, API restart, and `DevsecPostgresDown` fire/resolve.
 - Both Grafana dashboards are provisioned and query the live Prometheus target.
 
-Still not verified: backup/restore, multi-replica behavior, real-Groq capacity,
-and a fresh-clone deployment on a clean host.
+A fresh shallow clone of the final branch validated both Compose configs and
+passed all 33 tests. Still not verified: a full image build/boot from a fresh
+clone on a clean host, backup/restore, multi-replica behavior, real-Groq
+capacity, and GitHub CI.

@@ -99,6 +99,7 @@ snapshot, not a production capacity claim.
 | Check | Measured result |
 |---|---|
 | Test suite | **33 passed** (unit + Postgres integration) |
+| Fresh shallow clone | `0c93848`; both Compose configs valid; **33 passed** |
 | Real `/ask` | **200**, 4.36s, 310-character answer, 3 sources |
 | Cached `/ask` | **200**, ~4–10ms after warm-up |
 | Real `/ask/stream` | **200**, 1,726 bytes: `sources`, 7 `token`, `metrics`, `done` |
@@ -113,10 +114,12 @@ snapshot, not a production capacity claim.
 | Prometheus targets | `devsec-api`, `devsec-refresh`, `postgres`, `prometheus` all UP |
 | Grafana | both dashboards provisioned (12 + 9 panels) and loaded |
 
-Full evidence is in [`docs/evidence/`](docs/evidence/). The load numbers use a
-deterministic mock Groq service, not real provider capacity. The cold-path p95
-is above the 6s latency SLO target; that is a measured limitation on this host,
-not an SLO pass.
+Full evidence is in [`docs/evidence/`](docs/evidence/). The fresh-clone check was
+shallow because this Mac's iCloud had evicted historical Git objects; a
+full-history clone, full image build/boot from a clone, and GitHub CI remain
+unverified. The load numbers use a deterministic mock Groq service, not real
+provider capacity. The cold-path p95 is above the 6s latency SLO target; that is
+a measured limitation on this host, not an SLO pass.
 
 ## Quick start
 

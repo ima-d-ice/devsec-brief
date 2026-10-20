@@ -75,6 +75,8 @@ This is a deliberate, honest list. None of these are hidden by the README.
 
 The Compose stack has been booted and the API, migrations, scrape targets,
 Grafana, Alertmanager, ingestion path, real `/ask`/SSE path, load runs, failure
-drills, and alert fire/resolve have been exercised. Fresh-clone verification is
-the remaining deployment gate; backup/restore and multi-replica behavior remain
+drills, and alert fire/resolve have been exercised. A fresh **shallow** clone of
+the final branch validated both Compose configurations and passed all 33 tests.
+A full-history clone from a normal host, a full image build/boot from a clone,
+backup/restore, multi-replica behavior, real-Groq capacity, and GitHub CI remain
 unverified. This is **production-shaped, not production-proven**.

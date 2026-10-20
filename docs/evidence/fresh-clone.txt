@@ -1,0 +1,14 @@
+# Fresh-clone verification
+captured_at=2026-10-20T08:45:10Z
+source=/Users/imad/Desktop/devsec-brief
+destination=/private/var/folders/gg/xsjntjt15w51dftnkpw9zpr40000gn/T/opencode/devsec-clone5
+branch=sre/hardening
+commit=0c93848 Harden DevSec-Brief for observable Compose operations
+clone=git clone --depth 1 --single-branch --branch sre/hardening file:///Users/imad/Desktop/devsec-brief <dest>
+clone_result=OK
+worktree_clean=yes
+docker_compose_config=OK
+docker_compose_loadtest_config=OK
+compose_services=postgres postgres-exporter migrate api prometheus refresh alertmanager grafana
+tests=33 passed, 1 warning in 2.03s
+note=Full-history local clone was blocked because 54 historical loose Git objects were iCloud-evicted (dataless) on the source Mac. The final-branch shallow clone, checkout, Compose validation, and test run succeeded. A full image build/boot from the clone and GitHub-hosted CI were not exercised.
