@@ -6,10 +6,18 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lint-and-unit:
     name: Lint & Unit Tests
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
@@ -23,17 +31,23 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install ruff pytest-cov
+
+      - name: Ruff syntax/undefined-name gate
+        run: ruff check src tests scripts --select E9,F63,F7,F82
 
       - name: Bytecode compilation check
-        run: python -m py_compile src/*.py tests/*.py
+        run: python -m py_compile src/*.py tests/*.py scripts/*.py scripts/failure/*.py
 
-      - name: Run Pytest Unit Tests
+      - name: Unit tests
         run: |
-          python -m pytest tests/test_sanitize.py tests/test_api_validation.py -v --tb=short
+          python -m pytest -m "not integration" -v --tb=short \
+            --cov=src --cov-report=term-missing
 
   integration:
     name: Database Integration Tests
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     services:
       postgres:
         image: pgvector/pgvector:pg16
@@ -44,11 +58,10 @@ jobs:
         ports:
           - 5432:5432
         options: >-
-          --health-cmd pg_isready
+          --health-cmd "pg_isready -U devsec"
           --health-interval 5s
           --health-timeout 5s
-          --health-retries 5
-
+          --health-retries 10
     steps:
       - uses: actions/checkout@v4
 
@@ -61,14 +74,80 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Initialize Database Schema
+      - name: Apply migrations
         env:
           DATABASE_URL: postgresql://devsec:devsec@localhost:5432/devsec
-        run: |
-          python -c "from src.db import init_db; init_db()"
+        run: python -m src.migrate
 
-      - name: Run Integration Tests
+      - name: Run integration tests
         env:
           DATABASE_URL: postgresql://devsec:devsec@localhost:5432/devsec
+        run: python -m pytest -m integration -v --tb=short
+
+  compose-config:
+    name: Compose Config Validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate base stack
+        run: docker compose config -q
+
+      - name: Validate load-test profile
+        run: docker compose --profile loadtest config -q
+
+  security:
+    name: Secret & Dependency Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Trivy filesystem scan
+        uses: aquasecurity/trivy-action@0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          format: table
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          exit-code: "1"
+          skip-dirs: devsec-brief-frontend/node_modules,devsec-brief-frontend/.next,node_modules,.git
+
+  build:
+    name: Image Build & Import Smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    needs: [lint-and-unit]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          load: true
+          tags: devsec-brief:ci
+          cache-from: type=gha,scope=ci-build
+          cache-to: type=gha,mode=max,scope=ci-build
+
+      - name: Assert baked models
         run: |
-          python -m pytest tests/test_retrieval_integration.py -v -m integration --tb=short
+          docker run --rm --entrypoint sh devsec-brief:ci -c \
+            "test -f /app/data/onnx_st/bge-m3-onnx/onnx/model_qint8_arm64.onnx && \
+             test -f /app/data/onnx_st/mmarco-onnx/onnx/model_qint8_arm64.onnx"
+
+      - name: Import application (no DB connection at import)
+        run: |
+          docker run --rm --entrypoint python devsec-brief:ci -c \
+            "import src.api; print('api-import-ok')"

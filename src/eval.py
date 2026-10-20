@@ -260,7 +260,12 @@ if __name__ == "__main__":
     parser.add_argument("--out", type=str, default=None, help="Output JSON path")
     parser.add_argument("--judge-context-chars", type=int, default=4500)
     args = parser.parse_args()
-    run_evaluation(sample_size=args.sample, sleep_s=args.sleep, resume=args.resume,
-                   retrieval_only=args.retrieval_only, out_path=args.out,
-                   judge_context_chars=args.judge_context_chars)
+    from src.db import close_pool
+
+    try:
+        run_evaluation(sample_size=args.sample, sleep_s=args.sleep, resume=args.resume,
+                       retrieval_only=args.retrieval_only, out_path=args.out,
+                       judge_context_chars=args.judge_context_chars)
+    finally:
+        close_pool()
 

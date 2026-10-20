@@ -142,7 +142,13 @@ jobs:
              test -f /app/data/onnx_st/mmarco-onnx/onnx/model_qint8_arm64.onnx && \
              echo 'baked ONNX models present'"
 
-      - name: Smoke Test Container Boot & Health
+      - name: Apply migrations
+        run: |
+          docker run --rm --network host \
+            -e DATABASE_URL=postgresql://devsec:devsec@localhost:5432/devsec \
+            --entrypoint python "${{ steps.manifest.outputs.sha_tag }}" -m src.migrate
+
+      - name: Smoke Test Container Boot & Readiness
         run: |
           IMAGE="${{ steps.manifest.outputs.sha_tag }}"
           echo "Smoking image: $IMAGE"
@@ -153,15 +159,15 @@ jobs:
             "$IMAGE"
           cleanup() { docker rm -f test_api; }
           trap cleanup EXIT
-          # Models are baked in; boot is load + migrate only (~1-2 min)
+          # Models are baked in; boot is model load + readiness (~1-2 min)
           for _ in $(seq 1 60); do
-            if curl -sf http://127.0.0.1:8000/health; then
+            if curl -sf http://127.0.0.1:8000/health/ready; then
               echo; echo "Smoke test passed"
               exit 0
             fi
             sleep 5
           done
-          echo "Smoke test FAILED: /health never returned 200"
+          echo "Smoke test FAILED: /health/ready never returned 200"
           docker logs test_api
           exit 1
 

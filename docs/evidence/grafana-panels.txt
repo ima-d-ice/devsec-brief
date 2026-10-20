@@ -1,0 +1,9 @@
+# Grafana provisioning check
+{
+  "database": "ok",
+  "version": "11.3.0",
+  "commit": "d9455ff7db73b694db7d412e49a68bec767f2b5a"
+}
+DevSec Brief — Service Overview devsec-overview
+DevSec Brief — SLOs devsec-slo
+overview_panels=12 slo_panels=9 datasource=prometheus

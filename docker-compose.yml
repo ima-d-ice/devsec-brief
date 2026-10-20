@@ -1,106 +1,315 @@
+name: devsec-brief
+
+x-app-build: &app-build
+  context: .
+  dockerfile: Dockerfile
+
+x-app-env: &app-env
+  DATABASE_URL: postgresql://${POSTGRES_USER:-devsec}:${POSTGRES_PASSWORD:-devsec}@postgres:5432/${POSTGRES_DB:-devsec}
+  PRIMARY_MODEL: ${PRIMARY_MODEL:-qwen/qwen3.8-27b}
+  FALLBACK_MODEL: ${FALLBACK_MODEL:-qwen/qwen3.6-27b}
+  SAFETY_NET_MODEL: ${SAFETY_NET_MODEL:-openai/gpt-oss-120b}
+  GROQ_SERVE_KEYS: ${GROQ_SERVE_KEYS:-1,2,3,4,5,6,7,8}
+  GROQ_GEN_KEYS: ${GROQ_GEN_KEYS:-9,10}
+  GROQ_JUDGE_KEYS: ${GROQ_JUDGE_KEYS:-11,12}
+  GROQ_BASE_URL: ${GROQ_BASE_URL:-}
+  GROQ_TIMEOUT_SECONDS: ${GROQ_TIMEOUT_SECONDS:-45}
+  GROQ_TOTAL_TIMEOUT_SECONDS: ${GROQ_TOTAL_TIMEOUT_SECONDS:-90}
+  GROQ_MAX_ATTEMPTS: ${GROQ_MAX_ATTEMPTS:-3}
+  GROQ_BACKOFF_BASE_SECONDS: ${GROQ_BACKOFF_BASE_SECONDS:-0.5}
+  GROQ_COOLDOWN_SECONDS: ${GROQ_COOLDOWN_SECONDS:-10}
+  ONNX_INTRA_OP_THREADS: ${ONNX_INTRA_OP_THREADS:-4}
+  CIRCUIT_FAILURE_THRESHOLD: ${CIRCUIT_FAILURE_THRESHOLD:-5}
+  CIRCUIT_RECOVERY_SECONDS: ${CIRCUIT_RECOVERY_SECONDS:-30}
+  SSE_HEARTBEAT_SECONDS: ${SSE_HEARTBEAT_SECONDS:-15}
+  SSE_MAX_DURATION_SECONDS: ${SSE_MAX_DURATION_SECONDS:-300}
+  READINESS_CACHE_SECONDS: ${READINESS_CACHE_SECONDS:-5}
+  READINESS_DB_TIMEOUT_SECONDS: ${READINESS_DB_TIMEOUT_SECONDS:-2}
+  API_KEY: ${API_KEY:-}
+  RATE_LIMIT_PER_MINUTE: ${RATE_LIMIT_PER_MINUTE:-0}
+  CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://127.0.0.1:5500}
+  LOG_LEVEL: ${LOG_LEVEL:-INFO}
+  APP_ENV: ${APP_ENV:-compose}
+  REFRESH_INTERVAL_HOURS: ${REFRESH_INTERVAL_HOURS:-6}
+  REFRESH_METRICS_PORT: ${REFRESH_METRICS_PORT:-9101}
+  CACHE_ENABLED: ${CACHE_ENABLED:-true}
+
+x-app-service: &app-service
+  image: devsec-brief:local
+  build: *app-build
+  env_file:
+    - path: .env
+      required: false
+  restart: unless-stopped
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+  stop_grace_period: 30s
+
 services:
   postgres:
     image: pgvector/pgvector:pg16
     container_name: devsec_postgres
     environment:
-      POSTGRES_USER: devsec
-      POSTGRES_PASSWORD: devsec
-      POSTGRES_DB: devsec
+      POSTGRES_USER: ${POSTGRES_USER:-devsec}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-devsec}
+      POSTGRES_DB: ${POSTGRES_DB:-devsec}
     ports:
-      - "5432:5432"
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    command:
+      - postgres
+      - -c
+      - max_connections=100
+      - -c
+      - shared_buffers=256MB
+    shm_size: 256mb
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U devsec"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-devsec} -d ${POSTGRES_DB:-devsec}"]
       interval: 5s
       timeout: 5s
-      retries: 10
+      retries: 12
+      start_period: 10s
+    restart: unless-stopped
     mem_limit: 1g
     cpus: 2.0
 
-  api:
-    build: .
-    container_name: devsec_api
+  migrate:
+    <<: *app-service
+    container_name: devsec_migrate
+    command: ["python", "-m", "src.migrate"]
+    environment:
+      <<: *app-env
     depends_on:
       postgres:
         condition: service_healthy
+    restart: "no"
+    mem_limit: 1g
+    cpus: 1.0
+
+  api:
+    <<: *app-service
+    container_name: devsec_api
     environment:
-      - DATABASE_URL=postgresql://devsec:devsec@postgres:5432/devsec
-      - PRIMARY_MODEL=${PRIMARY_MODEL:-qwen/qwen3.8-27b}
-      - FALLBACK_MODEL=${FALLBACK_MODEL:-qwen/qwen3.6-27b}
-      - SAFETY_NET_MODEL=${SAFETY_NET_MODEL:-openai/gpt-oss-120b}
-      - GROQ_SERVE_KEYS=${GROQ_SERVE_KEYS:-1,2,3,4,5,6,7,8}
-      - GROQ_GEN_KEYS=${GROQ_GEN_KEYS:-9,10}
-      - GROQ_JUDGE_KEYS=${GROQ_JUDGE_KEYS:-11,12}
-      - GROQ_API_KEY=${GROQ_API_KEY}
-      - GROQ_API_KEY_1=${GROQ_API_KEY_1}
-      - GROQ_API_KEY_2=${GROQ_API_KEY_2}
-      - GROQ_API_KEY_3=${GROQ_API_KEY_3}
-      - GROQ_API_KEY_4=${GROQ_API_KEY_4}
-      - GROQ_API_KEY_5=${GROQ_API_KEY_5}
-      - GROQ_API_KEY_6=${GROQ_API_KEY_6}
-      - GROQ_API_KEY_7=${GROQ_API_KEY_7}
-      - GROQ_API_KEY_8=${GROQ_API_KEY_8}
-      - GROQ_API_KEY_9=${GROQ_API_KEY_9}
-      - GROQ_API_KEY_10=${GROQ_API_KEY_10}
-      - GROQ_API_KEY_11=${GROQ_API_KEY_11}
-      - GROQ_API_KEY_12=${GROQ_API_KEY_12}
-      - OMP_NUM_THREADS=4
-      - MKL_NUM_THREADS=4
-      - OPENBLAS_NUM_THREADS=4
-      - ONNX_INTRA_OP_THREADS=4
+      <<: *app-env
+      UVICORN_WORKERS: ${UVICORN_WORKERS:-1}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
     ports:
-      - "8000:8000"
-    volumes:
-      - ./data:/app/data
+      - "127.0.0.1:${API_PORT:-8000}:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/ready', timeout=3)"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 180s
     mem_limit: 3g
     cpus: 6.0
 
   refresh:
-    build: .
+    <<: *app-service
     container_name: devsec_refresh
-    profiles: ["refresh"]
+    command: ["python", "-m", "src.refresh", "--loop"]
+    environment:
+      <<: *app-env
     depends_on:
       postgres:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    # The worker has no HTTP health endpoint (only a Prometheus metrics port);
+    # the image-level /health/live check would always fail. Liveness is observed
+    # through ingestion run metrics and the devsec-refresh scrape target.
+    healthcheck:
+      disable: true
+    mem_limit: 3g
+    cpus: 4.0
+
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:v0.16.0
+    container_name: devsec_postgres_exporter
     environment:
-      - DATABASE_URL=postgresql://devsec:devsec@postgres:5432/devsec
-      - REFRESH_INTERVAL_HOURS=${REFRESH_INTERVAL_HOURS:-6}
-    volumes:
-      - ./data:/app/data
-    command: ["sh", "-c", "while true; do python -m src.refresh; sleep ${REFRESH_INTERVAL_HOURS:-6}h; done"]
+      DATA_SOURCE_NAME: postgresql://${POSTGRES_USER:-devsec}:${POSTGRES_PASSWORD:-devsec}@postgres:5432/${POSTGRES_DB:-devsec}?sslmode=disable
+    depends_on:
+      postgres:
+        condition: service_healthy
     restart: unless-stopped
+    mem_limit: 256m
+
+  prometheus:
+    image: prom/prometheus:v2.55.1
+    container_name: devsec_prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=7d
+      - --web.enable-lifecycle
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/rules:/etc/prometheus/rules:ro
+      - prom_data:/prometheus
+    ports:
+      - "127.0.0.1:${PROMETHEUS_PORT:-9090}:9090"
+    depends_on:
+      api:
+        condition: service_started
+      postgres-exporter:
+        condition: service_started
+    restart: unless-stopped
+    mem_limit: 512m
+
+  alertmanager:
+    image: prom/alertmanager:v0.27.0
+    container_name: devsec_alertmanager
+    command:
+      - --config.file=/etc/alertmanager/alertmanager.yml
+      - --storage.path=/alertmanager
+    volumes:
+      - ./monitoring/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+      - alertmanager_data:/alertmanager
+    ports:
+      - "127.0.0.1:${ALERTMANAGER_PORT:-9093}:9093"
+    restart: unless-stopped
+    mem_limit: 256m
+
+  grafana:
+    image: grafana/grafana:11.3.0
+    container_name: devsec_grafana
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_AUTH_ANONYMOUS_ENABLED: "false"
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/devsec-overview.json
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    ports:
+      - "127.0.0.1:${GRAFANA_PORT:-3001}:3000"
+    depends_on:
+      prometheus:
+        condition: service_started
+    restart: unless-stopped
+    mem_limit: 512m
 
   eval:
-    build: .
+    <<: *app-service
     profiles: ["eval"]
     container_name: devsec_eval
+    command: ["python", "-m", "src.eval"]
+    environment:
+      <<: *app-env
     depends_on:
       postgres:
         condition: service_healthy
-    environment:
-      - DATABASE_URL=postgresql://devsec:devsec@postgres:5432/devsec
-      - PRIMARY_MODEL=${PRIMARY_MODEL:-qwen/qwen3.8-27b}
-      - FALLBACK_MODEL=${FALLBACK_MODEL:-qwen/qwen3.6-27b}
-      - SAFETY_NET_MODEL=${SAFETY_NET_MODEL:-openai/gpt-oss-120b}
-      - GROQ_SERVE_KEYS=${GROQ_SERVE_KEYS:-1,2,3,4,5,6,7,8}
-      - GROQ_GEN_KEYS=${GROQ_GEN_KEYS:-9,10}
-      - GROQ_JUDGE_KEYS=${GROQ_JUDGE_KEYS:-11,12}
-      - GROQ_API_KEY_1=${GROQ_API_KEY_1}
-      - GROQ_API_KEY_2=${GROQ_API_KEY_2}
-      - GROQ_API_KEY_3=${GROQ_API_KEY_3}
-      - GROQ_API_KEY_4=${GROQ_API_KEY_4}
-      - GROQ_API_KEY_5=${GROQ_API_KEY_5}
-      - GROQ_API_KEY_6=${GROQ_API_KEY_6}
-      - GROQ_API_KEY_7=${GROQ_API_KEY_7}
-      - GROQ_API_KEY_8=${GROQ_API_KEY_8}
-      - GROQ_API_KEY_9=${GROQ_API_KEY_9}
-      - GROQ_API_KEY_10=${GROQ_API_KEY_10}
-      - GROQ_API_KEY_11=${GROQ_API_KEY_11}
-      - GROQ_API_KEY_12=${GROQ_API_KEY_12}
+      migrate:
+        condition: service_completed_successfully
     volumes:
       - ./data:/app/data
-    command: ["python", "-m", "src.eval"]
+    restart: "no"
+    mem_limit: 3g
+    cpus: 4.0
+
+  # ---------- load-test profile ----------
+  mock-groq:
+    build:
+      context: ./mock_groq
+    image: devsec-brief-mock-groq:local
+    container_name: devsec_mock_groq
+    profiles: ["loadtest"]
+    environment:
+      MOCK_GROQ_MODE: ${MOCK_GROQ_MODE:-ok}
+      MOCK_GROQ_DELAY_MS: ${MOCK_GROQ_DELAY_MS:-5}
+      MOCK_GROQ_STREAM_DELAY_MS: ${MOCK_GROQ_STREAM_DELAY_MS:-5}
+      MOCK_GROQ_ANSWER: ${MOCK_GROQ_ANSWER:-This is a deterministic mock answer for load testing.}
+    ports:
+      - "127.0.0.1:${MOCK_GROQ_PORT:-8081}:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3)"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+    mem_limit: 256m
+
+  api-mock:
+    <<: *app-service
+    profiles: ["loadtest"]
+    container_name: devsec_api_mock
+    environment:
+      <<: *app-env
+      GROQ_BASE_URL: http://mock-groq:8000
+      GROQ_API_KEY: mock
+      PRIMARY_MODEL: mock-primary
+      FALLBACK_MODEL: mock-fallback
+      SAFETY_NET_MODEL: mock-safety
+      UVICORN_WORKERS: ${LOADTEST_WORKERS:-1}
+      GROQ_TIMEOUT_SECONDS: "8"
+      GROQ_TOTAL_TIMEOUT_SECONDS: "25"
+      GROQ_BACKOFF_BASE_SECONDS: "0.1"
+      # Default load drills exercise the cold retrieval + generation path.
+      # Set LOADTEST_CACHE_ENABLED=true to measure the production cache path.
+      CACHE_ENABLED: ${LOADTEST_CACHE_ENABLED:-false}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+      mock-groq:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${API_MOCK_PORT:-8001}:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/ready', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 180s
+    mem_limit: 3g
+    cpus: 4.0
+
+  seed:
+    <<: *app-service
+    profiles: ["loadtest"]
+    container_name: devsec_seed
+    command: ["python", "scripts/seed_loadtest.py"]
+    environment:
+      <<: *app-env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    restart: "no"
+    mem_limit: 3g
+    cpus: 2.0
+
+  k6:
+    image: grafana/k6:0.54.0
+    container_name: devsec_k6
+    profiles: ["loadtest"]
+    command: ["run", "/scripts/smoke.js"]
+    environment:
+      BASE_URL: http://api-mock:8000
+      API_KEY: ${API_KEY:-}
+      K6_NO_USAGE_REPORT: "true"
+    volumes:
+      - ./loadtest:/scripts:ro
+    depends_on:
+      api-mock:
+        condition: service_healthy
+      seed:
+        condition: service_completed_successfully
+    restart: "no"
 
 volumes:
   pgdata:
+  prom_data:
+  grafana_data:
+  alertmanager_data:

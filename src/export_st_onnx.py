@@ -98,7 +98,6 @@ def export_embedding(onnx_dir: Path):
     model = SentenceTransformer(
         src,
         backend="onnx",
-        processor_kwargs={"fix_mistral_regex": True},
     )
 
     print("Running ONNX INT8 Quantization...")
@@ -134,8 +133,7 @@ def export_reranker(onnx_dir: Path):
         model = CrossEncoder(
             src,
             backend="onnx",
-            processor_kwargs={"fix_mistral_regex": True},
-        )
+            )
 
         export_dynamic_quantized_onnx_model(
             model,

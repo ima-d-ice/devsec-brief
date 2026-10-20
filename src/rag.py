@@ -9,10 +9,22 @@ from typing import Generator
 from dateutil import parser
 from sentence_transformers import SentenceTransformer, CrossEncoder
 
+from src import obs
 from src.sanitize import sanitize_definition
-from src.db import search_keyword, search_semantic, check_semantic_cache, check_exact_cache, get_parent_text
+from src.db import (
+    check_exact_cache,
+    check_semantic_cache,
+    get_parent_texts,
+    search_keyword,
+    search_semantic,
+)
 from src.groq_pool import safe_groq_call, stream_groq_call, PRIMARY_MODEL
+from src.logger import get_logger
 from src.paths import ONNX_EMBED_PATH, GLOSSARY_PATH
+
+log = get_logger("rag")
+MODELS_READY = False
+_RETRIEVAL_POOL = ThreadPoolExecutor(max_workers=4, thread_name_prefix="retrieval")
 
 
 def _ort_session_options():
@@ -33,7 +45,7 @@ _ORT_OPTS = _ort_session_options()
 EMBED_MODEL_NAME = "BAAI/bge-m3"
 
 if ONNX_EMBED_PATH.exists():
-    print(f"Loading INT8 ONNX Embedding model from {ONNX_EMBED_PATH}...")
+    log.info("loading_embedding_model", extra={"fields": {"path": str(ONNX_EMBED_PATH)}})
     embed_model = SentenceTransformer(
         str(ONNX_EMBED_PATH),
         backend="onnx",
@@ -41,10 +53,10 @@ if ONNX_EMBED_PATH.exists():
             "file_name": "onnx/model_qint8_arm64.onnx",
             "provider": "CPUExecutionProvider",
             "session_options": _ORT_OPTS,
-        }
+        },
     )
 else:
-    print("Loading Embedding model (CPU)...")
+    log.info("loading_embedding_model_cpu")
     embed_model = SentenceTransformer(
         EMBED_MODEL_NAME,
         trust_remote_code=True,
@@ -54,7 +66,7 @@ else:
 RERANKER_MODEL_NAME = "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1"
 ONNX_RERANK_PATH = Path(__file__).resolve().parents[1] / "data" / "onnx_st" / "mmarco-onnx"
 if ONNX_RERANK_PATH.exists():
-    print(f"Loading INT8 ONNX CrossEncoder from {ONNX_RERANK_PATH}...")
+    log.info("loading_reranker_model", extra={"fields": {"path": str(ONNX_RERANK_PATH)}})
     reranker_model = CrossEncoder(
         str(ONNX_RERANK_PATH),
         backend="onnx",
@@ -62,10 +74,10 @@ if ONNX_RERANK_PATH.exists():
             "file_name": "onnx/model_qint8_arm64.onnx",
             "provider": "CPUExecutionProvider",
             "session_options": _ORT_OPTS,
-        }
+        },
     )
 else:
-    print("Loading CrossEncoder natively...")
+    log.info("loading_reranker_model_cpu")
     reranker_model = CrossEncoder(
         RERANKER_MODEL_NAME,
         device="cpu"
@@ -76,7 +88,13 @@ try:
     embed_model.encode(["warmup"])
     reranker_model.predict([["warmup query", "warmup passage"]])
 except Exception as _warm_e:
-    print(f"Warmup skipped: {_warm_e}")
+    log.warning("model_warmup_skipped", extra={"fields": {"error": type(_warm_e).__name__}})
+MODELS_READY = True
+
+
+def is_ready() -> bool:
+    """True once the embedding and reranker models are loaded."""
+    return MODELS_READY
 
 CONTEXT_DOC_LIMIT = 3
 CROSSENCODER_MAX_CHARS = 1000
@@ -91,7 +109,7 @@ def timeit(func):
         start = time.perf_counter()
         result = func(*args, **kwargs)
         elapsed = time.perf_counter() - start
-        print(f"⏱️  {func.__name__} took {elapsed:.4f}s")
+        log.debug("function_timing", extra={"fields": {"function": func.__name__, "seconds": round(elapsed, 4)}})
         return result
     return wrapper
 
@@ -102,9 +120,9 @@ def _load_glossary():
     try:
         with open(GLOSSARY_PATH, 'r') as f:
             _entity_glossary = json.load(f)
-        print(f"  [glossary] Loaded {len(_entity_glossary)} entities for query enrichment.")
+        log.info("glossary_loaded", extra={"fields": {"entities": len(_entity_glossary)}})
     except Exception as e:
-        print(f"  [glossary] Could not load: {e}")
+        log.warning("glossary_unavailable", extra={"fields": {"error": type(e).__name__}})
         _entity_glossary = {}
 
 _load_glossary()
@@ -223,15 +241,24 @@ def retrieve_super(query: str, topic: str | None = None, k: int = 6, precomputed
     else:
         q_embs = embed_model.encode(query_variants, batch_size=len(query_variants)).tolist()
     timings["embedding_ms"] = round((time.perf_counter() - t1) * 1000, 2)
+    obs.observe_stage("embedding", t1, time.perf_counter())
 
     # Stage 2: Parallel DB search (semantic + keyword)
     t2 = time.perf_counter()
-    with ThreadPoolExecutor(max_workers=2) as ex:
-        semantic_future = ex.submit(lambda: search_semantic(q_embs, k=20, topic=topic))
-        keyword_future = ex.submit(lambda: search_keyword(query_variants[-1], limit=20, topic=topic))
+    try:
+        semantic_future = _RETRIEVAL_POOL.submit(
+            lambda: search_semantic(q_embs, k=20, topic=topic)
+        )
+        keyword_future = _RETRIEVAL_POOL.submit(
+            lambda: search_keyword(query_variants[-1], limit=20, topic=topic)
+        )
         original_res = semantic_future.result()
         keyword_results = keyword_future.result()
+    except Exception as exc:
+        obs.record_retrieval_failure("db_search", type(exc).__name__)
+        raise
     timings["db_search_ms"] = round((time.perf_counter() - t2) * 1000, 2)
+    obs.observe_stage("db_search", t2, time.perf_counter())
 
     semantic_result_lists = []
     if original_res.get("documents"):
@@ -253,6 +280,7 @@ def retrieve_super(query: str, topic: str | None = None, k: int = 6, precomputed
     t3 = time.perf_counter()
     merged = rrf_merge(*non_empty_lists, pool_size=20)
     timings["rrf_ms"] = round((time.perf_counter() - t3) * 1000, 2)
+    obs.observe_stage("rrf", t3, time.perf_counter())
     
     merged_docs = merged["documents"][0]
     merged_metas = merged["metadatas"][0]
@@ -263,35 +291,59 @@ def retrieve_super(query: str, topic: str | None = None, k: int = 6, precomputed
 
     # Stage 4: CrossEncoder reranking
     t4 = time.perf_counter()
-    pairs = [[query, doc[:CROSSENCODER_MAX_CHARS]] for doc in merged_docs]
-    rerank_scores = reranker_model.predict(pairs)
+    try:
+        pairs = [[query, doc[:CROSSENCODER_MAX_CHARS]] for doc in merged_docs]
+        obs.RERANK_CANDIDATES.observe(len(pairs))
+        rerank_scores = reranker_model.predict(pairs)
+    except Exception as exc:
+        obs.record_retrieval_failure("rerank", type(exc).__name__)
+        raise
     timings["rerank_ms"] = round((time.perf_counter() - t4) * 1000, 2)
+    obs.observe_stage("rerank", t4, time.perf_counter())
 
     scored_results = list(zip(rerank_scores, merged_docs, merged_metas))
     scored_results.sort(key=lambda x: x[0], reverse=True)
 
-    # Big-to-small: reranked children -> expand to capped parent docs, deduped
+    # Big-to-small: reranked children -> capped parent docs, deduped.
+    # One batch lookup replaces up to k N+1 queries.
+    t5 = time.perf_counter()
+    candidates: list[tuple[dict, str]] = []
     seen_parents: set[tuple] = set()
-    top_k_docs: list[str] = []
-    top_k_metas: list[dict] = []
     for _, child_doc, meta in scored_results:
-        if len(top_k_docs) >= k:
-            break
         aid = meta.get("article_id")
         pidx = meta.get("parent_index", 0) or 0
         key = (aid, pidx, meta.get("url"))
         if key in seen_parents:
             continue
         seen_parents.add(key)
-        parent_text = None
-        if aid is not None:
-            try:
-                parent_text = get_parent_text(aid, pidx, max_chars=PARENT_SNIPPET_CHARS)
-            except Exception:
-                parent_text = None
+        candidates.append((meta, child_doc))
+        if len(candidates) >= k:
+            break
+
+    parent_map: dict[tuple[int, int], str] = {}
+    lookup_pairs = [
+        (meta.get("article_id"), meta.get("parent_index", 0) or 0)
+        for meta, _ in candidates
+        if meta.get("article_id") is not None
+    ]
+    if lookup_pairs:
+        try:
+            parent_map = get_parent_texts(lookup_pairs, max_chars=PARENT_SNIPPET_CHARS)
+        except Exception as exc:
+            obs.record_retrieval_failure("parent_lookup", type(exc).__name__)
+            parent_map = {}
+
+    top_k_docs: list[str] = []
+    top_k_metas: list[dict] = []
+    for meta, child_doc in candidates:
+        key = (meta.get("article_id"), meta.get("parent_index", 0) or 0)
+        parent_text = parent_map.get(key)
         top_k_docs.append((parent_text or child_doc)[:PARENT_SNIPPET_CHARS])
         top_k_metas.append(meta)
+    timings["parent_lookup_ms"] = round((time.perf_counter() - t5) * 1000, 2)
+    obs.observe_stage("parent_lookup", t5, time.perf_counter())
     timings["total_retrieval_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
+    obs.observe_stage("total_retrieval", t_start, time.perf_counter())
 
     return {
         "documents": [top_k_docs],

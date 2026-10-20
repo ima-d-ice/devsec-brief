@@ -1,0 +1,2 @@
+# Reserve the directory so Grafana's provisioning scanner does not log a
+# missing-directory error. Alerting is managed by Prometheus/Alertmanager.
