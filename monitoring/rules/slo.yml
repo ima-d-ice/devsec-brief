@@ -42,7 +42,6 @@ groups:
         annotations:
           summary: "Availability error budget is burning 14.4x too fast"
           description: "At this rate the 99.5% monthly budget is exhausted in ~2 days."
-          runbook_url: "docs/SLOS.md"
 
       - alert: DevsecAvailabilityBudgetBurnSlow
         expr: |
@@ -54,7 +53,6 @@ groups:
           severity: warning
         annotations:
           summary: "Availability error budget is burning 6x too fast"
-          runbook_url: "docs/SLOS.md"
 
       - alert: DevsecLatencyBudgetBurnFast
         expr: |
@@ -66,4 +64,3 @@ groups:
           severity: warning
         annotations:
           summary: "p95 latency budget is burning too fast"
-          runbook_url: "docs/SLOS.md"

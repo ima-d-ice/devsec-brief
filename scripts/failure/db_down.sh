@@ -2,7 +2,7 @@
 set -euo pipefail
 
 API="${API_URL:-http://127.0.0.1:8000}"
-OUT="${OUT:-docs/evidence/db-down.txt}"
+OUT="${OUT:-evidence/db-down.txt}"
 mkdir -p "$(dirname "$OUT")"
 
 log() { printf '%s %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$*" | tee -a "$OUT"; }

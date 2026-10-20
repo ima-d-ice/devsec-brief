@@ -9,7 +9,7 @@ Run from the repository root with the base stack up:
 docker compose up -d
 ```
 
-Then pick a drill. Record the output in `docs/evidence/` before writing the
+Then pick a drill. Record the output in `evidence/` before writing the
 postmortem.
 
 | Script | What it breaks | Expected behavior |
