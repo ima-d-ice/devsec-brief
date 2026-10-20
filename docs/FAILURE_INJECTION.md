@@ -7,6 +7,10 @@ multi-node, multi-replica, or cloud failover behavior.
 
 ## Matrix
 
+Drills 9–11 cover recovery and scale, not only failure. Backup/restore is
+logical and manual; standby promotion is manual; the second API replica shares
+Postgres state but not per-process Groq/rate-limit state.
+
 | Drill | Command | Expected | Observed | Result |
 |---|---|---|---|---|
 | DB down | `bash scripts/failure/db_down.sh` | live 200, ready 503, ask 503, ready recovers | live 200, ready 503, ask 503 in 13s, ready 200 ~6s after start | **PASS** |
@@ -149,6 +153,40 @@ Evidence: [`evidence/ingestion-restart.txt`](evidence/ingestion-restart.txt)
   scrapes job `devsec-refresh`. Before this change, the API process exported an
   unset `0` gauge and the freshness alert would have been misleading.
 
+## Drill 9: Backup and restore
+
+A custom-format logical dump was taken from the live Postgres container, then
+restored into a new scratch database:
+
+```bash
+./scripts/backup/pg_backup.sh
+./scripts/backup/verify_restore.sh data/backups/<file>.dump
+```
+
+Measured: 16,077,010-byte dump; restore **7s**; row counts matched for
+`articles` (522), `article_chunks` (3043), `parent_docs` (1017),
+`semantic_cache` (23), `chat_messages` (164), ingestion runs/feed runs, and
+`schema_migrations`; pgvector present. See
+[`evidence/backup-restore.txt`](evidence/backup-restore.txt).
+
+## Drill 10: Two-replica API routing
+
+A second API process and nginx round-robin proxy were started with
+`docker-compose.scale.yml`. Twenty-one health requests were distributed 14/7
+across both upstreams; REST and SSE through the proxy returned 200. Memory was
+1.05 GiB + 1.68 GiB for the API replicas. Per-process rate limits, Groq key
+state, and circuit breakers remain a documented limitation. See
+[`evidence/multi-replica.txt`](evidence/multi-replica.txt).
+
+## Drill 11: Manual Postgres standby promotion
+
+A streaming standby was initialized with `pg_basebackup`, caught up to
+`sent_lsn = replay_lsn = 0/B000060`, then promoted with `pg_promote()` while
+the primary and API were stopped. A new API pointed at the promoted node
+returned readiness 200 and a real `/ask` returned 200, 3 sources, 432 chars,
+model `qwen/qwen3.8-27b`, in 2s. This validates manual promotion, not automatic
+failover or fencing. See [`evidence/db-failover.txt`](evidence/db-failover.txt).
+
 ## Alerting defects found and corrected during drills
 
 1. **SSE disconnect metric did not count generator-close disconnects.** Fixed
@@ -172,10 +210,10 @@ Evidence: [`evidence/ingestion-restart.txt`](evidence/ingestion-restart.txt)
 
 ## Not executed
 
-- Backup and restore. No restore has been performed in this build.
+- Automatic Postgres failover, quorum, fencing, or split-brain recovery.
 - Real Groq provider outage or rate-limit storm. The timeout drill uses a
-  deterministic mock.
-- Postgres primary failover, node loss, or multi-replica API failure.
+  deterministic mock; one real-provider success is recorded separately.
+- A multi-host replica failure or node loss.
 - Long-running soak with production query cardinality.
 - A full idle-period validation of the SLO burn guard after the threshold change.
 

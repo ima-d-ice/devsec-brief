@@ -96,6 +96,12 @@ jobs:
       - name: Validate load-test profile
         run: docker compose --profile loadtest config -q
 
+      - name: Validate scale overlay
+        run: docker compose -f docker-compose.yml -f docker-compose.scale.yml --profile scale config -q
+
+      - name: Validate replication overlay
+        run: docker compose -f docker-compose.yml -f docker-compose.replication.yml --profile replication config -q
+
   security:
     name: Secret & Dependency Scan
     runs-on: ubuntu-latest

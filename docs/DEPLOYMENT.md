@@ -75,29 +75,31 @@ migrations against production data.
 
 ## Backup and restore
 
-Backup:
+Use the scripts so the archive is timestamped, checksummed, and always restored
+into a new database:
 
 ```bash
-docker compose exec -T postgres pg_dump -U devsec -d devsec -Fc > devsec.dump
+./scripts/backup/pg_backup.sh
+./scripts/backup/verify_restore.sh data/backups/<file>.dump
 ```
 
-Restore into a fresh database:
-
-```bash
-docker compose exec -T postgres createdb -U devsec devsec_restore
-docker compose exec -T postgres pg_restore -U devsec -d devsec_restore < devsec.dump
-```
-
-**Not yet verified in this build.** A backup is not considered valid until a
-restore has been executed and application queries have been tested against the
-restored database. Add the measured restore time to the release record.
+See [`docs/RUNBOOKS/backup-restore.md`](RUNBOOKS/backup-restore.md). The restore
+drill was executed: a 16,077,010-byte dump restored in 7 seconds, all application
+table counts matched, and pgvector was present. This is logical backup/restore,
+not continuous WAL archiving or PITR.
 
 ## Scaling and availability limits
 
 - Default `UVICORN_WORKERS=1`; ONNX models are loaded per worker.
-- `container_name` is fixed, so Compose scaling would require removing those
-  names and moving key/rate-limit state to a shared store.
-- Postgres is a single primary. There is no automated failover.
+- Optional two-replica drill:
+  `docker compose -f docker-compose.yml -f docker-compose.scale.yml --profile scale up -d api2 nginx`.
+  Nginx round-robins on `:8080`; Postgres-backed cache/chat state is shared,
+  but rate limits and Groq circuit state remain per process.
+- Base service names are fixed, so arbitrary `docker compose --scale` is not
+  supported; the overlay adds a second named API service.
+- Postgres is a single primary. The optional replication overlay supports a
+  manual standby promotion; there is no automatic failover, VIP, or fencing.
+  See [`docs/RUNBOOKS/db-failover.md`](RUNBOOKS/db-failover.md).
 - The refresh worker uses a Postgres advisory lock, so duplicate refresh
   containers are safe but do not increase throughput.
 - TLS, WAF, request-size limits and authentication at the edge are deployment

@@ -1,20 +1,19 @@
 # DevSec-Brief SRE Upgrade — Live TODO
 
-Last updated: 2026-10-20 08:45 UTC
+Last updated: 2026-10-20 09:20 UTC
 Status: **hardened and locally verified; not production-proven**
 
 Legend: `[x]` done and verified · `[~]` implemented/partly verified · `[ ]` pending
 
-Progress estimate: **~97% overall** · implementation 100% of scoped work ·
-local end-to-end verification ~98% · production evidence ~85%
+Progress estimate: **~99% overall** · implementation 100% of scoped work ·
+local end-to-end verification ~99% · production evidence ~90%
 
 The remaining percentage is deployment/operability evidence, not missing
 application code:
 
-- full-history clone, image build/boot from a clone, and GitHub-hosted CI
-- backup/restore
-- multi-replica and DB failover behavior
-- real-Groq capacity and production query mix
+- full clean-image build/boot from the final clone and GitHub-hosted CI
+- automatic failover, fencing, and point-in-time recovery
+- real-Groq capacity, production query mix, and a 7-day SLO window
 
 ## Baseline
 
@@ -120,8 +119,10 @@ application code:
 - [x] Real alert fire/resolve validated
 - [x] Low-traffic/idle guard added and `promtool` validated
 - [~] 7-day SLO compliance — **not demonstrated**; no production traffic window
-- [ ] Backup/restore drill
-- [ ] Multi-replica / DB failover validation
+- [x] Backup/restore drill: dump + scratch restore, all table counts matched, 7s
+- [x] Two-replica API routing through nginx; both upstreams served traffic
+- [x] Manual standby promotion; promoted API ready and real `/ask` returned 200
+- [ ] Automatic failover / split-brain fencing
 
 ## Phase 8 — Docker / CI/CD
 
@@ -135,8 +136,9 @@ application code:
 - [x] CI: lint, unit, integration, build, security scan (written)
 - [ ] CI run on GitHub (not executed locally)
 - [x] Deployment/rollback docs
-- [x] Fresh shallow clone at `0c93848`: Compose configs valid, 33 tests passed
-- [ ] Full image build/boot from a fresh clone on a clean host
+- [x] Full-history clone: origin + local bundle, 14 commits, `git fsck` passed
+- [ ] Full clean-image build/boot from the final full clone
+- [x] Backup/restore, two-replica, and manual-failover runbooks/evidence
 
 ## Phase 9 — Docs / final verification
 
@@ -145,12 +147,13 @@ application code:
 - [x] Metrics/alerts reference (updated for refresh target and job filters)
 - [x] SLO doc (updated with measured status)
 - [x] Runbooks
-- [x] Known limitations (memory sequencing, HN 419, CPU bottleneck, no backup)
+- [x] Known limitations (memory sequencing, HN 419, CPU bottleneck, logical-backup/PITR limits)
 - [x] Security posture
 - [x] Load-test report with measured numbers
 - [x] Failure-injection report with measured drills
 - [x] Incident postmortem with real timeline
-- [x] Fresh-clone verification (shallow; config + tests)
+- [x] Full-history clone verification (config/tests pending final closure)
+- [x] Backup/restore, two-replica, and manual-failover evidence
 - [x] Final hardening commit `0c93848` on `sre/hardening`
 
 ## Live verification (2026-10-20)
@@ -192,28 +195,35 @@ application code:
   `partial` unless that feed is fixed/disabled.
 - The 3.83 GiB Docker VM cannot run all model services at once; seed/API/refresh
   and mock API must be serialized.
-- The fresh-clone gate used a shallow clone of the final branch. A full-history
-  clone was blocked by iCloud-evicted historical Git objects on this Mac; a
-  full image build/boot from a clone and GitHub CI are still unverified.
-- Backup/restore, multi-replica behavior, and real-Groq capacity are still
-  unverified.
+- The full-history clone was reconstructed from GitHub origin plus a local
+  bundle of the two local-only commits; it has 14 commits and passed `git fsck`.
+  A clean image build/boot from that clone and GitHub CI are still being
+  completed.
+- Backup/restore is manual logical dump/restore, not continuous WAL or PITR.
+  The standby drill proves manual promotion, not automatic failover or fencing.
+- Two-replica routing is verified, but rate limits, key cooldowns, and circuit
+  breakers remain per process.
+- Real-Groq sampling succeeded, but capacity and the 7-day SLO window are not
+  demonstrated.
 
 ## Remaining critical path
 
 Completed for this local milestone:
 
 - [x] Final tests and static/config checks.
-- [x] Fresh shallow clone validates Compose and the 33-test suite.
-- [x] Hardening work committed on `sre/hardening` at `0c93848`; evidence and
-      TODO closure committed separately.
+- [x] Full-history clone reconstructed from origin + local bundle.
+- [x] Backup/restore drill and scratch-database validation.
+- [x] Two-replica nginx routing and manual standby promotion.
+- [x] Hardening work committed on `sre/hardening`; evidence and TODO closure
+      committed separately.
 - [x] Final tree and unrelated frontend changes preserved.
 
 Production gates still open:
 
-- [ ] Backup/restore drill.
-- [ ] Multi-replica / DB failover validation.
-- [ ] Real-Groq capacity and production query mix.
+- [ ] Full clean-image build/boot from the final full clone.
 - [ ] GitHub-hosted CI run.
-- [ ] Full-history clone and full image build/boot from a clean host.
+- [ ] Automatic failover, fencing, continuous WAL/PITR.
+- [ ] Real-Groq capacity, production query mix, 7-day SLO window.
+- [ ] Off-host backup copy and retention automation.
 
 No hard blocker for the local milestone.

@@ -1,0 +1,19 @@
+# Backup and restore drill
+captured_at=2026-10-20T09:03:47Z
+backup_file=data/backups/devsec-20261020T090347Z.dump
+backup_bytes=16077010
+backup_sha256=fd679e0e24d356687d3a9c8ebe18b5c0c12095d4d79654274dca88e695a7ad46
+restore_target=devsec_restore_check
+restore_elapsed_s=7
+articles=522
+article_chunks=3043
+parent_docs=1017
+semantic_cache=23
+chat_messages=164
+ingestion_runs=6
+ingestion_feed_runs=30
+schema_migrations=2
+vector_extension=vector
+row_counts_match=yes
+RESULT=PASS
+note=Manual logical dump/restore; not continuous WAL archiving. RPO is the age of the newest dump. The restore target was a new database; the live database was not overwritten.

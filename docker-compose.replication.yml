@@ -1,0 +1,40 @@
+# Optional local primary/standby drill. This is NOT an automatic HA solution:
+# promotion is manual and there is no failover controller or VIP.
+#
+#   ./scripts/replication/setup-primary.sh
+#   docker compose -f docker-compose.yml -f docker-compose.replication.yml \
+#     --profile replication up -d postgres-standby
+#
+# The standby is read-only and only usable as a recovery target after
+# pg_ctl promote. The base stack remains single-primary.
+services:
+  postgres:
+    volumes:
+      - ./scripts/replication:/replication:ro
+
+  postgres-standby:
+    image: pgvector/pgvector:pg16
+    container_name: devsec_postgres_standby
+    profiles: ["replication"]
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-devsec}
+      POSTGRES_DB: ${POSTGRES_DB:-devsec}
+    volumes:
+      - pgstandby:/var/lib/postgresql/data
+      - ./scripts/replication/standby-entrypoint.sh:/usr/local/bin/standby-entrypoint.sh:ro
+    entrypoint: ["/bin/bash", "/usr/local/bin/standby-entrypoint.sh"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-devsec} -d ${POSTGRES_DB:-devsec}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    restart: "no"
+    mem_limit: 1g
+    cpus: 2.0
+
+volumes:
+  pgstandby:

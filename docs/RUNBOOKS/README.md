@@ -4,6 +4,9 @@ Each runbook is written for an on-call engineer who did not build the service.
 
 - [API down](api-down.md)
 - [Database down](database-down.md)
+- [Database standby and manual failover](db-failover.md)
+- [Backup and restore](backup-restore.md)
+- [Two-replica API](multi-replica.md)
 - [Groq outage](groq-outage.md)
 - [Ingestion stale](ingestion-stale.md)
 - [High latency](high-latency.md)

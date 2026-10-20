@@ -66,8 +66,14 @@ The baseline gaps above have since been closed locally:
 - Failure drills passed for DB down/slow, Groq timeout, feed isolation, SSE
   disconnect, API restart, and `DevsecPostgresDown` fire/resolve.
 - Both Grafana dashboards are provisioned and query the live Prometheus target.
+- Backup/restore into a scratch database matched every application table count;
+  restore took 7s.
+- Two API replicas served traffic through nginx; both upstreams received
+  requests and REST/SSE returned 200.
+- A streaming standby was promoted manually; the API pointed at it became
+  ready and a real `/ask` returned 200 with 3 sources.
+- A full-history clone (origin plus local commits) passed `git fsck`.
 
-A fresh shallow clone of the final branch validated both Compose configs and
-passed all 33 tests. Still not verified: a full image build/boot from a fresh
-clone on a clean host, backup/restore, multi-replica behavior, real-Groq
-capacity, and GitHub CI.
+Still not verified: a clean image build/boot from the final clone, automatic
+failover/fencing, continuous WAL/PITR, real-Groq capacity, a 7-day SLO window,
+and GitHub-hosted CI.

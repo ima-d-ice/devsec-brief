@@ -4,13 +4,15 @@ This is a deliberate, honest list. None of these are hidden by the README.
 
 ## Reliability
 
-- Postgres is a single primary; there is no automatic failover.
+- Postgres is a single primary; there is no automatic failover. The optional
+  replication overlay supports manual standby promotion only.
 - Compose restarts crashed containers, but there is no orchestrator-level
   rescheduling or node failure handling.
 - The API starts even when Postgres is down (by design) and reports not-ready;
   `depends_on` only gates initial startup, not later outages.
 - Groq key state, cooldowns and the optional rate limiter are per process.
-  Multiple API replicas would over-admit requests.
+  The optional two-replica overlay shares Postgres cache/chat state, but cannot
+  enforce a global admission limit without shared state.
 - The circuit breaker is per process; a restart resets it.
 - SSE producer threads are daemon threads. A hard disconnect can leave a
   blocked upstream read until the client timeout; the request no longer holds
@@ -32,7 +34,9 @@ This is a deliberate, honest list. None of these are hidden by the README.
   upstream removals beyond optional chunk pruning.
 - The semantic cache has a TTL but no explicit invalidation when an article
   changes. Cache entries can outlive source updates until expiry.
-- No backup/restore has been executed in this build yet.
+- Backups are manual logical `pg_dump` archives; there is no continuous WAL
+  archiving, off-host copy, or point-in-time recovery. A restore was executed
+  into a scratch database and row counts matched. RPO is the newest dump age.
 - No data retention policy for chat history or cache.
 - Chat history persistence is completed-only; interrupted streams do not save a
   partial answer.
@@ -75,8 +79,8 @@ This is a deliberate, honest list. None of these are hidden by the README.
 
 The Compose stack has been booted and the API, migrations, scrape targets,
 Grafana, Alertmanager, ingestion path, real `/ask`/SSE path, load runs, failure
-drills, and alert fire/resolve have been exercised. A fresh **shallow** clone of
-the final branch validated both Compose configurations and passed all 33 tests.
-A full-history clone from a normal host, a full image build/boot from a clone,
-backup/restore, multi-replica behavior, real-Groq capacity, and GitHub CI remain
-unverified. This is **production-shaped, not production-proven**.
+drills, alert fire/resolve, backup/restore, two-replica routing, and a manual
+standby promotion have been exercised. A full-history clone validated both
+Compose configurations and the 33-test suite. Automatic failover, full
+point-in-time recovery, real-Groq capacity, and hosted CI remain unverified.
+This is **production-shaped, not production-proven**.
