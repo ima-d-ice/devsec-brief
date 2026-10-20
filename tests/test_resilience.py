@@ -20,10 +20,12 @@ def test_groq_total_deadline_bounds_model_fallbacks(monkeypatch):
     fake_settings = replace(
         groq_pool.settings,
         groq_total_timeout_seconds=0.2,
-        groq_backoff_base_seconds=0.01,
-        groq_max_attempts=3,
+        groq_backoff_base_seconds=0.0,
+        groq_max_attempts=100,
     )
     monkeypatch.setattr(groq_pool, "settings", fake_settings)
+    # Remove jitter so this is a deterministic deadline test.
+    monkeypatch.setattr(groq_pool.random, "uniform", lambda _a, _b: 0.0)
     monkeypatch.setattr(
         groq_pool,
         "_CIRCUIT",
@@ -43,7 +45,9 @@ def test_groq_total_deadline_bounds_model_fallbacks(monkeypatch):
     started = time.monotonic()
     with pytest.raises(UpstreamUnavailable, match="deadline"):
         pool.execute_with_fallback(slow_failure)
-    assert time.monotonic() - started < 1.0
+    elapsed = time.monotonic() - started
+    # The implementation clamps the total deadline to at least 1 second.
+    assert 1.0 <= elapsed < 2.0
 
 
 def test_groq_key_state_sets_explicit_default_base_url(monkeypatch):
