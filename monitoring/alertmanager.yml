@@ -10,5 +10,5 @@ route:
 
 receivers:
   # Local lab receiver: alerts remain visible in the Alertmanager UI.
-  # Add a Slack/webhook receiver here for paging; see docs/RUNBOOKS/README.md.
+  # Add a Slack/webhook receiver here for paging.
   - name: default

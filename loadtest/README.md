@@ -55,9 +55,9 @@ LOADTEST_WORKERS=2 ONNX_INTRA_OP_THREADS=2 \
 ```
 
 On the recorded 8-vCPU / 3.83 GiB host, two workers used 1.82 GiB and did not
-improve throughput. See [`../docs/LOAD_TEST_REPORT.md`](../docs/LOAD_TEST_REPORT.md)
-for the measured results and caveats. Stop `api-mock` before starting the real
-API or seed job; concurrent model processes can OOM the Docker VM.
+improve throughput. See the root README's Benchmarks section for the measured
+results and caveats. Stop `api-mock` before starting the real API or seed job;
+concurrent model processes can OOM the Docker VM.
 
 ## Failure modes
 

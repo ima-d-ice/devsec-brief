@@ -2,7 +2,7 @@
 set -euo pipefail
 
 PROM="${PROM_URL:-http://127.0.0.1:9090}"
-OUT="${OUT:-docs/evidence/alerts.txt}"
+OUT="${OUT:-evidence/alerts.txt}"
 mkdir -p "$(dirname "$OUT")"
 : > "$OUT"
 

@@ -1,5 +1,0 @@
-2026-10-20T07:31:06Z drill=sse_disconnect api=http://127.0.0.1:8001 active_before=0.0 disconnects_before=1.0
-2026-10-20T07:31:14Z active_after=0.0 disconnects_total=2.0
-2026-10-20T07:31:14Z stream_bytes=926
-2026-10-20T07:31:16Z mock_restored=ok
-2026-10-20T07:31:16Z RESULT=PASS (stream started, client left, disconnect counted, active gauge zero)

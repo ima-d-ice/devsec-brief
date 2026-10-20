@@ -2,7 +2,7 @@
 set -euo pipefail
 
 API="${API_URL:-http://127.0.0.1:8001}"
-OUT="${OUT:-docs/evidence/groq-timeout.txt}"
+OUT="${OUT:-evidence/groq-timeout.txt}"
 mkdir -p "$(dirname "$OUT")"
 : > "$OUT"
 

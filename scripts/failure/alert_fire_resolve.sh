@@ -3,7 +3,7 @@ set -euo pipefail
 
 PROM="${PROM_URL:-http://127.0.0.1:9090}"
 AM="${AM_URL:-http://127.0.0.1:9093}"
-OUT="${OUT:-docs/evidence/alert-fire-resolve.txt}"
+OUT="${OUT:-evidence/alert-fire-resolve.txt}"
 mkdir -p "$(dirname "$OUT")"
 : > "$OUT"
 
