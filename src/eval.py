@@ -1,6 +1,7 @@
 import argparse
 import json
 import re
+import statistics
 import time
 from pathlib import Path
 
@@ -187,8 +188,12 @@ def run_evaluation(sample_size: int = None, sleep_s: float = 2.5, resume: bool =
     avg_faithfulness = round(sum(r["scores"]["faithfulness"] for r in results) / len(results), 3)
     avg_relevancy = round(sum(r["scores"]["answer_relevancy"] for r in results) / len(results), 3)
     avg_similarity = round(sum(r["scores"]["semantic_similarity"] for r in results) / len(results), 3)
-    avg_retrieval_ms = round(sum(r["retrieval_ms"] for r in results) / len(results), 1)
-    avg_generation_ms = round(sum(r["generation_ms"] for r in results) / len(results), 1)
+    retrieval_values = [r["retrieval_ms"] for r in results]
+    generation_values = [r["generation_ms"] for r in results]
+    avg_retrieval_ms = round(statistics.fmean(retrieval_values), 1)
+    p50_retrieval_ms = round(statistics.median(retrieval_values), 1)
+    avg_generation_ms = round(statistics.fmean(generation_values), 1)
+    p50_generation_ms = round(statistics.median(generation_values), 1)
 
     summary = {
         "total_questions": len(results),
@@ -199,7 +204,9 @@ def run_evaluation(sample_size: int = None, sleep_s: float = 2.5, resume: bool =
             "answer_relevancy": avg_relevancy,
             "semantic_similarity": avg_similarity,
             "retrieval_latency_ms": avg_retrieval_ms,
+            "retrieval_p50_ms": p50_retrieval_ms,
             "generation_latency_ms": avg_generation_ms,
+            "generation_p50_ms": p50_generation_ms,
         },
         "results": results
     }
@@ -232,9 +239,9 @@ def run_evaluation(sample_size: int = None, sleep_s: float = 2.5, resume: bool =
 
 ## 2. Latency Profiling
 
-- **Average Retrieval Latency (Embedding + pgvector + RRF + Rerank)**: `{avg_retrieval_ms} ms`
-- **Average Generation Latency (Groq Key Pool)**: `{avg_generation_ms} ms`
-- **Average Total Request Latency**: `{round(avg_retrieval_ms + avg_generation_ms, 1)} ms`
+- **Retrieval Latency (mean / p50)**: `{avg_retrieval_ms} ms` / `{p50_retrieval_ms} ms`
+- **Generation Latency (mean / p50)**: `{avg_generation_ms} ms` / `{p50_generation_ms} ms`
+- **Mean Total Request Latency**: `{round(avg_retrieval_ms + avg_generation_ms, 1)} ms`
 
 ---
 
