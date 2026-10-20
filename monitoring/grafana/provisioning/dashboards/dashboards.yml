@@ -1,0 +1,12 @@
+apiVersion: 1
+
+providers:
+  - name: devsec-brief
+    orgId: 1
+    folder: DevSec Brief
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: false
+    options:
+      path: /var/lib/grafana/dashboards

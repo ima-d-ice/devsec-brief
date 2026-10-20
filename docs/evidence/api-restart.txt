@@ -1,0 +1,9 @@
+2026-10-20T08:03:17Z drill=api_restart api=http://127.0.0.1:8000
+2026-10-20T08:03:22Z restarting api
+2026-10-20T08:03:52Z samples=64 ok=33 non_200=31
+status_000=31
+status_200=33
+2026-10-20T08:03:52Z final_live_status=200
+2026-10-20T08:03:52Z final_ready_status=200
+2026-10-20T08:03:52Z final_ask_status=200
+2026-10-20T08:03:52Z RESULT=PASS (API restarted; liveness, readiness, and retrieval all recovered)

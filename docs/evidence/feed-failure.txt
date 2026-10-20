@@ -1,0 +1,26 @@
+{"ts": "2026-10-20T08:04:07.428925+00:00", "level": "warning", "service": "devsec-brief", "env": "local", "logger": "fetch_feeds", "request_id": "-", "event": "feed_retry", "feed": "drill-bad", "attempt": 1, "delay_s": 1.02}
+{"ts": "2026-10-20T08:04:07.470919+00:00", "level": "info", "service": "devsec-brief", "env": "local", "logger": "fetch_feeds", "request_id": "-", "event": "feed_fetched", "feed": "drill-good", "status": "success", "entries": 1, "inserted": 0, "updated": 0, "skipped": 1, "failed": 0, "duration_ms": 51.48}
+{"ts": "2026-10-20T08:04:08.450544+00:00", "level": "warning", "service": "devsec-brief", "env": "local", "logger": "fetch_feeds", "request_id": "-", "event": "feed_retry", "feed": "drill-bad", "attempt": 2, "delay_s": 2.06}
+[
+  {
+    "feed": "drill-good",
+    "status": "success",
+    "inserted": 0,
+    "updated": 0,
+    "skipped": 1,
+    "failed_entries": 0,
+    "error": null,
+    "duration_ms": 51.59
+  },
+  {
+    "feed": "drill-bad",
+    "status": "failed",
+    "inserted": 0,
+    "updated": 0,
+    "skipped": 0,
+    "failed_entries": 0,
+    "error": "HTTP 500",
+    "duration_ms": 3094.4
+  }
+]
+RESULT=PASS (one feed failed; healthy feed completed)

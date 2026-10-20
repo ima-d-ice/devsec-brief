@@ -1,0 +1,107 @@
+{
+  "annotations": {"list": []},
+  "editable": true,
+  "graphTooltip": 1,
+  "panels": [
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "fieldConfig": {"defaults": {"unit": "percentunit", "min": 0, "max": 1, "thresholds": {"mode": "absolute", "steps": [{"color": "red", "value": null}, {"color": "green", "value": 0.995}]}}, "overrides": []},
+      "gridPos": {"h": 6, "w": 8, "x": 0, "y": 0},
+      "id": 1,
+      "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "colorMode": "value", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "textMode": "auto"},
+      "targets": [{"expr": "sum(rate(devsec_http_requests_total{route=~\"/ask|/ask/stream\",status!~\"5xx\"}[7d])) / sum(rate(devsec_http_requests_total{route=~\"/ask|/ask/stream\"}[7d]))", "legendFormat": "availability", "refId": "A"}],
+      "title": "Availability SLI (7d) — target 99.5%",
+      "type": "stat"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "fieldConfig": {"defaults": {"unit": "percentunit", "min": 0, "max": 1, "thresholds": {"mode": "absolute", "steps": [{"color": "red", "value": null}, {"color": "yellow", "value": 0.25}, {"color": "green", "value": 0.5}]}}, "overrides": []},
+      "gridPos": {"h": 6, "w": 8, "x": 8, "y": 0},
+      "id": 2,
+      "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "colorMode": "value", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "textMode": "auto"},
+      "targets": [{"expr": "1 - ((1 - (sum(rate(devsec_http_requests_total{route=~\"/ask|/ask/stream\",status!~\"5xx\"}[7d])) / sum(rate(devsec_http_requests_total{route=~\"/ask|/ask/stream\"}[7d])))) / 0.005)", "legendFormat": "budget remaining", "refId": "A"}],
+      "title": "Error budget remaining (7d)",
+      "type": "stat"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "fieldConfig": {"defaults": {"unit": "short", "min": 0, "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "yellow", "value": 6}, {"color": "red", "value": 14.4}]}}, "overrides": []},
+      "gridPos": {"h": 6, "w": 8, "x": 16, "y": 0},
+      "id": 3,
+      "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "colorMode": "value", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "textMode": "auto"},
+      "targets": [{"expr": "devsec:slo_availability:burn_rate1h", "legendFormat": "burn rate", "refId": "A"}],
+      "title": "Availability burn rate (1h) — fast burn >14.4x",
+      "type": "stat"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "fieldConfig": {"defaults": {"unit": "s", "min": 0}, "overrides": []},
+      "gridPos": {"h": 7, "w": 12, "x": 0, "y": 6},
+      "id": 4,
+      "options": {"legend": {"displayMode": "list", "placement": "bottom"}, "tooltip": {"mode": "multi"}},
+      "targets": [{"expr": "histogram_quantile(0.95, sum by (le) (rate(devsec_http_request_duration_seconds_bucket{route=\"/ask\"}[5m])))", "legendFormat": "p95 latency", "refId": "A"}],
+      "title": "p95 latency vs 6s target",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "fieldConfig": {"defaults": {"unit": "percentunit", "min": 0, "max": 1, "thresholds": {"mode": "absolute", "steps": [{"color": "red", "value": null}, {"color": "green", "value": 0.95}]}}, "overrides": []},
+      "gridPos": {"h": 7, "w": 6, "x": 12, "y": 6},
+      "id": 5,
+      "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "colorMode": "value", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "textMode": "auto"},
+      "targets": [{"expr": "devsec:sli_latency:ratio_rate1h", "legendFormat": "under 6s", "refId": "A"}],
+      "title": "Latency SLI (1h) — target 95%",
+      "type": "stat"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "fieldConfig": {"defaults": {"unit": "s", "min": 0, "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "yellow", "value": 21600}, {"color": "red", "value": 28800}]}}, "overrides": []},
+      "gridPos": {"h": 7, "w": 6, "x": 18, "y": 6},
+      "id": 6,
+      "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "colorMode": "value", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "textMode": "auto"},
+      "targets": [{"expr": "time() - devsec_ingestion_last_success_timestamp_seconds", "legendFormat": "age", "refId": "A"}],
+      "title": "Content freshness — target <8h",
+      "type": "stat"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "fieldConfig": {"defaults": {"unit": "percentunit", "min": 0, "max": 1}, "overrides": []},
+      "gridPos": {"h": 7, "w": 8, "x": 0, "y": 13},
+      "id": 7,
+      "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "colorMode": "value", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "textMode": "auto"},
+      "targets": [{"expr": "sum(increase(devsec_ingestion_runs_total{result=\"success\"}[7d])) / clamp_min(sum(increase(devsec_ingestion_runs_total[7d])), 1)", "legendFormat": "success ratio", "refId": "A"}],
+      "title": "Ingestion success (7d)",
+      "type": "stat"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "fieldConfig": {"defaults": {"unit": "short", "min": 0}, "overrides": []},
+      "gridPos": {"h": 7, "w": 8, "x": 8, "y": 13},
+      "id": 8,
+      "options": {"legend": {"displayMode": "list", "placement": "bottom"}, "tooltip": {"mode": "multi"}},
+      "targets": [{"expr": "sum by (result) (increase(devsec_ingestion_runs_total[7d]))", "legendFormat": "{{result}}", "refId": "A"}],
+      "title": "Ingestion outcomes (7d)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "fieldConfig": {"defaults": {"unit": "short", "min": 0, "max": 1}, "overrides": []},
+      "gridPos": {"h": 7, "w": 8, "x": 16, "y": 13},
+      "id": 9,
+      "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "colorMode": "value", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "textMode": "auto"},
+      "targets": [{"expr": "devsec_ready{job=\"devsec-api\"}", "legendFormat": "ready", "refId": "A"}],
+      "title": "Readiness",
+      "type": "stat"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "style": "dark",
+  "tags": ["devsec-brief", "sre", "slo"],
+  "templating": {"list": []},
+  "time": {"from": "now-7d", "to": "now"},
+  "timezone": "browser",
+  "title": "DevSec Brief — SLOs",
+  "uid": "devsec-slo",
+  "version": 1
+}

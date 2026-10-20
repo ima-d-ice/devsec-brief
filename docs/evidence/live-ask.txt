@@ -1,0 +1,5 @@
+# Real provider smoke
+captured_at=2026-10-20T08:07:57Z
+ask_status=200 elapsed_s=4.356613 answer_chars=310 sources=3 query=What is the latest CISA ICS advisory about Schneider Electric?
+cache_warm_latencies_ms=10.250,3.844,4.280,5.451,4.387,5.052,4.703,4.317
+stream_bytes=1726 events=sources:1 token:7 metrics:1 done:1

@@ -1,0 +1,29 @@
+# Hosted CI evidence
+
+run_id=39404424151
+workflow=CI
+head_sha=7275d9a74eb39490acf8cd059503532ab9bcbabc
+conclusion=success
+url=https://github.com/ima-d-ice/devsec-brief/actions/runs/39404424151
+
+job_secret_dependency_scan=pass (18s)
+job_lint_unit=pass (2m3s)
+job_compose_config=pass (5s)
+job_database_integration=pass (2m24s)
+job_image_build_import_smoke=pass (9m55s)
+
+clean_model_download=yes (CI checkout has no local data/onnx_st)
+baked_model_assertion=pass
+api_import_smoke=pass
+runner=ubuntu-latest
+
+notes:
+- The CI image job built the model bundle from scratch, asserted both baked
+  ONNX files, and imported src.api without a database connection.
+- The local clone image additionally booted the full Compose stack and served
+  real /ask and /ask/stream requests; that is recorded in
+  full-clone-boot.txt.
+- GitGuardian (a separate GitHub App check) initially flagged the local
+  development fallback value in the optional replication overlay. It was not a
+  real credential. The fallback was removed and the branch history containing
+  it was rewritten before the final CI run.

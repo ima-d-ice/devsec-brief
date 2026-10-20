@@ -1,0 +1,6 @@
+2026-10-20T07:24:27Z drill=groq_timeout api=http://127.0.0.1:8001
+2026-10-20T07:24:59Z ask_status=503 elapsed_s=27.71
+2026-10-20T07:24:59Z body={"detail":"Answer generation temporarily unavailable"}
+2026-10-20T07:25:00Z live_status=200
+2026-10-20T07:25:01Z mock_restored=ok
+2026-10-20T07:25:01Z RESULT=PASS (liveness held; upstream failure bounded)

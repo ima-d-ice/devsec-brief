@@ -1,0 +1,19 @@
+# Backup and restore drill
+captured_at=2026-10-20T10:01:46Z
+backup_file=data/backups/devsec-20261020T100146Z.dump
+backup_bytes=16082564
+backup_sha256=2d0a6ad96d42f8bf89e3db1dafa4b08b06267188153c63af6fff624b49d21ae0
+restore_target=devsec_restore_check
+restore_elapsed_s=13
+articles=522
+article_chunks=3043
+parent_docs=1017
+semantic_cache=24
+chat_messages=164
+ingestion_runs=7
+ingestion_feed_runs=36
+schema_migrations=2
+vector_extension=vector
+row_counts_match=yes
+RESULT=PASS
+note=Manual logical dump/restore; not continuous WAL archiving. RPO is the age of the newest dump. The restore target was a new database; the live database was not overwritten. An earlier run on the same stack restored in 7s; this run took 13s while hosted CI was running.

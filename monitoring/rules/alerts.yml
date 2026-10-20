@@ -1,0 +1,168 @@
+groups:
+  - name: devsec-availability
+    rules:
+      - alert: DevsecApiDown
+        expr: up{job="devsec-api"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "DevSec Brief API is not scrapeable"
+          description: "Prometheus has failed to scrape the API for 2 minutes."
+          runbook_url: "docs/RUNBOOKS/api-down.md"
+
+      - alert: DevsecNoMetrics
+        expr: absent(devsec_http_requests_total)
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "No API metrics have been recorded"
+          description: "The process may be up but not serving requests."
+          runbook_url: "docs/RUNBOOKS/api-down.md"
+
+      - alert: DevsecNotReady
+        expr: devsec_ready{job="devsec-api"} == 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "API readiness has been false for 5 minutes"
+          description: "Check database connectivity and model loading."
+          runbook_url: "docs/RUNBOOKS/database-down.md"
+
+      - alert: DevsecHighErrorRate
+        expr: |
+          sum(rate(devsec_http_requests_total{route=~"/ask|/ask/stream",status="5xx"}[5m]))
+          /
+          clamp_min(sum(rate(devsec_http_requests_total{route=~"/ask|/ask/stream"}[5m])), 1e-9)
+          > 0.02
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "5xx error rate is above 2%"
+          description: "More than 2% of responses have failed for 10 minutes."
+          runbook_url: "docs/RUNBOOKS/high-latency.md"
+
+      - alert: DevsecLatencyP95High
+        expr: |
+          histogram_quantile(
+            0.95,
+            sum by (le) (rate(devsec_http_request_duration_seconds_bucket{route="/ask"}[5m]))
+          ) > 6
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "p95 API latency is above 6 seconds"
+          description: "Inspect retrieval stage latency and database saturation."
+          runbook_url: "docs/RUNBOOKS/high-latency.md"
+
+  - name: devsec-database
+    rules:
+      - alert: DevsecDbPoolSaturated
+        expr: devsec_db_pool_in_use >= 8
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Database pool is near its maximum"
+          description: "8 or more of 10 connections are checked out."
+          runbook_url: "docs/RUNBOOKS/database-down.md"
+
+      - alert: DevsecDbConnectionFailures
+        expr: increase(devsec_db_connection_failures_total[5m]) > 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "The API failed to acquire a database connection"
+          description: "Requests are likely returning 503."
+          runbook_url: "docs/RUNBOOKS/database-down.md"
+
+      - alert: DevsecPostgresDown
+        expr: pg_up == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "PostgreSQL exporter reports the database is down"
+          runbook_url: "docs/RUNBOOKS/database-down.md"
+
+  - name: devsec-ingestion
+    rules:
+      - alert: DevsecIngestionStale
+        expr: time() - max(devsec_ingestion_last_success_timestamp_seconds{job="devsec-refresh"}) > 8 * 3600
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "RSS ingestion has produced no successful or partial run for over 8 hours"
+          description: "The API may be healthy while content is going stale. Partial runs (at least one feed succeeded) also refresh the timestamp."
+          runbook_url: "docs/RUNBOOKS/ingestion-stale.md"
+
+      - alert: DevsecIngestionFailed
+        expr: increase(devsec_ingestion_runs_total{job="devsec-refresh",result="failed"}[2h]) > 0
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "An ingestion run failed"
+          description: "Check feed errors and database connectivity."
+          runbook_url: "docs/RUNBOOKS/ingestion-stale.md"
+
+      - alert: DevsecIngestionNoSuccessMetric
+        expr: absent(devsec_ingestion_last_success_timestamp_seconds{job="devsec-refresh"})
+        for: 30m
+        labels:
+          severity: warning
+        annotations:
+          summary: "No successful ingestion timestamp is available"
+          runbook_url: "docs/RUNBOOKS/ingestion-stale.md"
+
+  - name: devsec-upstream
+    rules:
+      - alert: DevsecGroqRateLimited
+        expr: |
+          sum(rate(devsec_groq_requests_total{outcome="rate_limit"}[5m]))
+          /
+          clamp_min(sum(rate(devsec_groq_requests_total[5m])), 1e-9)
+          > 0.20
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "More than 20% of Groq calls are rate-limited"
+          description: "Key pool or model fallback is under pressure."
+          runbook_url: "docs/RUNBOOKS/groq-outage.md"
+
+      - alert: DevsecGroqCircuitOpen
+        expr: devsec_groq_circuit_state == 2
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Groq circuit breaker is open"
+          description: "Generation is failing fast to protect the service."
+          runbook_url: "docs/RUNBOOKS/groq-outage.md"
+
+      - alert: DevsecSseDisconnects
+        expr: increase(devsec_sse_disconnects_total[10m]) > 10
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Elevated SSE client disconnects"
+          description: "Check proxy idle timeouts and stream duration."
+          runbook_url: "docs/RUNBOOKS/high-latency.md"
+
+  - name: devsec-meta
+    rules:
+      - alert: Watchdog
+        expr: vector(1)
+        labels:
+          severity: none
+        annotations:
+          summary: "Alerting pipeline watchdog"
+          description: "This alert should always fire; if it stops, alerting is broken."

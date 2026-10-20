@@ -1,0 +1,14 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: default
+  group_by: ["alertname", "severity"]
+  group_wait: 10s
+  group_interval: 5m
+  repeat_interval: 4h
+
+receivers:
+  # Local lab receiver: alerts remain visible in the Alertmanager UI.
+  # Add a Slack/webhook receiver here for paging; see docs/RUNBOOKS/README.md.
+  - name: default

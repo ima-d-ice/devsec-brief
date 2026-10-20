@@ -1,0 +1,69 @@
+groups:
+  - name: devsec-slo
+    interval: 30s
+    rules:
+      - record: devsec:sli_availability:ratio_rate5m
+        expr: |
+          sum(rate(devsec_http_requests_total{route=~"/ask|/ask/stream",status!~"5xx"}[5m]))
+          /
+          sum(rate(devsec_http_requests_total{route=~"/ask|/ask/stream"}[5m]))
+
+      - record: devsec:sli_availability:ratio_rate1h
+        expr: |
+          sum(rate(devsec_http_requests_total{route=~"/ask|/ask/stream",status!~"5xx"}[1h]))
+          /
+          sum(rate(devsec_http_requests_total{route=~"/ask|/ask/stream"}[1h]))
+
+      - record: devsec:slo_availability:burn_rate1h
+        expr: (1 - devsec:sli_availability:ratio_rate1h) / 0.005
+
+      - record: devsec:slo_availability:error_budget_remaining
+        expr: 1 - ((1 - devsec:sli_availability:ratio_rate1h) / 0.005)
+
+      - record: devsec:sli_latency:ratio_rate1h
+        expr: |
+          sum(rate(devsec_http_request_duration_seconds_bucket{route="/ask",le="6"}[1h]))
+          /
+          sum(rate(devsec_http_request_duration_seconds_count{route="/ask"}[1h]))
+
+      - record: devsec:slo_latency:burn_rate1h
+        expr: (1 - devsec:sli_latency:ratio_rate1h) / 0.05
+
+      # A zero-traffic window is not an outage. Without the guard, 0/0 becomes
+      # 0% availability and the burn-rate alert fires during idle periods.
+      - alert: DevsecAvailabilityBudgetBurnFast
+        expr: |
+          devsec:slo_availability:burn_rate1h > 14.4
+          and
+          sum(increase(devsec_http_requests_total{route=~"/ask|/ask/stream"}[1h])) >= 20
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Availability error budget is burning 14.4x too fast"
+          description: "At this rate the 99.5% monthly budget is exhausted in ~2 days."
+          runbook_url: "docs/SLOS.md"
+
+      - alert: DevsecAvailabilityBudgetBurnSlow
+        expr: |
+          devsec:slo_availability:burn_rate1h > 6
+          and
+          sum(increase(devsec_http_requests_total{route=~"/ask|/ask/stream"}[1h])) >= 20
+        for: 30m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Availability error budget is burning 6x too fast"
+          runbook_url: "docs/SLOS.md"
+
+      - alert: DevsecLatencyBudgetBurnFast
+        expr: |
+          devsec:slo_latency:burn_rate1h > 14.4
+          and
+          sum(increase(devsec_http_request_duration_seconds_count{route="/ask"}[1h])) >= 20
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "p95 latency budget is burning too fast"
+          runbook_url: "docs/SLOS.md"

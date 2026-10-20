@@ -1,0 +1,4 @@
+devsec-api up
+devsec-refresh up
+postgres up
+prometheus up

@@ -1,0 +1,186 @@
+ Image grafana/k6:0.54.0 Pulling
+ cf04c63912e1 Already exists 0B
+ f2fc57ab4a3d Pulling fs layer 0B
+ 35dae20296e8 Pulling fs layer 0B
+ 4f4fb700ef54 Pulling fs layer 0B
+ 35dae20296e8 Downloading 292kB
+ f2fc57ab4a3d Downloading 933B
+ f2fc57ab4a3d Verifying Checksum 0B
+ 4f4fb700ef54 Verifying Checksum 0B
+ f2fc57ab4a3d Download complete 0B
+ 4f4fb700ef54 Download complete 0B
+ f2fc57ab4a3d Extracting 933B
+ f2fc57ab4a3d Extracting 933B
+ f2fc57ab4a3d Pull complete 0B
+ 35dae20296e8 Downloading 588.5kB
+ 35dae20296e8 Downloading 1.765MB
+ 35dae20296e8 Downloading 3.546MB
+ 35dae20296e8 Downloading 5.007MB
+ 35dae20296e8 Downloading 5.896MB
+ 35dae20296e8 Downloading 6.486MB
+ 35dae20296e8 Downloading 7.659MB
+ 35dae20296e8 Downloading 9.138MB
+ 35dae20296e8 Downloading 10.91MB
+ 35dae20296e8 Downloading 12.37MB
+ 35dae20296e8 Downloading 13.84MB
+ 35dae20296e8 Downloading 15.02MB
+ 35dae20296e8 Downloading 16.18MB
+ 35dae20296e8 Downloading 17.94MB
+ 35dae20296e8 Downloading 19.41MB
+ 35dae20296e8 Downloading 20.29MB
+ 35dae20296e8 Downloading 20.86MB
+ 35dae20296e8 Downloading 21.74MB
+ 35dae20296e8 Downloading 23.19MB
+ 35dae20296e8 Downloading 24.37MB
+ 35dae20296e8 Downloading 25.54MB
+ 35dae20296e8 Downloading 27MB
+ 35dae20296e8 Verifying Checksum 0B
+ 35dae20296e8 Download complete 0B
+ 35dae20296e8 Extracting 294.9kB
+ 35dae20296e8 Extracting 2.949MB
+ 35dae20296e8 Extracting 5.014MB
+ 35dae20296e8 Extracting 7.668MB
+ 35dae20296e8 Extracting 10.03MB
+ 35dae20296e8 Extracting 14.16MB
+ 35dae20296e8 Extracting 27.13MB
+ 35dae20296e8 Extracting 28.55MB
+ 35dae20296e8 Pull complete 0B
+ 4f4fb700ef54 Extracting 32B
+ 4f4fb700ef54 Extracting 32B
+ 4f4fb700ef54 Pull complete 0B
+ Image grafana/k6:0.54.0 Pulled
+ Container devsec-brief-k6-run-33d3387c8d88 Creating
+ Container devsec-brief-k6-run-33d3387c8d88 Created
+
+         /\      Grafana   /‾‾/
+    /\  /  \     |\  __   /  /
+   /  \/    \    | |/ /  /   ‾‾\
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/
+
+     execution: local
+        script: /scripts/smoke.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 1 max VUs, 10m30s max duration (incl. graceful stop):
+              * default: 3 iterations shared among 1 VUs (maxDuration: 10m0s, gracefulStop: 30s)
+
+
+running (00m01.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+default   [   0% ] 1 VUs  00m01.0s/10m0s  0/3 shared iters
+
+running (00m02.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+default   [   0% ] 1 VUs  00m02.0s/10m0s  0/3 shared iters
+
+running (00m03.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+default   [   0% ] 1 VUs  00m03.0s/10m0s  0/3 shared iters
+
+running (00m04.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+default   [   0% ] 1 VUs  00m04.0s/10m0s  0/3 shared iters
+
+running (00m05.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+default   [   0% ] 1 VUs  00m05.0s/10m0s  0/3 shared iters
+
+running (00m06.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+default   [   0% ] 1 VUs  00m06.0s/10m0s  0/3 shared iters
+
+running (00m07.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+default   [   0% ] 1 VUs  00m07.0s/10m0s  0/3 shared iters
+
+running (00m08.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+default   [   0% ] 1 VUs  00m08.0s/10m0s  0/3 shared iters
+
+running (00m09.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+default   [   0% ] 1 VUs  00m09.0s/10m0s  0/3 shared iters
+
+running (00m10.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+default   [   0% ] 1 VUs  00m10.0s/10m0s  0/3 shared iters
+
+running (00m11.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+default   [   0% ] 1 VUs  00m11.0s/10m0s  0/3 shared iters
+
+running (00m12.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+default   [   0% ] 1 VUs  00m12.0s/10m0s  0/3 shared iters
+
+running (00m13.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+default   [   0% ] 1 VUs  00m13.0s/10m0s  0/3 shared iters
+
+running (00m14.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+default   [   0% ] 1 VUs  00m14.0s/10m0s  0/3 shared iters
+
+running (00m15.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+default   [   0% ] 1 VUs  00m15.0s/10m0s  0/3 shared iters
+
+running (00m16.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+default   [   0% ] 1 VUs  00m16.0s/10m0s  0/3 shared iters
+
+running (00m17.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+default   [   0% ] 1 VUs  00m17.0s/10m0s  0/3 shared iters
+
+running (00m18.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+default   [   0% ] 1 VUs  00m18.0s/10m0s  0/3 shared iters
+
+running (00m19.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+default   [   0% ] 1 VUs  00m19.0s/10m0s  0/3 shared iters
+
+running (00m20.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+default   [   0% ] 1 VUs  00m20.0s/10m0s  0/3 shared iters
+
+running (00m21.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+default   [   0% ] 1 VUs  00m21.0s/10m0s  0/3 shared iters
+
+running (00m22.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+default   [   0% ] 1 VUs  00m22.0s/10m0s  0/3 shared iters
+
+running (00m23.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+default   [   0% ] 1 VUs  00m23.0s/10m0s  0/3 shared iters
+
+running (00m24.0s), 1/1 VUs, 1 complete and 0 interrupted iterations
+default   [  33% ] 1 VUs  00m24.0s/10m0s  1/3 shared iters
+
+running (00m25.0s), 1/1 VUs, 1 complete and 0 interrupted iterations
+default   [  33% ] 1 VUs  00m25.0s/10m0s  1/3 shared iters
+
+running (00m26.0s), 1/1 VUs, 1 complete and 0 interrupted iterations
+default   [  33% ] 1 VUs  00m26.0s/10m0s  1/3 shared iters
+
+running (00m27.0s), 1/1 VUs, 1 complete and 0 interrupted iterations
+default   [  33% ] 1 VUs  00m27.0s/10m0s  1/3 shared iters
+
+running (00m28.0s), 1/1 VUs, 2 complete and 0 interrupted iterations
+default   [  67% ] 1 VUs  00m28.0s/10m0s  2/3 shared iters
+
+running (00m29.0s), 1/1 VUs, 2 complete and 0 interrupted iterations
+default   [  67% ] 1 VUs  00m29.0s/10m0s  2/3 shared iters
+
+     ✓ live: status is 2xx
+     ✓ ready: status is 2xx
+     ✓ ask: status is 2xx
+     ✓ ask: answer present
+     ✓ stream: status is 2xx
+     ✓ stream: sources event
+     ✓ stream: done event
+
+     checks.........................: 100.00% 21 out of 21
+     data_received..................: 11 kB   378 B/s
+     data_sent......................: 1.8 kB  60 B/s
+     http_req_blocked...............: avg=411.37µs min=5.58µs   med=22.5µs   max=4.52ms   p(90)=150.82µs p(95)=2.12ms
+     http_req_connecting............: avg=76.32µs  min=0s       med=0s       max=915.91µs p(90)=0s       p(95)=412.16µs
+     http_req_duration..............: avg=2.35s    min=3.61ms   med=491.18ms max=19.31s   p(90)=3.14s    p(95)=10.48s
+     ✓ { endpoint:ask }.............: avg=7.19s    min=798.85ms med=1.47s    max=19.31s   p(90)=15.74s   p(95)=17.53s
+     ✓ { endpoint:stream }..........: avg=2.12s    min=995.93ms med=2.13s    max=3.25s    p(90)=3.02s    p(95)=3.14s
+       { expected_response:true }...: avg=2.35s    min=3.61ms   med=491.18ms max=19.31s   p(90)=3.14s    p(95)=10.48s
+   ✓ http_req_failed................: 0.00%   0 out of 12
+     http_req_receiving.............: avg=19.47ms  min=178.12µs med=3.26ms   max=76.84ms  p(90)=73.04ms  p(95)=76.39ms
+     http_req_sending...............: avg=243.8µs  min=22.41µs  med=145.7µs  max=764.62µs p(90)=590.18µs p(95)=671.03µs
+     http_req_tls_handshaking.......: avg=0s       min=0s       med=0s       max=0s       p(90)=0s       p(95)=0s
+     http_req_waiting...............: avg=2.33s    min=3.16ms   med=489.81ms max=19.3s    p(90)=3.09s    p(95)=10.45s
+     http_reqs......................: 12      0.402285/s
+     iteration_duration.............: avg=9.93s    min=2.31s    med=4.33s    max=23.15s   p(90)=19.39s   p(95)=21.27s
+     iterations.....................: 3       0.100571/s
+     vus............................: 1       min=1        max=1
+     vus_max........................: 1       min=1        max=1
+
+
+running (00m29.8s), 0/1 VUs, 3 complete and 0 interrupted iterations
+default ✓ [ 100% ] 1 VUs  00m29.8s/10m0s  3/3 shared iters
