@@ -111,10 +111,18 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Assert example environment file has no real secrets
+        run: |
+          if grep -E '^(GROQ_API_KEY(_[0-9]+)?|HF_TOKEN|GEMINI_API_KEY)=.+' .env.example; then
+            echo "Sensitive .env.example entries must remain empty placeholders." >&2
+            exit 1
+          fi
+
       - name: Gitleaks
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_CONFIG: .gitleaks.toml
 
       - name: Trivy filesystem scan
         uses: aquasecurity/trivy-action@v0.36.0

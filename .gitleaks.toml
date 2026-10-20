@@ -1,0 +1,11 @@
+title = "DevSec-Brief gitleaks policy"
+
+[extend]
+useDefault = true
+
+# `.env.example` is intentionally placeholder-only. The security job asserts
+# that sensitive keys in this file remain empty, so this allowlist cannot hide
+# a real credential added later.
+[allowlist]
+description = "Placeholder-only example environment file"
+paths = ['''(^|/)\.env\.example$''']
