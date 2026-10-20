@@ -81,6 +81,7 @@ The Compose stack has been booted and the API, migrations, scrape targets,
 Grafana, Alertmanager, ingestion path, real `/ask`/SSE path, load runs, failure
 drills, alert fire/resolve, backup/restore, two-replica routing, and a manual
 standby promotion have been exercised. A full-history clone validated both
-Compose configurations and the 33-test suite. Automatic failover, full
-point-in-time recovery, real-Groq capacity, and hosted CI remain unverified.
-This is **production-shaped, not production-proven**.
+Compose configurations and the 33-test suite. Hosted CI passes the same tests,
+security/config checks, and a clean-download image build with an import smoke.
+Automatic failover, full point-in-time recovery, and real-Groq capacity remain
+unverified. This is **production-shaped, not production-proven**.

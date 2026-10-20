@@ -1,6 +1,6 @@
 # DevSec-Brief SRE Upgrade — Live TODO
 
-Last updated: 2026-10-20 09:20 UTC
+Last updated: 2026-10-20 10:25 UTC
 Status: **hardened and locally verified; not production-proven**
 
 Legend: `[x]` done and verified · `[~]` implemented/partly verified · `[ ]` pending
@@ -11,9 +11,9 @@ local end-to-end verification ~99% · production evidence ~90%
 The remaining percentage is deployment/operability evidence, not missing
 application code:
 
-- full clean-image build/boot from the final clone and GitHub-hosted CI
 - automatic failover, fencing, and point-in-time recovery
 - real-Groq capacity, production query mix, and a 7-day SLO window
+- off-host backup copy and retention automation
 
 ## Baseline
 
@@ -133,11 +133,13 @@ application code:
 - [x] Healthchecks/restart policies/resource limits; refresh healthcheck disabled
 - [x] Mock Groq / load-test profiles
 - [x] Compose and loadtest profile config validate
-- [x] CI: lint, unit, integration, build, security scan (written)
-- [ ] CI run on GitHub (not executed locally)
+- [x] CI workflow: lint/unit, integration, security, Compose checks pass on GitHub (run 39404424151)
+- [x] CI clean-download image build: pass in 9m55s
+- [x] CI security: Gitleaks allowlist for empty `.env.example`; documented Trivy exceptions
 - [x] Deployment/rollback docs
-- [x] Full-history clone: origin + local bundle, 14 commits, `git fsck` passed
-- [ ] Full clean-image build/boot from the final full clone
+- [x] Full-history clone: origin + local bundle, 19 commits, `git fsck` passed
+- [x] Image built and booted from the full clone with supplied ONNX artifacts
+- [x] Clean-download model build: hosted CI pass
 - [x] Backup/restore, two-replica, and manual-failover runbooks/evidence
 
 ## Phase 9 — Docs / final verification
@@ -152,7 +154,7 @@ application code:
 - [x] Load-test report with measured numbers
 - [x] Failure-injection report with measured drills
 - [x] Incident postmortem with real timeline
-- [x] Full-history clone verification (config/tests pending final closure)
+- [x] Full-history clone verification: 19 commits, config + 33 tests passed
 - [x] Backup/restore, two-replica, and manual-failover evidence
 - [x] Final hardening commit `0c93848` on `sre/hardening`
 
@@ -196,9 +198,10 @@ application code:
 - The 3.83 GiB Docker VM cannot run all model services at once; seed/API/refresh
   and mock API must be serialized.
 - The full-history clone was reconstructed from GitHub origin plus a local
-  bundle of the two local-only commits; it has 14 commits and passed `git fsck`.
-  A clean image build/boot from that clone and GitHub CI are still being
-  completed.
+  bundle of the local-only commits; it has 19 commits and passed `git fsck`.
+  The image was built and booted from that clone with local ONNX artifacts.
+  Hosted CI then built the same image from a clean checkout, downloading the
+  ONNX models, and passed the import smoke.
 - Backup/restore is manual logical dump/restore, not continuous WAL or PITR.
   The standby drill proves manual promotion, not automatic failover or fencing.
 - Two-replica routing is verified, but rate limits, key cooldowns, and circuit
@@ -218,10 +221,13 @@ Completed for this local milestone:
       committed separately.
 - [x] Final tree and unrelated frontend changes preserved.
 
+Closed for this milestone:
+
+- [x] Clean-download image build from the hosted CI clone.
+- [x] GitHub-hosted CI workflow run (all five jobs pass).
+
 Production gates still open:
 
-- [ ] Full clean-image build/boot from the final full clone.
-- [ ] GitHub-hosted CI run.
 - [ ] Automatic failover, fencing, continuous WAL/PITR.
 - [ ] Real-Groq capacity, production query mix, 7-day SLO window.
 - [ ] Off-host backup copy and retention automation.

@@ -7,10 +7,12 @@ Compose deployment.
 > **Status: hardened and locally verified; not production-proven.**
 > The Compose stack, real provider path, 33-test suite, load tests, failure
 > drills, alert fire/resolve, backup/restore, two-replica routing, and manual
-> standby promotion have been exercised on one host. The service is still a
-> single-primary, single-host deployment with mock-upstream capacity numbers;
-> automatic failover, real-Groq capacity, and hosted CI are not established.
-> See [`TODO.md`](TODO.md) and the measured reports:
+> standby promotion have been exercised on one host. Hosted CI now passes the
+> test suite, security/config checks, and a clean-download image build with an
+> import smoke test. The service is still a single-primary, single-host
+> deployment with mock-upstream capacity numbers; automatic failover and
+> real-Groq capacity are not established. See [`TODO.md`](TODO.md) and the
+> measured reports:
 > [`LOAD_TEST_REPORT.md`](docs/LOAD_TEST_REPORT.md) and
 > [`FAILURE_INJECTION.md`](docs/FAILURE_INJECTION.md).
 
@@ -100,8 +102,10 @@ snapshot, not a production capacity claim.
 | Check | Measured result |
 |---|---|
 | Test suite | **33 passed** (unit + Postgres integration) |
-| Full-history clone | 14 commits reconstructed from origin + local bundle; `git fsck` clean |
-| Backup/restore | 16.1 MB dump; all table counts matched; restore **7s** |
+| Full-history clone | 19 commits reconstructed from origin + local bundle; `git fsck` clean; **33 passed** in the clone |
+| Clean-clone image | built from the full clone; non-root UID 10001; baked models; boot ready 200; 4 scrape targets up |
+| Hosted CI | all 5 workflow jobs pass; clean-download image build **9m55s**; baked models + import smoke pass |
+| Backup/restore | 16.08 MB dump; all table counts matched; restore **7–13s** across two runs |
 | Two-replica routing | 21 health requests split across both nginx upstreams; REST + SSE 200 |
 | Standby promotion | promoted DB writable; API ready; real `/ask` **200**, 432 chars, 3 sources, 2s |
 | Real `/ask` | **200**, 4.36s, 310-character answer, 3 sources |
@@ -119,12 +123,13 @@ snapshot, not a production capacity claim.
 | Grafana | both dashboards provisioned (12 + 9 panels) and loaded |
 
 Full evidence is in [`docs/evidence/`](docs/evidence/). The full clone was
-reconstructed from GitHub origin plus a bundle of the two local-only commits
-because this Mac's iCloud had evicted historical local Git objects; a clean
-image build from that clone and GitHub CI are being completed. The load numbers
-use a deterministic mock Groq service, not real provider capacity. The
-cold-path p95 is above the 6s latency SLO target; that is a measured limitation
-on this host, not an SLO pass.
+reconstructed from GitHub origin plus a bundle of the local-only commits
+because this Mac's iCloud had evicted historical local Git objects. The image
+was built and booted from that clone, and hosted CI built the same image from a
+clean checkout while downloading the ONNX models. The load numbers use a
+deterministic mock Groq service, not real provider capacity. The cold-path p95
+is above the 6s latency SLO target; that is a measured limitation on this host,
+not an SLO pass.
 
 ## Quick start
 
@@ -221,6 +226,8 @@ logic changes, re-run the eval before citing these numbers.
 - [`docs/RUNBOOKS/multi-replica.md`](docs/RUNBOOKS/multi-replica.md) — nginx two-replica routing
 - [`scripts/failure/`](scripts/failure/) — executable drills
 - [`docs/incidents/2026-10-20-sse-disconnect-metric.md`](docs/incidents/2026-10-20-sse-disconnect-metric.md) — incident review for the disconnect-counter defect
+- [`docs/evidence/full-clone-boot.txt`](docs/evidence/full-clone-boot.txt) — full-history clone, image build, baked-model, and live boot results
+- [`docs/evidence/hosted-ci.txt`](docs/evidence/hosted-ci.txt) — GitHub-hosted CI run, clean-download build, and import smoke
 - [`docs/evidence/`](docs/evidence/) — raw k6, recovery, scale, and drill output
 
 Do not read these results as real-Groq capacity, multi-host availability, or SLO
@@ -286,7 +293,7 @@ docs/                  architecture, SLOs, runbooks, reports
 - No TLS, user identity, RBAC or WAF in this stack.
 - Semantic cache has TTL but no article-change invalidation.
 - Mock-upstream load numbers are not real-Groq benchmarks; real-provider sampling is not capacity proof.
-- GitHub-hosted CI and a full clean-clone image build remain unproven until run.
+- The optional standby is a manual-promotion drill using a trust rule on the private Docker network; it is not an automatic HA solution.
 - Hacker News still returns HTTP 419 inside Compose; ingestion is expected to report `partial` with that feed failing.
 - The 3.83 GiB Docker VM cannot run seed, API, refresh, and api-mock model processes concurrently; model-heavy jobs must be serialized.
 

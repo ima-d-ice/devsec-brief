@@ -15,6 +15,9 @@
 - Structured logs avoid request bodies, keys and query text.
 - Secrets are supplied via `.env`/environment; `.env` is gitignored and
   `.dockerignore` excludes it from the image build context.
+- The optional replication overlay does not define a password fallback; the
+  standby initializes from a base backup over the private Docker network. Set
+  credentials explicitly if adapting it for authenticated replication.
 - No schema DDL at API boot; only the migration job can change the schema.
 - Postgres is published on `127.0.0.1` only by default.
 - CI includes Gitleaks and Trivy filesystem scanning.

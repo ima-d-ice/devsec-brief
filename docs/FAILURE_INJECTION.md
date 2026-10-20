@@ -163,10 +163,10 @@ restored into a new scratch database:
 ./scripts/backup/verify_restore.sh data/backups/<file>.dump
 ```
 
-Measured: 16,077,010-byte dump; restore **7s**; row counts matched for
-`articles` (522), `article_chunks` (3043), `parent_docs` (1017),
-`semantic_cache` (23), `chat_messages` (164), ingestion runs/feed runs, and
-`schema_migrations`; pgvector present. See
+Measured: 16,082,564-byte dump; restore **13s** on the final run (7s on an
+earlier run); row counts matched for `articles` (522), `article_chunks` (3043),
+`parent_docs` (1017), `semantic_cache` (24), `chat_messages` (164), ingestion
+runs/feed runs, and `schema_migrations`; pgvector present. See
 [`evidence/backup-restore.txt`](evidence/backup-restore.txt).
 
 ## Drill 10: Two-replica API routing

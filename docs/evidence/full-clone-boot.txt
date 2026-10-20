@@ -2,11 +2,13 @@
 
 captured_at=2026-10-20T09:30:00Z
 clone_method=git clone origin (full history) + local bundle 263d8f8..sre/hardening; then git clone --no-local of the reconstructed repo
-clone_head=2114ab7
-clone_commits=16
+image_source_clone_head=2114ab7
+image_source_clone_commits=16
+final_closure_clone_head=7275d9a
+final_closure_clone_commits=19
 git_fsck=no errors
 worktree_clean=yes
-tests=33 passed, 1 warning in 2.14s
+tests=33 passed, 1 warning in 2.20s (final closure clone)
 compose_configs=base,loadtest,scale,replication all valid
 image_build=local full clone, build_exit=0
 image=devsec-brief:local
