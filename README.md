@@ -18,14 +18,6 @@ I built this as a final-year B.Tech project around the parts a RAG demo usually 
 - **Operational surface:** 15 alert rules, 9 SLO rules, two Grafana dashboards, Alertmanager routing, 33 tests, and CI image/import checks.
 - **Measured quality:** 94-question current-corpus evaluation; context precision 0.923, faithfulness 0.968, answer relevancy 0.919, semantic similarity 0.903. Four questions still miss their expected source URL at k=4.
 
-## Demo
-
-`[TODO: replace with a 20–30 second demo GIF at assets/demo.gif]`
-
-Record: `docker compose ps` → `/health/ready` → a real `/ask` JSON response → `/ask/stream` (`sources` → `token` → `metrics` → `done`) → Grafana for 2–3 s. Use 1280×720 or larger, keep the GIF under ~10 MB, and save it at `assets/demo.gif`.
-
-A real-provider smoke request returned **200 in 4.36 s**, with a 310-character answer and 3 sources. The stream returned 1,726 bytes: one `sources` event, seven `token` events, one `metrics` event, and `done`.
-
 ## Architecture
 
 Startup is gated: **Postgres healthy → `migrate` exits 0 → API and refresh worker start**. After startup, the API survives a database outage: liveness stays green and readiness reports 503 until dependencies recover.
