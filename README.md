@@ -10,6 +10,12 @@ I built this as a final-year B.Tech project around the parts a RAG demo usually 
 ![Postgres](https://img.shields.io/badge/PostgreSQL-16%20%2B%20pgvector-336791?logo=postgresql&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
 
+## Demo
+
+![DevSec Brief chat demo](assets/demo.gif)
+
+Ask a question, stream a grounded answer, and inspect the cited sources.
+
 ## Key highlights
 
 - **Hybrid retrieval:** bge-m3 INT8 ONNX embeddings + pgvector HNSW, Postgres full-text search, source-weighted/time-decayed RRF, and mMARCO reranking — all on CPU.
